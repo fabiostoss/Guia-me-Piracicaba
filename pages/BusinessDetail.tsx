@@ -8,9 +8,10 @@ import { isBusinessOpen } from '../utils/businessUtils';
 interface BusinessDetailProps {
   businesses: Business[];
   onIncrementView?: (id: string) => void;
+  checkAuth?: (action: () => void) => void;
 }
 
-const BusinessDetail: React.FC<BusinessDetailProps> = ({ businesses, onIncrementView }) => {
+const BusinessDetail: React.FC<BusinessDetailProps> = ({ businesses, onIncrementView, checkAuth }) => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const business = businesses.find(b => String(b.id) === String(id));
@@ -35,6 +36,17 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ businesses, onIncrement
   const isOpen = isBusinessOpen(business.schedule);
   const whatsappUrl = `https://wa.me/${business.phone}?text=${encodeURIComponent(WHATSAPP_MSG_DEFAULT)}`;
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(business.address)}`;
+
+  const handleWhatsAppClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (checkAuth) {
+      checkAuth(() => {
+        window.open(whatsappUrl, '_blank');
+      });
+    } else {
+      window.open(whatsappUrl, '_blank');
+    }
+  };
 
   return (
     <div className="pb-24 bg-slate-50 min-h-screen">
@@ -139,15 +151,13 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ businesses, onIncrement
                 )}
               </div>
 
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noreferrer"
+              <button
+                onClick={handleWhatsAppClick}
                 className="w-full bg-brand-teal hover:bg-brand-teal-dark text-white font-black py-6 rounded-2xl flex items-center justify-center transition-all shadow-xl shadow-brand-teal/20 active:scale-95 uppercase tracking-widest text-xs"
               >
                 <ICONS.MessageCircle className="w-6 h-6 mr-3" />
                 Enviar Mensagem
-              </a>
+              </button>
             </div>
           </div>
         </div>

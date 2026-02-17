@@ -357,7 +357,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Category Distribution Chart */}
-              <div className="lg:col-span-1 bg-white p-10 rounded-[3rem] border border-slate-200 shadow-xl shadow-slate-200/50 flex flex-col h-[500px]">
+              <div className="lg:col-span-1 bg-white p-10 rounded-[3rem] border border-slate-200 shadow-xl shadow-slate-200/50 flex flex-col h-[400px] md:h-[500px]">
                 <div className="mb-8">
                   <h4 className="text-sm font-black text-brand-teal-deep uppercase tracking-widest">Distribuição por Categoria</h4>
                   <p className="text-[10px] font-bold text-slate-400 uppercase mt-1">Presença de mercado local</p>
@@ -388,7 +388,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
               </div>
 
               {/* Performance Ranking Chart */}
-              <div className="lg:col-span-2 bg-white p-10 rounded-[3rem] border border-slate-200 shadow-xl shadow-slate-200/50 flex flex-col h-[500px]">
+              <div className="lg:col-span-2 bg-white p-10 rounded-[3rem] border border-slate-200 shadow-xl shadow-slate-200/50 flex flex-col h-[400px] md:h-[500px]">
                 <div className="mb-8 flex justify-between items-end">
                   <div>
                     <h4 className="text-sm font-black text-brand-teal-deep uppercase tracking-widest">Top Performance (Ranking de Acessos)</h4>

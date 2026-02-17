@@ -160,8 +160,7 @@ const CustomerRegistrationModal: React.FC<{
               value={neighborhood}
               onChange={setNeighborhood}
               placeholder="Selecione o Bairro..."
-              selectClassName="w-full px-6 py-4 rounded-2xl border border-slate-200 bg-slate-50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all appearance-none"
-              inputClassName="bg-white"
+              triggerClassName="w-full px-6 py-4 rounded-2xl border border-slate-200 bg-slate-50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all appearance-none"
             />
           </div>
           <button className="w-full bg-brand-teal text-white py-5 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-brand-teal/20 hover:scale-105 active:scale-95 transition-all mt-4">
@@ -181,6 +180,7 @@ const App: React.FC = () => {
   const [customerModalOpen, setCustomerModalOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Load data from Supabase on mount
   useEffect(() => {
@@ -315,11 +315,30 @@ const App: React.FC = () => {
             </Link>
             <div className="hidden md:flex items-center space-x-12">
               <Link to="/" className="text-slate-600 hover:text-brand-teal font-bold transition-colors">Início</Link>
-              <Link to="/noticias" className="text-slate-600 hover:text-brand-teal font-bold transition-colors">Notícias</Link>
+              <Link to="/noticias" className="text-slate-600 hover:text-brand-teal font-bold transition-colors">Noticias</Link>
               <Link to="/guia-turistico" className="text-slate-600 hover:text-brand-teal font-bold transition-colors">Guia Turístico</Link>
               <Link to="/vagas" className="text-slate-600 hover:text-brand-teal font-bold transition-colors">Vagas</Link>
               <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="bg-brand-teal text-white px-8 py-3 rounded-2xl font-black text-sm uppercase transition-all hover:bg-brand-teal-dark active:scale-95 shadow-lg shadow-brand-teal/10">Anunciar</a>
             </div>
+
+            {/* Mobile Menu Button */}
+            <div className="md:hidden flex items-center gap-4">
+              {currentCustomer && (
+                <div className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-100">
+                  <div className="w-6 h-6 rounded-full bg-brand-orange flex items-center justify-center text-white text-[8px] font-black">
+                    {currentCustomer.name.charAt(0)}
+                  </div>
+                </div>
+              )}
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="p-3 bg-slate-50 rounded-xl text-brand-teal-deep hover:bg-brand-teal/10 transition-colors"
+                aria-label="Menu"
+              >
+                {isMenuOpen ? <ICONS.X size={24} /> : <ICONS.Menu size={24} />}
+              </button>
+            </div>
+
             {currentCustomer && (
               <div className="hidden md:flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-xl border border-slate-100">
                 <div className="w-8 h-8 rounded-full bg-brand-orange flex items-center justify-center text-white text-[10px] font-black">
@@ -331,6 +350,46 @@ const App: React.FC = () => {
                 </div>
               </div>
             )}
+          </div>
+
+          {/* Mobile Side Menu (Overlay) */}
+          {isMenuOpen && (
+            <div
+              className="md:hidden fixed inset-0 z-40 bg-brand-teal-deep/20 backdrop-blur-sm animate-fade-in"
+              onClick={() => setIsMenuOpen(false)}
+            />
+          )}
+
+          {/* Mobile Menu Transitions */}
+          <div className={`md:hidden fixed top-24 left-4 right-4 z-50 bg-white rounded-[2.5rem] shadow-2xl border border-slate-100 p-8 flex flex-col gap-6 transition-all duration-300 transform ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10 pointer-events-none'}`}>
+            <Link to="/" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 text-brand-teal-deep font-black uppercase text-xs tracking-widest hover:bg-brand-teal/10 transition-all">
+              <div className="p-2 bg-white rounded-xl shadow-sm"><ICONS.HomeIcon size={18} className="text-brand-teal" /></div>
+              Início
+            </Link>
+            <Link to="/noticias" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 text-brand-teal-deep font-black uppercase text-xs tracking-widest hover:bg-brand-teal/10 transition-all">
+              <div className="p-2 bg-white rounded-xl shadow-sm"><ICONS.Newspaper size={18} className="text-brand-teal" /></div>
+              Noticias
+            </Link>
+            <Link to="/guia-turistico" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 text-brand-teal-deep font-black uppercase text-xs tracking-widest hover:bg-brand-teal/10 transition-all">
+              <div className="p-2 bg-white rounded-xl shadow-sm"><ICONS.MapPin size={18} className="text-brand-teal" /></div>
+              Guia Turístico
+            </Link>
+            <Link to="/vagas" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 text-brand-teal-deep font-black uppercase text-xs tracking-widest hover:bg-brand-teal/10 transition-all">
+              <div className="p-2 bg-white rounded-xl shadow-sm"><ICONS.Briefcase size={18} className="text-brand-teal" /></div>
+              Vagas de Emprego
+            </Link>
+            <hr className="border-slate-100 my-2" />
+            <a
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="w-full bg-brand-teal text-white py-5 rounded-2xl font-black text-center uppercase tracking-[0.2em] text-[10px] shadow-xl shadow-brand-teal/20"
+            >
+              Anunciar no Guia
+            </a>
+            <div className="text-center pt-2">
+              <Link to="/merchant-login" onClick={() => setIsMenuOpen(false)} className="text-[9px] font-black text-slate-400 uppercase tracking-widest hover:text-brand-teal">Painel do Lojista</Link>
+            </div>
           </div>
         </nav>
 
@@ -403,16 +462,18 @@ const App: React.FC = () => {
           </div>
         </footer>
 
-        {customerModalOpen && (
-          <CustomerRegistrationModal
-            onRegister={handleRegisterCustomer}
-            onClose={() => setCustomerModalOpen(false)}
-          />
-        )}
+        {
+          customerModalOpen && (
+            <CustomerRegistrationModal
+              onRegister={handleRegisterCustomer}
+              onClose={() => setCustomerModalOpen(false)}
+            />
+          )
+        }
 
         <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="fixed bottom-8 right-8 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 text-white p-5 rounded-full shadow-2xl hover:scale-110 transition-transform z-50 ring-8 ring-white/10 shadow-purple-500/20"><ICONS.Instagram size={32} /></a>
-      </div>
-    </Router>
+      </div >
+    </Router >
   );
 };
 

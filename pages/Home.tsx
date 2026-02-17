@@ -142,7 +142,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="max-w-4xl space-y-8 text-center md:text-left animate-slide-up">
             <span className="text-brand-orange text-xs font-black uppercase tracking-[0.5em] block mb-4">Marketplace Oficial Piracicaba</span>
-            <h1 className="text-4xl md:text-8xl font-black text-brand-teal-deep tracking-tighter leading-[0.9]">
+            <h1 className="text-3xl md:text-8xl font-black text-brand-teal-deep tracking-tighter leading-[0.9]">
               Encontre tudo em <span className="text-brand-orange">Piracicaba</span>, resolva no Zap.
             </h1>
             <p className="text-lg md:text-2xl text-slate-500 font-medium max-w-2xl">
@@ -168,7 +168,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             <div className="relative max-w-3xl mx-auto md:mx-0 pt-4">
               <div className="flex flex-col gap-6">
                 {/* Multi-layered shadow container with hover effects */}
-                <div className="bg-white rounded-[2.5rem] overflow-visible p-2 flex flex-col md:flex-row gap-2 border border-slate-200/50 ring-1 ring-slate-100 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15),0_10px_25px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.2),0_15px_35px_-10px_rgba(0,0,0,0.15)] hover:scale-[1.02] transition-all duration-500 ease-out backdrop-blur-sm group">
+                <div className="bg-white rounded-[2rem] md:rounded-[2.5rem] overflow-visible p-4 md:p-2 flex flex-col md:flex-row gap-2 border border-slate-200/50 ring-1 ring-slate-100 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15),0_10px_25px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.2),0_15px_35px_-10px_rgba(0,0,0,0.15)] hover:scale-[1.02] transition-all duration-500 ease-out backdrop-blur-sm group">
 
                   {/* Search Input Section */}
                   <div className="flex-grow relative flex items-center px-6 py-4 md:border-r border-slate-200 group/input">
@@ -183,16 +183,16 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
                   </div>
 
                   {/* Neighborhood Selector Section */}
-                  <div className="flex items-center px-6 py-4 min-w-[240px] group/select relative">
+                  <div className="flex items-center px-6 py-4 md:min-w-[240px] group/select relative bg-slate-50/50 md:bg-transparent rounded-2xl md:rounded-none">
                     <ICONS.MapPin className="text-brand-orange mr-4 group-hover/select:scale-110 transition-transform duration-300" size={20} />
-                    <div className="flex-grow flex flex-col min-w-0">
-                      <span className="text-slate-400 font-black text-[8px] uppercase tracking-widest mb-1 text-center md:text-left">Filtrar por Bairro</span>
+                    <div className="flex-grow flex flex-col min-w-0 pointer-events-auto">
+                      <span className="text-slate-400 font-black text-[8px] uppercase tracking-widest mb-1 text-left">Filtrar por Bairro</span>
                       <NeighborhoodSelector
                         value={selectedNeighborhood}
                         onChange={setSelectedNeighborhood}
                         placeholder="Todos os Bairros"
-                        triggerClassName="bg-transparent text-slate-700 font-bold outline-none cursor-pointer text-center md:text-left hover:text-brand-teal transition-colors"
-                        dropdownClassName="min-w-[280px] -left-12 md:left-0"
+                        triggerClassName="bg-transparent text-slate-700 font-bold outline-none cursor-pointer text-left hover:text-brand-teal transition-colors"
+                        dropdownClassName="min-w-[280px] left-0"
                       />
                     </div>
                   </div>
@@ -218,18 +218,18 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       {/* Categories & Business Grid */}
       <section className="bg-slate-50 pt-20 pb-32">
         <div className="max-w-7xl mx-auto px-4 -mt-32 relative z-30 mb-20 reveal">
-          <div className="bg-white p-6 md:p-12 rounded-[3rem] shadow-2xl border border-slate-100 overflow-x-auto no-scrollbar">
-            <div className="flex gap-10">
+          <div className="bg-white p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] shadow-2xl border border-slate-100 overflow-x-auto no-scrollbar">
+            <div className="flex gap-4 md:gap-10">
               {Object.values(CategoryType).map((category, idx) => (
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
                   className={`flex flex-col items-center group transition-all shrink-0 reveal stagger-${(idx % 4) + 1}`}
                 >
-                  <div className={`w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center transition-all border-2 mb-4 ${selectedCategory === category ? 'bg-brand-teal border-brand-teal text-white shadow-xl scale-110' : 'bg-slate-50 border-transparent text-brand-teal-deep hover:bg-slate-100'}`}>
-                    {CATEGORY_ICONS[category]}
+                  <div className={`w-14 h-14 md:w-20 md:h-20 rounded-2xl flex items-center justify-center transition-all border-2 mb-4 ${selectedCategory === category ? 'bg-brand-teal border-brand-teal text-white shadow-xl scale-110' : 'bg-slate-50 border-transparent text-brand-teal-deep hover:bg-slate-100'}`}>
+                    {React.cloneElement(CATEGORY_ICONS[category] as React.ReactElement<any>, { className: "w-6 h-6 md:w-8 md:h-8" })}
                   </div>
-                  <span className={`text-[9px] font-black uppercase tracking-widest text-center ${selectedCategory === category ? 'text-brand-teal' : 'text-slate-400'}`}>{category}</span>
+                  <span className={`text-[8px] md:text-[9px] font-black uppercase tracking-widest text-center ${selectedCategory === category ? 'text-brand-teal' : 'text-slate-400'}`}>{category}</span>
                 </button>
               ))}
             </div>
