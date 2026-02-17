@@ -505,6 +505,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                 <tr>
                   <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Identificação da Loja</th>
                   <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Categoria / Bairro</th>
+                  <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">WhatsApp</th>
                   <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Acessos</th>
                   <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
                   <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Ação</th>
@@ -518,6 +519,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                   const currentName = draft.name !== undefined ? draft.name : biz.name;
                   const currentCategory = (draft.category !== undefined ? draft.category : biz.category) as CategoryType;
                   const currentNeighborhood = draft.neighborhood !== undefined ? draft.neighborhood : biz.neighborhood;
+                  const currentPhone = draft.phone !== undefined ? draft.phone : biz.phone;
 
                   return (
                     <tr key={biz.id} className="hover:bg-slate-50/50 transition-colors group">
@@ -567,6 +569,20 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                             </select>
                             <ICONS.Edit size={8} className="text-slate-200 opacity-0 group-hover/neigh:opacity-100 transition-opacity" />
                           </div>
+                        </div>
+                      </td>
+                      <td className="px-8 py-6">
+                        <div className="flex flex-col gap-1 group/phone">
+                          <div className="flex items-center gap-2">
+                            <input
+                              placeholder="(19) 9..."
+                              className={`w-32 text-[11px] font-black outline-none bg-transparent border-b border-transparent focus:border-brand-teal transition-all ${draft.phone !== undefined ? 'text-brand-teal' : 'text-slate-500'}`}
+                              value={currentPhone || ''}
+                              onChange={e => setDraftChanges(prev => ({ ...prev, [biz.id]: { ...prev[biz.id], phone: e.target.value } }))}
+                            />
+                            <ICONS.Edit size={10} className="text-slate-200 opacity-0 group-hover/phone:opacity-100 transition-opacity" />
+                          </div>
+                          <span className="text-[8px] font-bold text-slate-300 uppercase tracking-widest">Número</span>
                         </div>
                       </td>
                       <td className="px-8 py-6">
