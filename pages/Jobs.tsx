@@ -69,8 +69,8 @@ const Jobs: React.FC = () => {
                   <ICONS.Briefcase size={24} />
                 </div>
                 <span className={`text-[9px] font-black px-3 py-1.5 rounded-lg uppercase tracking-widest border transition-colors ${job.type === 'Efetivo' ? 'bg-emerald-50 text-emerald-600 border-emerald-100/50' :
-                    job.type === 'Estágio' ? 'bg-brand-orange/5 text-brand-orange border-brand-orange/10' :
-                      'bg-brand-teal/5 text-brand-teal border-brand-teal/10'
+                  job.type === 'Estágio' ? 'bg-brand-orange/5 text-brand-orange border-brand-orange/10' :
+                    'bg-brand-teal/5 text-brand-teal border-brand-teal/10'
                   }`}>
                   {job.type}
                 </span>
@@ -195,24 +195,29 @@ const Jobs: React.FC = () => {
 
               <div className="space-y-4 border-y border-slate-100 py-5">
                 <div>
-                  <h4 className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">Requisitos e Descrição</h4>
-                  <p className="text-slate-600 font-medium text-sm leading-relaxed bg-slate-50 p-4 rounded-xl max-h-40 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200">
+                  <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Requisitos e Descrição</h4>
+                  <p className="text-slate-600 font-medium leading-relaxed bg-slate-50 p-6 rounded-2xl">
                     {selectedJob.requirements}
                   </p>
                 </div>
+
+                <div className="flex items-center gap-4 text-slate-600 font-bold text-sm">
+                  <ICONS.MapPin size={20} className="text-brand-orange" />
+                  <span>{selectedJob.location}</span>
+                </div>
               </div>
 
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-4">
                 <a
                   href={OFFICIAL_JOBS_URL}
                   target="_blank"
                   rel="noreferrer"
-                  className="w-full bg-brand-teal text-white py-3.5 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-brand-teal/20 hover:bg-brand-teal-dark active:scale-95 transition-all flex items-center justify-center gap-2 group"
+                  className="w-full bg-brand-teal text-white py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-brand-teal/20 hover:bg-brand-teal-dark active:scale-95 transition-all flex items-center justify-center gap-3"
                 >
                   Candidatar-se Agora
-                  <ICONS.ExternalLink size={14} className="group-hover:translate-x-1 transition-transform" />
+                  <ICONS.ExternalLink size={16} />
                 </a>
-                <p className="text-center text-[8px] font-black text-slate-300 uppercase tracking-widest">
+                <p className="text-center text-[9px] font-black text-slate-400 uppercase tracking-widest">
                   Publicado {selectedJob.postedAt}
                 </p>
               </div>
