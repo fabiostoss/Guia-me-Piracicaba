@@ -100,14 +100,20 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
         </p>
 
         <div className="space-y-3 mb-8">
-          <div className="flex items-start text-slate-400 text-xs">
-            <ICONS.MapPin className="w-4 h-4 mr-3 flex-shrink-0 text-brand-orange" />
+          <a
+            href={business.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${business.street}, ${business.number} - ${business.neighborhood}, Piracicaba - SP`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-start text-slate-400 text-xs hover:text-brand-orange transition-colors group/address"
+          >
+            <ICONS.MapPin className="w-4 h-4 mr-3 flex-shrink-0 text-brand-orange group-hover/address:scale-110 transition-transform" />
             <div className="flex flex-col gap-1 min-w-0">
               <p className="font-bold truncate">
                 {business.street}, {business.number} - {business.neighborhood}
               </p>
+              <span className="text-[8px] font-black uppercase tracking-widest text-slate-300">Clique para ver no mapa</span>
             </div>
-          </div>
+          </a>
           <div className="flex items-center text-slate-400 text-[10px] font-black uppercase tracking-widest">
             <ICONS.Eye className="w-4 h-4 mr-3 text-brand-teal" />
             {business.views || 0} Visualizações
