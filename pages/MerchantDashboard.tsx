@@ -347,7 +347,7 @@ const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ businesses, onUpd
                     value={formData.neighborhood || ''}
                     onChange={val => setFormData({ ...formData, neighborhood: val })}
                     placeholder="Selecione o bairro..."
-                    selectClassName="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all shadow-inner"
+                    triggerClassName="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all shadow-inner"
                   />
                 </div>
               </div>

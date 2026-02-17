@@ -561,7 +561,8 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                             <div className="flex items-center gap-2 group/neigh">
                               <NeighborhoodSelector
                                 className="flex-grow min-w-[120px]"
-                                selectClassName={`text-[9px] font-black uppercase tracking-widest outline-none bg-transparent border-b border-transparent focus:border-brand-teal cursor-pointer ${draft.neighborhood !== undefined ? 'text-brand-teal' : 'text-slate-400'}`}
+                                triggerClassName={`text-[9px] font-black uppercase tracking-widest outline-none bg-transparent border-b border-transparent focus:border-brand-teal cursor-pointer ${draft.neighborhood !== undefined ? 'text-brand-teal' : 'text-slate-400'}`}
+                                dropdownClassName="min-w-[200px]"
                                 value={currentNeighborhood || ''}
                                 onChange={val => setDraftChanges(prev => ({ ...prev, [biz.id]: { ...prev[biz.id], neighborhood: val } }))}
                                 placeholder="Sem Bairro"
@@ -763,7 +764,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                         value={formData.neighborhood || ''}
                         onChange={val => setFormData({ ...formData, neighborhood: val })}
                         placeholder="Selecione o bairro..."
-                        selectClassName="w-full px-6 py-4 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold outline-none"
+                        triggerClassName="w-full px-6 py-4 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold outline-none"
                       />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

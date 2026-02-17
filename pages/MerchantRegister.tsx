@@ -208,7 +208,7 @@ _Enviado via formulário de cadastro_`;
                   value={formData.neighborhood}
                   onChange={val => setFormData({ ...formData, neighborhood: val })}
                   placeholder="Selecione o bairro..."
-                  selectClassName="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all"
+                  triggerClassName="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all"
                 />
               </div>
             </div>
