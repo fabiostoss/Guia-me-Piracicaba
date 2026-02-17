@@ -114,10 +114,6 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
               <span className="hidden md:inline text-[8px] font-black uppercase tracking-widest text-slate-300">Ver no mapa</span>
             </div>
           </a>
-          <div className="flex items-center text-slate-400 text-[10px] font-black uppercase tracking-widest">
-            <ICONS.Eye className="w-4 h-4 mr-3 text-brand-teal" />
-            {business.views || 0} Visualizações
-          </div>
         </div>
 
         <div className="mt-auto pt-6 border-t border-slate-50">

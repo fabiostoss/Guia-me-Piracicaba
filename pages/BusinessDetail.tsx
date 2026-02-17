@@ -133,10 +133,6 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ businesses, onIncrement
 
           <div className="lg:col-span-1">
             <div className="sticky top-28 bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-2xl">
-              <div className="flex items-center gap-2 mb-8">
-                <ICONS.Eye size={16} className="text-brand-orange" />
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{business.views || 0} Visualizações</span>
-              </div>
 
               <div className="space-y-4 mb-10">
                 {business.offersDelivery && (
