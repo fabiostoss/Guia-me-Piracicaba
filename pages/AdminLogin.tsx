@@ -13,6 +13,7 @@ const AdminLogin: React.FC = () => {
     try {
       const success = await db.createAdminSession();
       if (success) {
+        localStorage.setItem('pira_admin_auth', 'true');
         navigate('/admin');
       }
     } catch (error) {

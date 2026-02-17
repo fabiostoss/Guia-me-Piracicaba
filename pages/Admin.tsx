@@ -64,6 +64,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
   }, [businesses]);
 
   const handleLogout = async () => {
+    localStorage.removeItem('pira_admin_auth');
     await db.clearAdminSession();
     navigate('/admin-login');
   };

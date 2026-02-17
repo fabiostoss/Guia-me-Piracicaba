@@ -32,7 +32,17 @@ const ProtectedAdminRoute: React.FC<{ children: React.ReactNode }> = ({ children
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   useEffect(() => {
-    db.checkAdminSession().then(setIsAuthenticated);
+    const checkAuth = async () => {
+      const localAuth = localStorage.getItem('pira_admin_auth');
+      if (!localAuth) {
+        setIsAuthenticated(false);
+        return;
+      }
+      const remoteAuth = await db.checkAdminSession();
+      setIsAuthenticated(remoteAuth);
+    };
+
+    checkAuth();
   }, []);
 
   if (isAuthenticated === null) {
