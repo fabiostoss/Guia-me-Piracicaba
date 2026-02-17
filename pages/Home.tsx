@@ -164,18 +164,20 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
         <div className="max-w-7xl mx-auto px-4 -mt-32 relative z-30 mb-20 reveal">
           <div className="bg-white p-6 md:p-12 rounded-[3rem] shadow-2xl border border-slate-100 overflow-x-auto no-scrollbar">
             <div className="flex gap-10">
-              {Object.values(CategoryType).map((category, idx) => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
-                  className={`flex flex-col items-center group transition-all shrink-0 reveal stagger-${(idx % 4) + 1}`}
-                >
-                  <div className={`w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center transition-all border-2 mb-4 ${selectedCategory === category ? 'bg-brand-teal border-brand-teal text-white shadow-xl scale-110' : 'bg-slate-50 border-transparent text-brand-teal-deep hover:bg-slate-100'}`}>
-                    {CATEGORY_ICONS[category]}
-                  </div>
-                  <span className={`text-[9px] font-black uppercase tracking-widest text-center ${selectedCategory === category ? 'text-brand-teal' : 'text-slate-400'}`}>{category}</span>
-                </button>
-              ))}
+              {Object.values(CategoryType)
+                .filter(cat => cat !== CategoryType.OFICIAIS)
+                .map((category, idx) => (
+                  <button
+                    key={category}
+                    onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
+                    className={`flex flex-col items-center group transition-all shrink-0 reveal stagger-${(idx % 4) + 1}`}
+                  >
+                    <div className={`w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center transition-all border-2 mb-4 ${selectedCategory === category ? 'bg-brand-teal border-brand-teal text-white shadow-xl scale-110' : 'bg-slate-50 border-transparent text-brand-teal-deep hover:bg-slate-100'}`}>
+                      {CATEGORY_ICONS[category]}
+                    </div>
+                    <span className={`text-[9px] font-black uppercase tracking-widest text-center ${selectedCategory === category ? 'text-brand-teal' : 'text-slate-400'}`}>{category}</span>
+                  </button>
+                ))}
             </div>
           </div>
         </div>
@@ -261,7 +263,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       </section>
 
       {/* Seção de Parceiros Oficiais */}
-      {businesses.some(b => b.category === CategoryType.OFICIAIS) && (
+      {businesses.some(b => b.isOfficial) && (
         <section className="py-32 bg-white relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-4">
             <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-8 reveal">
@@ -278,7 +280,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {businesses
-                .filter(b => b.category === CategoryType.OFICIAIS)
+                .filter(b => b.isOfficial)
                 .slice(0, 8)
                 .map((biz, idx) => (
                   <div key={biz.id} className={`reveal stagger-${(idx % 4) + 1}`}>

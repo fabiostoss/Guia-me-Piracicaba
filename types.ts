@@ -49,6 +49,7 @@ export interface Business {
   logoUrl: string;
   isOpen?: boolean;
   isActive: boolean;
+  isOfficial?: boolean;
   rating?: number;
   reviewsCount?: number;
   googleMapsLink?: string;

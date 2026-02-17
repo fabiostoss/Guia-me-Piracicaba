@@ -294,6 +294,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                             <p className="font-black text-brand-teal-deep text-sm group-hover:text-brand-teal transition-colors">{biz.name}</p>
                             <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
                               {biz.code} • {biz.category}
+                              {biz.isOfficial && <span className="bg-brand-orange/10 text-brand-orange px-1.5 py-0.5 rounded text-[7px] border border-brand-orange/20">OFICIAL</span>}
                             </p>
                           </div>
                         </div>
@@ -493,8 +494,16 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                     <div className="space-y-2">
                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Segmento Principal (Categoria)</label>
                       <select className="w-full px-6 py-4 rounded-2xl border border-slate-200 bg-white text-slate-700 font-bold outline-none focus:border-brand-teal" value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value as CategoryType })}>
-                        {Object.values(CategoryType).map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                        {Object.values(CategoryType)
+                          .filter(cat => cat !== CategoryType.OFICIAIS)
+                          .map(cat => <option key={cat} value={cat}>{cat}</option>)}
                       </select>
+                    </div>
+                    <div className="space-y-4 pt-6">
+                      <label className="flex items-center cursor-pointer p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-slate-100 transition-colors">
+                        <input type="checkbox" className="w-6 h-6 rounded border-slate-200 text-brand-orange mr-4" checked={formData.isOfficial || false} onChange={e => setFormData({ ...formData, isOfficial: e.target.checked })} />
+                        <span className="text-[11px] font-black uppercase tracking-widest text-brand-orange">Parceiro Oficial (Destaque)</span>
+                      </label>
                     </div>
                     <div className="space-y-2">
                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Especialidade / Seguimento (O que você vende?)</label>
