@@ -4,6 +4,7 @@ import { HashRouter as Router, Routes, Route, Link, useNavigate, useLocation, Na
 import { Business, CategoryType, Customer } from './types';
 import { INITIAL_BUSINESSES } from './data/mockData';
 import { ICONS, CATEGORY_ICONS, WHATSAPP_ADMIN, PIRACICABA_NEIGHBORHOODS, INSTAGRAM_URL } from './constants';
+import NeighborhoodSelector from './components/NeighborhoodSelector';
 import Home from './pages/Home';
 import BusinessDetail from './pages/BusinessDetail';
 import Admin from './pages/Admin';
@@ -94,11 +95,6 @@ const CustomerRegistrationModal: React.FC<{
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('+55');
   const [neighborhood, setNeighborhood] = useState('');
-  const [neighborhoodSearch, setNeighborhoodSearch] = useState('');
-
-  const filteredNeighborhoods = PIRACICABA_NEIGHBORHOODS.filter(n =>
-    n.toLowerCase().includes(neighborhoodSearch.toLowerCase())
-  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -160,24 +156,13 @@ const CustomerRegistrationModal: React.FC<{
           </div>
           <div className="space-y-1.5 text-left">
             <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Onde você mora em Piracicaba?</label>
-            <div className="space-y-2">
-              <input
-                type="text"
-                placeholder="🔍 Buscar bairro..."
-                className="w-full px-5 py-3 rounded-xl border border-slate-100 bg-slate-50 text-slate-600 text-xs font-bold outline-none focus:border-brand-teal/30 focus:bg-white transition-all"
-                value={neighborhoodSearch}
-                onChange={e => setNeighborhoodSearch(e.target.value)}
-              />
-              <select
-                required
-                className="w-full px-6 py-4 rounded-2xl border border-slate-200 bg-slate-50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all appearance-none"
-                value={neighborhood}
-                onChange={e => setNeighborhood(e.target.value)}
-              >
-                <option value="">Selecione o Bairro...</option>
-                {filteredNeighborhoods.map(b => <option key={b} value={b}>{b}</option>)}
-              </select>
-            </div>
+            <NeighborhoodSelector
+              value={neighborhood}
+              onChange={setNeighborhood}
+              placeholder="Selecione o Bairro..."
+              selectClassName="w-full px-6 py-4 rounded-2xl border border-slate-200 bg-slate-50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all appearance-none"
+              inputClassName="bg-white"
+            />
           </div>
           <button className="w-full bg-brand-teal text-white py-5 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-brand-teal/20 hover:scale-105 active:scale-95 transition-all mt-4">
             Confirmar e Continuar

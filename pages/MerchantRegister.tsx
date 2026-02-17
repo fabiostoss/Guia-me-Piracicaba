@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CategoryType } from '../types';
 import { ICONS, WHATSAPP_ADMIN, PIRACICABA_NEIGHBORHOODS } from '../constants';
+import NeighborhoodSelector from '../components/NeighborhoodSelector';
 
 const MerchantRegister: React.FC = () => {
   const navigate = useNavigate();
@@ -60,9 +61,9 @@ _Enviado via formulário de cadastro_`;
 
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${WHATSAPP_ADMIN}?text=${encodedMessage}`;
-    
+
     window.open(whatsappUrl, '_blank');
-    
+
     alert('Sua solicitação foi enviada! Você será redirecionado para o WhatsApp do administrador para concluir o cadastro.');
     navigate('/');
   };
@@ -146,20 +147,20 @@ _Enviado via formulário de cadastro_`;
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Nome Fantasia</label>
-                  <input 
-                    required 
+                  <input
+                    required
                     placeholder="Ex: Pira Burguer"
-                    className="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all" 
-                    value={formData.name} 
-                    onChange={e => setFormData({...formData, name: e.target.value})} 
+                    className="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all"
+                    value={formData.name}
+                    onChange={e => setFormData({ ...formData, name: e.target.value })}
                   />
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Segmento</label>
-                  <select 
-                    className="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all" 
-                    value={formData.category} 
-                    onChange={e => setFormData({...formData, category: e.target.value as CategoryType})}
+                  <select
+                    className="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all"
+                    value={formData.category}
+                    onChange={e => setFormData({ ...formData, category: e.target.value as CategoryType })}
                   >
                     {Object.values(CategoryType).map(cat => <option key={cat} value={cat}>{cat}</option>)}
                   </select>
@@ -167,13 +168,13 @@ _Enviado via formulário de cadastro_`;
               </div>
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">WhatsApp de Contato</label>
-                <input 
-                  required 
+                <input
+                  required
                   type="tel"
                   placeholder="+55 19..."
-                  className="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all" 
-                  value={formData.whatsapp} 
-                  onChange={handleWhatsappChange} 
+                  className="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all"
+                  value={formData.whatsapp}
+                  onChange={handleWhatsappChange}
                 />
               </div>
             </div>
@@ -184,40 +185,31 @@ _Enviado via formulário de cadastro_`;
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="md:col-span-3 space-y-2">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Rua / Logradouro</label>
-                  <input 
-                    required 
-                    className="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all" 
-                    value={formData.street} 
-                    onChange={e => setFormData({...formData, street: e.target.value})} 
+                  <input
+                    required
+                    className="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all"
+                    value={formData.street}
+                    onChange={e => setFormData({ ...formData, street: e.target.value })}
                   />
                 </div>
                 <div className="md:col-span-1 space-y-2">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Nº</label>
-                  <input 
-                    required 
-                    className="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all" 
-                    value={formData.number} 
-                    onChange={e => setFormData({...formData, number: e.target.value})} 
+                  <input
+                    required
+                    className="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all"
+                    value={formData.number}
+                    onChange={e => setFormData({ ...formData, number: e.target.value })}
                   />
                 </div>
               </div>
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Bairro</label>
-                <select 
-                  required 
-                  className="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all" 
-                  value={formData.neighborhood} 
-                  onChange={e => setFormData({...formData, neighborhood: e.target.value})}
-                >
-                  <option value="">Selecione o bairro...</option>
-                  {Object.entries(PIRACICABA_NEIGHBORHOODS).map(([region, neighborhoods]) => (
-                    <optgroup key={region} label={region}>
-                      {neighborhoods.map(bairro => (
-                        <option key={bairro} value={bairro}>{bairro}</option>
-                      ))}
-                    </optgroup>
-                  ))}
-                </select>
+                <NeighborhoodSelector
+                  value={formData.neighborhood}
+                  onChange={val => setFormData({ ...formData, neighborhood: val })}
+                  placeholder="Selecione o bairro..."
+                  selectClassName="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all"
+                />
               </div>
             </div>
 
@@ -226,23 +218,23 @@ _Enviado via formulário de cadastro_`;
               <h3 className="text-xs font-black text-brand-teal uppercase tracking-widest border-l-4 border-brand-teal pl-4">Detalhes do Negócio</h3>
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Sobre o seu Comércio</label>
-                <textarea 
-                  required 
-                  rows={4} 
+                <textarea
+                  required
+                  rows={4}
                   placeholder="Descreva o que você vende ou qual serviço oferece..."
-                  className="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all resize-none" 
-                  value={formData.description} 
-                  onChange={e => setFormData({...formData, description: e.target.value})} 
+                  className="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all resize-none"
+                  value={formData.description}
+                  onChange={e => setFormData({ ...formData, description: e.target.value })}
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <label className="flex items-center cursor-pointer p-5 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-slate-100 transition-all">
-                  <input 
-                    type="checkbox" 
-                    className="w-6 h-6 rounded-lg border-slate-300 text-brand-teal focus:ring-brand-teal mr-4" 
-                    checked={formData.offersDelivery} 
-                    onChange={e => setFormData({...formData, offersDelivery: e.target.checked})} 
+                  <input
+                    type="checkbox"
+                    className="w-6 h-6 rounded-lg border-slate-300 text-brand-teal focus:ring-brand-teal mr-4"
+                    checked={formData.offersDelivery}
+                    onChange={e => setFormData({ ...formData, offersDelivery: e.target.checked })}
                   />
                   <div className="flex flex-col">
                     <span className="text-xs font-black uppercase tracking-widest text-slate-700">Delivery</span>
@@ -250,11 +242,11 @@ _Enviado via formulário de cadastro_`;
                   </div>
                 </label>
                 <label className="flex items-center cursor-pointer p-5 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-slate-100 transition-all">
-                  <input 
-                    type="checkbox" 
-                    className="w-6 h-6 rounded-lg border-slate-300 text-brand-teal focus:ring-brand-teal mr-4" 
-                    checked={formData.offersPickup} 
-                    onChange={e => setFormData({...formData, offersPickup: e.target.checked})} 
+                  <input
+                    type="checkbox"
+                    className="w-6 h-6 rounded-lg border-slate-300 text-brand-teal focus:ring-brand-teal mr-4"
+                    checked={formData.offersPickup}
+                    onChange={e => setFormData({ ...formData, offersPickup: e.target.checked })}
                   />
                   <div className="flex flex-col">
                     <span className="text-xs font-black uppercase tracking-widest text-slate-700">Retirada</span>
@@ -265,8 +257,8 @@ _Enviado via formulário de cadastro_`;
             </div>
 
             <div className="pt-6">
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 className="w-full bg-brand-teal text-white py-6 rounded-2xl font-black text-lg uppercase tracking-widest shadow-2xl shadow-brand-teal/20 hover:bg-brand-teal-dark active:scale-[0.98] transition-all flex items-center justify-center gap-4"
               >
                 <ICONS.MessageCircle size={24} />

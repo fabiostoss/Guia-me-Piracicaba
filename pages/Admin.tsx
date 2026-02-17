@@ -3,6 +3,7 @@ import React, { useState, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Business, CategoryType, Customer } from '../types';
 import { ICONS, PIRACICABA_NEIGHBORHOODS, BUSINESS_SPECIALTIES } from '../constants';
+import NeighborhoodSelector from '../components/NeighborhoodSelector';
 import { isBusinessOpen, getDefaultSchedule, formatScheduleSummary } from '../utils/businessUtils';
 import * as db from '../services/databaseService';
 import {
@@ -557,16 +558,13 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                             <ICONS.Edit size={8} className="text-slate-200 opacity-0 group-hover/cat:opacity-100 transition-opacity" />
                           </div>
                           <div className="flex items-center gap-2 group/neigh">
-                            <select
-                              className={`text-[9px] font-black uppercase tracking-widest outline-none bg-transparent border-b border-transparent focus:border-brand-teal cursor-pointer flex-grow ${draft.neighborhood !== undefined ? 'text-brand-teal' : 'text-slate-400'}`}
+                            <NeighborhoodSelector
+                              className="flex-grow min-w-[120px]"
+                              selectClassName={`text-[9px] font-black uppercase tracking-widest outline-none bg-transparent border-b border-transparent focus:border-brand-teal cursor-pointer ${draft.neighborhood !== undefined ? 'text-brand-teal' : 'text-slate-400'}`}
                               value={currentNeighborhood || ''}
-                              onChange={e => setDraftChanges(prev => ({ ...prev, [biz.id]: { ...prev[biz.id], neighborhood: e.target.value } }))}
-                            >
-                              <option value="">Sem Bairro</option>
-                              {PIRACICABA_NEIGHBORHOODS.map(b => (
-                                <option key={b} value={b}>{b}</option>
-                              ))}
-                            </select>
+                              onChange={val => setDraftChanges(prev => ({ ...prev, [biz.id]: { ...prev[biz.id], neighborhood: val } }))}
+                              placeholder="Sem Bairro"
+                            />
                             <ICONS.Edit size={8} className="text-slate-200 opacity-0 group-hover/neigh:opacity-100 transition-opacity" />
                           </div>
                         </div>
@@ -773,12 +771,12 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                   </div>
                   <div className="space-y-2">
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Bairro de Piracicaba</label>
-                    <select required className="w-full px-6 py-4 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold outline-none" value={formData.neighborhood || ''} onChange={e => setFormData({ ...formData, neighborhood: e.target.value })}>
-                      <option value="">Selecione o bairro...</option>
-                      {PIRACICABA_NEIGHBORHOODS.map(bairro => (
-                        <option key={bairro} value={bairro}>{bairro}</option>
-                      ))}
-                    </select>
+                    <NeighborhoodSelector
+                      value={formData.neighborhood || ''}
+                      onChange={val => setFormData({ ...formData, neighborhood: val })}
+                      placeholder="Selecione o bairro..."
+                      selectClassName="w-full px-6 py-4 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold outline-none"
+                    />
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-2">

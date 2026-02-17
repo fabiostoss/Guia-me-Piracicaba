@@ -124,7 +124,7 @@ export const PIRACICABA_NEIGHBORHOODS: string[] = [
   "Água Branca", "Jardim Elite", "Jardim Europa", "Nova América", "Jardim Califórnia", "Jardim Panorama", "Jardim Petrópolis", "Jardim Astúrias", "Jardim Glória", "Jardim São Jorge", "Jardim São Judas", "Jardim São Vicente", "Jardim Paraíso", "Jardim Santa Silvia",
   "Pompéia", "Campestre", "Monte Alegre", "Ondas", "Jardim Colina Verde", "Jardim Ibirapuera", "Jardim São Cristóvão", "Jardim São Gabriel", "Jardim São Paulo",
   "Paulicéia", "Jaraguá", "Jardim Nova Iguaçu", "Jardim Maria Cláudia", "Jardim Santo Antônio", "Jardim Tatuapé", "Jardim Itapuã II", "Jardim Caxambu II", "Jardim São Benedito",
-  "Ártemis", "Ibitiruna", "Tupi", "Santana", "Guamium", "Piracicamirim"
+  "Ártemis", "Ibitiruna", "Tupi", "Santana", "Guamium", "Piracicamirim", "Dois Córregos"
 ].sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
 export const WHATSAPP_ADMIN = "5519995901620";
