@@ -34,10 +34,18 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
-        <div className="absolute top-4 left-4">
-          <span className="text-white text-[9px] font-black uppercase tracking-[0.3em] bg-brand-teal/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20">
-          </span>
-        </div>
+        {business.isOfficial && (
+          <div className="absolute top-4 left-4">
+            <div className="bg-white/90 backdrop-blur-md p-1.5 rounded-full border border-white/20 shadow-lg">
+              <img
+                src="https://img.freepik.com/vetores-premium/icone-de-conta-confirmada-icone-vetorial-do-conceito-de-conta-verificada_654297-327.jpg"
+                className="w-6 h-6 object-contain"
+                alt="Oficial"
+                title="Parceiro Oficial"
+              />
+            </div>
+          </div>
+        )}
 
         {business.distance !== undefined && (
           <div className="absolute top-4 right-4">
