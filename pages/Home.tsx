@@ -152,7 +152,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
   return (
     <div className="space-y-0 pb-0">
       {/* Hero Section - Animação Inicial */}
-      <section className="relative overflow-hidden bg-white pt-10 pb-4 md:pt-16 md:pb-6 animate-fade-in">
+      <section className="relative overflow-hidden bg-white pt-10 pb-16 md:pt-16 md:pb-24 animate-fade-in">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-brand-teal/5 -skew-x-12 translate-x-1/4 pointer-events-none"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="max-w-4xl space-y-8 text-center md:text-left animate-slide-up">
@@ -232,7 +232,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
 
       {/* Categories & Business Grid */}
       <section className="bg-slate-50 pt-6 pb-6">
-        <div className="max-w-7xl mx-auto px-4 -mt-16 relative z-30 mb-10 reveal">
+        <div className="max-w-7xl mx-auto px-4 -mt-10 relative z-30 mb-10 reveal">
           <div className="bg-white p-4 md:p-6 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl border border-slate-100 relative overflow-hidden">
             {/* Pagination Controls for Categories */}
             <div className="flex items-center justify-between mb-6">
