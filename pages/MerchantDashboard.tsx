@@ -373,19 +373,7 @@ const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ businesses, onUpd
                         ))}
                     </select>
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Especialidade / Seguimento (O que você vende?)</label>
-                    <select
-                      className="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all shadow-inner"
-                      value={formData.segment || ''}
-                      onChange={e => setFormData({ ...formData, segment: e.target.value })}
-                    >
-                      <option value="">Selecione a especialidade...</option>
-                      {BUSINESS_SPECIALTIES.map(spec => (
-                        <option key={spec} value={spec}>{spec}</option>
-                      ))}
-                    </select>
-                  </div>
+
                 </div>
               </div>
 

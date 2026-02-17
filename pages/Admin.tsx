@@ -158,9 +158,15 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
   const updateGpsByCep = async (cep: string) => {
     setIsGeocoding(true);
     try {
-      // Tenta busca ultra-específica pelo CEP em Piracicaba
       const query = encodeURIComponent(`CEP ${cep} Piracicaba Brazil`);
-      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}&limit=1`);
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}&limit=1`, {
+        headers: { 'User-Agent': 'Guia-me-Piracicaba/1.0' }
+      });
+
+      if (!response.ok) {
+        throw new Error('Falha na requisição');
+      }
+
       const data = await response.json();
 
       if (data && data.length > 0) {
@@ -169,9 +175,11 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
           latitude: parseFloat(data[0].lat),
           longitude: parseFloat(data[0].lon)
         }));
+        alert('Coordenadas encontradas com sucesso!');
       } else {
-        // Fallback: Tenta busca apenas pelo CEP se falhar com o contexto de cidade
-        const responseFall = await fetch(`https://nominatim.openstreetmap.org/search?format=json&postalcode=${cep}&country=Brazil&limit=1`);
+        const responseFall = await fetch(`https://nominatim.openstreetmap.org/search?format=json&postalcode=${cep}&country=Brazil&limit=1`, {
+          headers: { 'User-Agent': 'Guia-me-Piracicaba/1.0' }
+        });
         const dataFall = await responseFall.json();
         if (dataFall && dataFall.length > 0) {
           setFormData(prev => ({
@@ -179,13 +187,14 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
             latitude: parseFloat(dataFall[0].lat),
             longitude: parseFloat(dataFall[0].lon)
           }));
+          alert('Coordenadas encontradas com sucesso!');
         } else {
-          alert('Não foi possível encontrar as coordenadas para este CEP. Verifique se o CEP está correto.');
+          alert('Não foi possível encontrar as coordenadas para este CEP. Verifique se o CEP está correto ou tente buscar pelo endereço completo.');
         }
       }
     } catch (error) {
       console.error('Erro ao buscar coordenadas:', error);
-      alert('Erro na conexão com o serviço de mapas.');
+      alert('Não foi possível conectar ao serviço de mapas. Tente novamente em alguns segundos ou use a busca por endereço completo.');
     } finally {
       setIsGeocoding(false);
     }
@@ -324,15 +333,9 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
     setFormData({ ...formData, phone: val });
   };
 
-  const handleToggleStatus = (biz: Business) => {
-    const currentIsActive = draftChanges[biz.id]?.isActive !== undefined
-      ? draftChanges[biz.id].isActive
-      : biz.isActive;
-
-    setDraftChanges(prev => ({
-      ...prev,
-      [biz.id]: { ...prev[biz.id], isActive: !currentIsActive }
-    }));
+  const handleToggleStatus = async (biz: Business) => {
+    const updatedBiz = { ...biz, isActive: !biz.isActive };
+    await onUpdate(updatedBiz);
   };
 
   const saveAllChanges = async () => {
@@ -872,19 +875,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                           <span className="text-[11px] font-black uppercase tracking-widest text-brand-orange">Parceiro Oficial (Destaque)</span>
                         </label>
                       </div>
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Especialidade / Seguimento (O que você vende?)</label>
-                        <select
-                          className="w-full px-6 py-4 rounded-2xl border border-slate-200 bg-white text-slate-700 font-bold outline-none focus:border-brand-teal"
-                          value={formData.segment || ''}
-                          onChange={e => setFormData({ ...formData, segment: e.target.value })}
-                        >
-                          <option value="">Selecione a especialidade...</option>
-                          {BUSINESS_SPECIALTIES.map(spec => (
-                            <option key={spec} value={spec}>{spec}</option>
-                          ))}
-                        </select>
-                      </div>
+
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 shadow-inner">
                       <div className="space-y-2">

@@ -14,7 +14,6 @@ const MerchantRegister: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     category: CategoryType.RESTAURANTES,
-    segment: '',
     whatsapp: '+55',
     street: '',
     number: '',
@@ -115,7 +114,7 @@ const MerchantRegister: React.FC = () => {
         username: formData.name.toLowerCase().replace(/\s+/g, ''),
         description: formData.description,
         category: formData.category,
-        segment: formData.segment,
+        segment: '',
         address: `${formData.street}, ${formData.number} - ${formData.neighborhood}, Piracicaba, SP`,
         street: formData.street,
         number: formData.number,
@@ -145,7 +144,7 @@ const MerchantRegister: React.FC = () => {
 Quero ser um patrocinador!
 *Loja:* ${formData.name}
 *WhatsApp:* ${formData.whatsapp}
-*Segmento:* ${formData.segment}
+*Categoria:* ${formData.category}
 ---------------------------------------
 _Solicitação enviada via formulário de adesão_`;
 
@@ -154,7 +153,7 @@ _Solicitação enviada via formulário de adesão_`;
         window.open(whatsappUrl, '_blank');
       }
 
-      alert('Cadastro enviado com sucesso! Sua loja está na fila de aprovação e nossa equipe entrará em contato em breve.');
+      alert('Obrigado! Seu cadastro foi recebido e está aguardando aprovação dos administradores. Entraremos em contato em breve.');
       navigate('/');
     } catch (error) {
       console.error('Erro ao cadastrar:', error);
@@ -242,13 +241,6 @@ _Solicitação enviada via formulário de adesão_`;
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Categoria Principal</label>
                   <select className="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all shadow-inner" value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value as CategoryType })}>
                     {Object.values(CategoryType).filter(cat => cat !== CategoryType.OFICIAIS).map(cat => <option key={cat} value={cat}>{cat}</option>)}
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Especialidade / Segmento</label>
-                  <select className="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 text-slate-700 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all shadow-inner" value={formData.segment} onChange={e => setFormData({ ...formData, segment: e.target.value })}>
-                    <option value="">Selecione...</option>
-                    {BUSINESS_SPECIALTIES.map(spec => <option key={spec} value={spec}>{spec}</option>)}
                   </select>
                 </div>
               </div>
@@ -349,8 +341,8 @@ _Solicitação enviada via formulário de adesão_`;
             </div>
           </form>
         </div>
-      </section>
-    </div>
+      </section >
+    </div >
   );
 };
 
