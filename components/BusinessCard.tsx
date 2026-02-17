@@ -103,12 +103,9 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
           <div className="flex items-start text-slate-400 text-xs">
             <ICONS.MapPin className="w-4 h-4 mr-3 flex-shrink-0 text-brand-orange" />
             <div className="flex flex-col gap-1 min-w-0">
-              <p className="font-bold truncate">{business.address}</p>
-              {business.neighborhood && (
-                <p className="text-[10px] font-black text-brand-teal uppercase tracking-widest">
-                  Bairro: {business.neighborhood}
-                </p>
-              )}
+              <p className="font-bold truncate">
+                {business.street}, {business.number} - {business.neighborhood}
+              </p>
             </div>
           </div>
           <div className="flex items-center text-slate-400 text-[10px] font-black uppercase tracking-widest">
