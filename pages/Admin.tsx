@@ -152,17 +152,23 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
     setIsSaving(true);
     try {
       const entries = Object.entries(draftChanges);
+      console.log(`Iniciando sincronização de ${entries.length} alterações...`);
+
+      // Executa as atualizações em sequência para garantir a integridade
       for (const [id, changes] of entries) {
         const original = businesses.find(b => String(b.id) === String(id));
         if (original) {
-          await onUpdate({ ...(original as Business), ...(changes as Partial<Business>) } as Business);
+          // Garante que estamos enviando o objeto completo para o onUpdate
+          const updatedBusiness = { ...original, ...changes };
+          await onUpdate(updatedBusiness);
         }
       }
+
       setDraftChanges({});
-      alert('Todas as alterações foram salvas com sucesso!');
+      alert('Sincronização concluída! Todas as alterações estão salvas no servidor.');
     } catch (error) {
-      console.error('Erro ao salvar alterações:', error);
-      alert('Ocorreu um erro ao salvar algumas alterações.');
+      console.error('Erro crítico na sincronização:', error);
+      alert('Erro ao sincronizar. Algumas alterações podem não ter sido salvas.');
     } finally {
       setIsSaving(false);
     }
