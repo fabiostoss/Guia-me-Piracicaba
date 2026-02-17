@@ -23,6 +23,8 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
   const [editingBiz, setEditingBiz] = useState<Business | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState<'all' | 'active' | 'inactive'>('all');
+  const [draftChanges, setDraftChanges] = useState<Record<string, Partial<Business>>>({});
+  const [isSaving, setIsSaving] = useState(false);
 
   const logoInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
@@ -136,7 +138,34 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
   };
 
   const handleToggleStatus = (biz: Business) => {
-    onUpdate({ ...biz, isActive: !biz.isActive });
+    const currentIsActive = draftChanges[biz.id]?.isActive !== undefined
+      ? draftChanges[biz.id].isActive
+      : biz.isActive;
+
+    setDraftChanges(prev => ({
+      ...prev,
+      [biz.id]: { ...prev[biz.id], isActive: !currentIsActive }
+    }));
+  };
+
+  const saveAllChanges = async () => {
+    setIsSaving(true);
+    try {
+      const entries = Object.entries(draftChanges);
+      for (const [id, changes] of entries) {
+        const original = businesses.find(b => String(b.id) === String(id));
+        if (original) {
+          await onUpdate({ ...(original as Business), ...(changes as Partial<Business>) } as Business);
+        }
+      }
+      setDraftChanges({});
+      alert('Todas as alterações foram salvas com sucesso!');
+    } catch (error) {
+      console.error('Erro ao salvar alterações:', error);
+      alert('Ocorreu um erro ao salvar algumas alterações.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, field: 'imageUrl' | 'logoUrl') => {
@@ -215,6 +244,20 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
               <button onClick={() => setActiveTab('active')} className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest ${activeTab === 'active' ? 'bg-white text-brand-teal shadow-sm' : 'text-slate-400'}`}>No Ar</button>
               <button onClick={() => setActiveTab('inactive')} className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest ${activeTab === 'inactive' ? 'bg-white text-brand-teal shadow-sm' : 'text-slate-400'}`}>Pausados</button>
             </div>
+            {Object.keys(draftChanges).length > 0 && (
+              <button
+                onClick={saveAllChanges}
+                disabled={isSaving}
+                className="flex-grow md:flex-initial bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-emerald-500/20 transition-all flex items-center justify-center gap-3 animate-bounce-subtle"
+              >
+                {isSaving ? (
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                ) : (
+                  <ICONS.Check size={16} />
+                )}
+                Salvar Alterações ({Object.keys(draftChanges).length})
+              </button>
+            )}
           </div>
 
           <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden overflow-x-auto">
@@ -229,8 +272,9 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
               </thead>
               <tbody className="divide-y divide-slate-50">
                 {filteredBusinesses.map(biz => {
-                  const isCurrentActive = biz.isActive;
-                  const currentViews = biz.views || 0;
+                  const draft = draftChanges[biz.id] || {};
+                  const isCurrentActive = draft.isActive !== undefined ? draft.isActive : biz.isActive;
+                  const currentViews = draft.views !== undefined ? draft.views : (biz.views || 0);
 
                   return (
                     <tr key={biz.id} className="hover:bg-slate-50/50 transition-colors group">
@@ -253,11 +297,17 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                           <div className="flex items-center gap-2">
                             <input
                               type="number"
-                              className="w-24 border font-black outline-none focus:ring-4 rounded-xl px-3 py-1.5 transition-all text-sm bg-slate-50 border-slate-100 text-brand-teal-deep focus:border-brand-teal focus:bg-white focus:ring-brand-teal/10"
+                              className={`w-24 border font-black outline-none focus:ring-4 rounded-xl px-3 py-1.5 transition-all text-sm ${draft.views !== undefined
+                                ? 'bg-brand-teal/5 border-brand-teal text-brand-teal focus:ring-brand-teal/10'
+                                : 'bg-slate-50 border-slate-100 text-brand-teal-deep focus:border-brand-teal focus:bg-white focus:ring-brand-teal/10'
+                                }`}
                               value={currentViews}
                               onChange={(e) => {
                                 const val = parseInt(e.target.value) || 0;
-                                onUpdate({ ...biz, views: val });
+                                setDraftChanges(prev => ({
+                                  ...prev,
+                                  [biz.id]: { ...prev[biz.id], views: val }
+                                }));
                               }}
                               onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
@@ -265,6 +315,9 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                                 }
                               }}
                             />
+                            {draft.views !== undefined && (
+                              <div className="w-2 h-2 rounded-full bg-brand-teal animate-pulse" title="Alteração pendente"></div>
+                            )}
                           </div>
                           <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1 ml-1">Visualizações</span>
                         </div>
@@ -284,6 +337,9 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                           <span className="text-[10px] font-black uppercase tracking-widest">
                             {isCurrentActive ? 'Ativo' : 'Pausado'}
                           </span>
+                          {draft.isActive !== undefined && (
+                            <div className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse"></div>
+                          )}
                         </button>
                       </td>
                       <td className="px-10 py-6 text-right">
