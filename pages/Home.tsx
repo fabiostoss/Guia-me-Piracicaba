@@ -18,6 +18,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(null);
   const [selectedNeighborhood, setSelectedNeighborhood] = useState<string>('');
+  const [neighborhoodFilterTerm, setNeighborhoodFilterTerm] = useState('');
   const [latestNews, setLatestNews] = useState<NewsArticle[]>(NEWS_MOCK);
 
   useEffect(() => {
@@ -109,22 +110,29 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
                   </div>
 
                   {/* Neighborhood Selector Section */}
-                  <div className="flex items-center px-6 py-4 min-w-[200px] group/select relative">
+                  <div className="flex items-center px-6 py-4 min-w-[240px] group/select relative">
                     <ICONS.MapPin className="text-brand-orange mr-4 group-hover/select:scale-110 transition-transform duration-300" size={20} />
-                    <select
-                      className="w-full bg-transparent text-slate-600 font-bold outline-none cursor-pointer appearance-none pr-8 focus:text-brand-teal transition-colors"
-                      value={selectedNeighborhood}
-                      onChange={(e) => setSelectedNeighborhood(e.target.value)}
-                    >
-                      <option value="">Todos os Bairros</option>
-                      {Object.entries(PIRACICABA_NEIGHBORHOODS).map(([region, neighborhoods]) => (
-                        <optgroup key={region} label={region}>
-                          {neighborhoods.map(bairro => (
+                    <div className="flex-grow flex flex-col">
+                      <input
+                        type="text"
+                        placeholder="Filtrar Bairro..."
+                        className="w-full bg-transparent text-slate-600 font-black text-[10px] uppercase tracking-widest outline-none mb-1 border-b border-transparent focus:border-brand-teal/30 transition-all text-center md:text-left"
+                        value={neighborhoodFilterTerm}
+                        onChange={(e) => setNeighborhoodFilterTerm(e.target.value)}
+                      />
+                      <select
+                        className="w-full bg-transparent text-slate-700 font-bold outline-none cursor-pointer appearance-none pr-8 focus:text-brand-teal transition-colors text-center md:text-left"
+                        value={selectedNeighborhood}
+                        onChange={(e) => setSelectedNeighborhood(e.target.value)}
+                      >
+                        <option value="">Todos os Bairros</option>
+                        {PIRACICABA_NEIGHBORHOODS
+                          .filter(b => b.toLowerCase().includes(neighborhoodFilterTerm.toLowerCase()))
+                          .map(bairro => (
                             <option key={bairro} value={bairro}>{bairro}</option>
                           ))}
-                        </optgroup>
-                      ))}
-                    </select>
+                      </select>
+                    </div>
                     {/* Custom dropdown arrow */}
                     <div className="absolute right-8 pointer-events-none">
                       <svg className="w-4 h-4 text-slate-400 group-hover/select:text-brand-orange transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -99,14 +99,14 @@ export const CATEGORY_ICONS: Record<CategoryType, React.ReactNode> = {
   [CategoryType.EVENTOS]: <PartyPopper className="w-6 h-6" />,
 };
 
-export const PIRACICABA_NEIGHBORHOODS: Record<string, string[]> = {
-  "Região Central": ["Centro", "Cidade Alta", "Alto", "São Dimas", "Nova Piracicaba", "Alemães", "Vila Rezende", "Vila Independência", "Vila Monteiro", "Vila Boyes", "Clube de Campo", "Morumbi"],
-  "Região Norte": ["Vila Sônia", "Santa Terezinha", "Parque Piracicaba (Balbo)", "Jardim São Matheus", "Jardim Conceição", "Jardim Itapuã", "Jardim Primavera", "Jardim Brasília", "Jardim Ipanema", "Jardim Oriente", "Jardim Santa Rosa", "Jardim Caxambu", "Jardim São Francisco", "Jardim São Luiz", "Jardim Noiva da Colina", "Jardim Alvorada", "Jardim Abaeté", "Jardim Planalto", "Jardim Algodoal", "Jardim Gilda", "Jardim Itamaracá", "Jardim Vitória", "Jardim Bartira"],
-  "Região Sul": ["Água Branca", "Jardim Elite", "Jardim Europa", "Nova América", "Jardim Califórnia", "Jardim Panorama", "Jardim Petrópolis", "Jardim Astúrias", "Jardim Abaeté", "Jardim Glória", "Jardim São Jorge", "Jardim São Judas", "Jardim São Vicente", "Jardim Paraíso", "Jardim Santa Silvia", "Jardim São Francisco"],
-  "Região Leste": ["Pompéia", "Campestre", "Monte Alegre", "Ondas", "Jardim Colina Verde", "Jardim Ibirapuera", "Jardim Oriente", "Jardim São Cristóvão", "Jardim São Gabriel", "Jardim São Paulo"],
-  "Região Oeste": ["Paulicéia", "Jaraguá", "Jardim Nova Iguaçu", "Jardim Maria Cláudia", "Jardim Santo Antônio", "Jardim Tatuapé", "Jardim Itapuã II", "Jardim Caxambu II", "Jardim São Benedito"],
-  "Distritos e Regiões Rurais": ["Ártemis", "Ibitiruna", "Tupi", "Santana", "Guamium"]
-};
+export const PIRACICABA_NEIGHBORHOODS: string[] = [
+  "Centro", "Cidade Alta", "Alto", "São Dimas", "Nova Piracicaba", "Alemães", "Vila Rezende", "Vila Independência", "Vila Monteiro", "Vila Boyes", "Clube de Campo", "Morumbi",
+  "Vila Sônia", "Santa Terezinha", "Parque Piracicaba (Balbo)", "Jardim São Matheus", "Jardim Conceição", "Jardim Itapuã", "Jardim Primavera", "Jardim Brasília", "Jardim Ipanema", "Jardim Oriente", "Jardim Santa Rosa", "Jardim Caxambu", "Jardim São Francisco", "Jardim São Luiz", "Jardim Noiva da Colina", "Jardim Alvorada", "Jardim Abaeté", "Jardim Planalto", "Jardim Algodoal", "Jardim Gilda", "Jardim Itamaracá", "Jardim Vitória", "Jardim Bartira",
+  "Água Branca", "Jardim Elite", "Jardim Europa", "Nova América", "Jardim Califórnia", "Jardim Panorama", "Jardim Petrópolis", "Jardim Astúrias", "Jardim Glória", "Jardim São Jorge", "Jardim São Judas", "Jardim São Vicente", "Jardim Paraíso", "Jardim Santa Silvia",
+  "Pompéia", "Campestre", "Monte Alegre", "Ondas", "Jardim Colina Verde", "Jardim Ibirapuera", "Jardim São Cristóvão", "Jardim São Gabriel", "Jardim São Paulo",
+  "Paulicéia", "Jaraguá", "Jardim Nova Iguaçu", "Jardim Maria Cláudia", "Jardim Santo Antônio", "Jardim Tatuapé", "Jardim Itapuã II", "Jardim Caxambu II", "Jardim São Benedito",
+  "Ártemis", "Ibitiruna", "Tupi", "Santana", "Guamium", "Piracicamirim"
+].sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
 export const WHATSAPP_ADMIN = "5519995901620";
 export const WHATSAPP_MSG_DEFAULT = "Olá, encontrei seu comércio no Guia-me Piracicaba e gostaria de mais informações.";

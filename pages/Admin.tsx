@@ -394,10 +394,8 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Bairro de Piracicaba</label>
                   <select required className="w-full px-6 py-4 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold outline-none" value={formData.neighborhood || ''} onChange={e => setFormData({ ...formData, neighborhood: e.target.value })}>
                     <option value="">Selecione o bairro...</option>
-                    {Object.entries(PIRACICABA_NEIGHBORHOODS).map(([region, neighborhoods]) => (
-                      <optgroup key={region} label={region}>
-                        {neighborhoods.map(bairro => <option key={bairro} value={bairro}>{bairro}</option>)}
-                      </optgroup>
+                    {PIRACICABA_NEIGHBORHOODS.map(bairro => (
+                      <option key={bairro} value={bairro}>{bairro}</option>
                     ))}
                   </select>
                 </div>
