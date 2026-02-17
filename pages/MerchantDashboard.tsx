@@ -107,17 +107,34 @@ const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ businesses, onUpd
   const updateGpsByCep = async (cep: string) => {
     setIsGeocoding(true);
     try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&postalcode=${cep}&country=Brazil&limit=1`);
+      // Tenta busca ultra-específica pelo CEP em Piracicaba
+      const query = encodeURIComponent(`CEP ${cep} Piracicaba Brazil`);
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}&limit=1`);
       const data = await response.json();
+
       if (data && data.length > 0) {
         setFormData(prev => ({
           ...prev,
           latitude: parseFloat(data[0].lat),
           longitude: parseFloat(data[0].lon)
         }));
+      } else {
+        // Fallback: Tenta busca apenas pelo CEP se falhar com o contexto de cidade
+        const responseFall = await fetch(`https://nominatim.openstreetmap.org/search?format=json&postalcode=${cep}&country=Brazil&limit=1`);
+        const dataFall = await responseFall.json();
+        if (dataFall && dataFall.length > 0) {
+          setFormData(prev => ({
+            ...prev,
+            latitude: parseFloat(dataFall[0].lat),
+            longitude: parseFloat(dataFall[0].lon)
+          }));
+        } else {
+          alert('Não foi possível encontrar as coordenadas para este CEP. Verifique se o CEP está correto.');
+        }
       }
     } catch (error) {
-      console.error('Erro ao buscar CEP:', error);
+      console.error('Erro ao buscar coordenadas:', error);
+      alert('Erro na conexão com o serviço de mapas.');
     } finally {
       setIsGeocoding(false);
     }

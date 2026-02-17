@@ -21,6 +21,8 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
   const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(null);
   const [selectedNeighborhood, setSelectedNeighborhood] = useState<string>('');
   const [is24hOnly, setIs24hOnly] = useState(false);
+  const [isDeliveryOnly, setIsDeliveryOnly] = useState(false);
+  const [isPickupOnly, setIsPickupOnly] = useState(false);
   const [latestNews, setLatestNews] = useState<NewsArticle[]>(NEWS_MOCK);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [isLocating, setIsLocating] = useState(false);
@@ -156,9 +158,11 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       const matchesCategory = selectedCategory ? b.category === selectedCategory : true;
       const matchesNeighborhood = selectedNeighborhood ? b.neighborhood === selectedNeighborhood : true;
       const matches24h = is24hOnly ? b.is24h === true : true;
+      const matchesDelivery = isDeliveryOnly ? b.offersDelivery === true : true;
+      const matchesPickup = isPickupOnly ? b.offersPickup === true : true;
       const isActive = b.isActive !== false;
 
-      return matchesSearch && matchesCategory && matchesNeighborhood && matches24h && isActive;
+      return matchesSearch && matchesCategory && matchesNeighborhood && matches24h && matchesDelivery && matchesPickup && isActive;
     });
 
     // Ordenar por distância se disponível
@@ -171,7 +175,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
     }
 
     return result;
-  }, [businessesWithDistance, searchTerm, selectedCategory, selectedNeighborhood, is24hOnly, userLocation]);
+  }, [businessesWithDistance, searchTerm, selectedCategory, selectedNeighborhood, is24hOnly, isDeliveryOnly, isPickupOnly, userLocation]);
 
   const featuredSpots = (TOURIST_SPOTS || []).slice(0, 3);
   const recentJobs = (getLatestJobs() || []).slice(0, 4);
@@ -261,29 +265,38 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
                     </div>
                   </div>
 
-                  {/* 24h Filter Toggle */}
-                  <div className="flex items-center px-6 py-4 md:min-w-[120px] group/24h relative bg-slate-50/50 md:bg-transparent rounded-2xl md:rounded-none">
-                    <button
-                      onClick={() => setIs24hOnly(!is24hOnly)}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${is24hOnly ? 'bg-brand-teal text-white shadow-lg' : 'bg-white text-slate-400 border border-slate-100'}`}
-                    >
-                      <ICONS.Clock size={14} className={is24hOnly ? 'animate-pulse' : ''} />
-                      {is24hOnly ? '24h Ativo' : 'Lojas 24h'}
-                    </button>
-                  </div>
-
                   {/* Search Action Button with Gradient Hover */}
                   <button className="relative bg-brand-teal text-white px-8 py-4 rounded-xl md:rounded-2xl font-black text-sm transition-all duration-300 active:scale-95 shadow-lg shadow-brand-teal/30 uppercase tracking-widest whitespace-nowrap overflow-hidden group/button hover:shadow-xl hover:shadow-brand-teal/40 hover:scale-105">
                     {/* Gradient overlay on hover */}
                     <div className="absolute inset-0 bg-gradient-to-r from-brand-teal via-brand-teal-dark to-brand-teal opacity-0 group-hover/button:opacity-100 transition-opacity duration-300"></div>
-                    {/* Shine effect */}
-                    <div className="absolute inset-0 -translate-x-full group-hover/button:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-                    <span className="relative z-10 flex items-center gap-2">
-                      Buscar
-                      <ICONS.Search className="group-hover/button:rotate-12 transition-transform duration-300" size={16} />
-                    </span>
+                    <span className="relative z-10">Buscando...</span>
                   </button>
                 </div>
+              </div>
+
+              {/* Quick Filters Under Search Bar */}
+              <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
+                <button
+                  onClick={() => setIs24hOnly(!is24hOnly)}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${is24hOnly ? 'bg-brand-teal text-white shadow-lg' : 'bg-white text-slate-400 border border-slate-100'}`}
+                >
+                  <ICONS.Clock size={14} className={is24hOnly ? 'animate-pulse' : ''} />
+                  {is24hOnly ? 'Filtro 24h Ativo' : 'Aberto 24h'}
+                </button>
+                <button
+                  onClick={() => setIsDeliveryOnly(!isDeliveryOnly)}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${isDeliveryOnly ? 'bg-brand-teal text-white shadow-lg' : 'bg-white text-slate-400 border border-slate-100'}`}
+                >
+                  <ICONS.Truck size={14} />
+                  {isDeliveryOnly ? 'Somente Delivery' : 'Delivery'}
+                </button>
+                <button
+                  onClick={() => setIsPickupOnly(!isPickupOnly)}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${isPickupOnly ? 'bg-brand-teal text-white shadow-lg' : 'bg-white text-slate-400 border border-slate-100'}`}
+                >
+                  <ICONS.Package size={14} />
+                  {isPickupOnly ? 'Somente Retirada' : 'Retirada'}
+                </button>
               </div>
             </div>
           </div>
@@ -374,10 +387,10 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             </div>
           )}
         </div>
-      </section>
+      </section >
 
       {/* Vagas Section (Dark) - Adicionado Botão "Ver Todas" */}
-      <section className="bg-slate-900 py-6 md:py-8 text-white overflow-hidden relative">
+      < section className="bg-slate-900 py-6 md:py-8 text-white overflow-hidden relative" >
         <div className="absolute top-0 right-0 w-96 h-96 bg-brand-teal/5 rounded-full blur-3xl"></div>
         <div className="max-w-7xl mx-auto px-4 relative z-10">
           <div className="flex flex-col items-center justify-center mb-4 md:mb-6 gap-2 reveal">
@@ -428,10 +441,10 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             </Link>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Guia Turístico Section */}
-      <section className="bg-white py-6 md:py-8">
+      < section className="bg-white py-6 md:py-8" >
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-4 md:mb-6 reveal">
             <h2 className="text-2xl md:text-3xl font-black text-brand-teal-deep tracking-tighter leading-none">Turismo em <span className="text-brand-orange">Pira</span></h2>
@@ -470,10 +483,10 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             ))}
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Seção de Notícias */}
-      <section className="py-6 md:py-8 bg-slate-50 relative overflow-hidden">
+      < section className="py-6 md:py-8 bg-slate-50 relative overflow-hidden" >
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-col items-center justify-center mb-4 md:mb-6 gap-2 reveal">
@@ -546,8 +559,8 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             ))}
           </div>
         </div>
-      </section>
-    </div>
+      </section >
+    </div >
   );
 };
 

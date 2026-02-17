@@ -158,17 +158,34 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
   const updateGpsByCep = async (cep: string) => {
     setIsGeocoding(true);
     try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&postalcode=${cep}&country=Brazil&limit=1`);
+      // Tenta busca ultra-específica pelo CEP em Piracicaba
+      const query = encodeURIComponent(`CEP ${cep} Piracicaba Brazil`);
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}&limit=1`);
       const data = await response.json();
+
       if (data && data.length > 0) {
         setFormData(prev => ({
           ...prev,
           latitude: parseFloat(data[0].lat),
           longitude: parseFloat(data[0].lon)
         }));
+      } else {
+        // Fallback: Tenta busca apenas pelo CEP se falhar com o contexto de cidade
+        const responseFall = await fetch(`https://nominatim.openstreetmap.org/search?format=json&postalcode=${cep}&country=Brazil&limit=1`);
+        const dataFall = await responseFall.json();
+        if (dataFall && dataFall.length > 0) {
+          setFormData(prev => ({
+            ...prev,
+            latitude: parseFloat(dataFall[0].lat),
+            longitude: parseFloat(dataFall[0].lon)
+          }));
+        } else {
+          alert('Não foi possível encontrar as coordenadas para este CEP. Verifique se o CEP está correto.');
+        }
       }
     } catch (error) {
-      console.error('Erro ao buscar CEP:', error);
+      console.error('Erro ao buscar coordenadas:', error);
+      alert('Erro na conexão com o serviço de mapas.');
     } finally {
       setIsGeocoding(false);
     }
@@ -371,7 +388,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-16">
           <div>
-            <h1 className="text-4xl font-black text-brand-teal-deep tracking-tighter mb-4">Pira Admin Center</h1>
+            <h1 className="text-4xl font-black text-brand-teal-deep tracking-tighter mb-4">Centro de Controle Guia-me</h1>
             <div className="flex flex-wrap gap-2">
               <button onClick={() => setAdminView('dashboard')} className={`text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-xl transition-all ${adminView === 'dashboard' ? 'bg-brand-teal text-white shadow-lg' : 'bg-slate-100 text-slate-400'}`}>Visão Geral</button>
               <button onClick={() => setAdminView('management')} className={`text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-xl transition-all ${adminView === 'management' ? 'bg-brand-teal text-white shadow-lg' : 'bg-slate-100 text-slate-400'}`}>Lojistas</button>
