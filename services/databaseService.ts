@@ -282,6 +282,9 @@ function transformBusinessFromDB(data: any): Business {
         businessHours: data.business_hours,
         offersDelivery: data.offers_delivery,
         offersPickup: data.offers_pickup,
+        rating: data.rating || 0,
+        reviewsCount: data.reviews_count || 0,
+        googleMapsLink: data.google_maps_link || '',
         views: data.views || 0,
         createdAt: new Date(data.created_at).getTime(),
     };
@@ -310,6 +313,9 @@ function transformBusinessToDB(business: Business): any {
         business_hours: business.businessHours,
         offers_delivery: business.offersDelivery,
         offers_pickup: business.offersPickup,
+        rating: business.rating || 0,
+        reviews_count: business.reviewsCount || 0,
+        google_maps_link: business.googleMapsLink || '',
         views: business.views || 0,
     };
 }

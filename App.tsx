@@ -16,6 +16,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfUse from './pages/TermsOfUse';
 import Jobs from './pages/Jobs';
 import News from './pages/News';
+import SeedOfficial from './pages/SeedOfficial';
 import { Calendar, Clock as ClockIcon } from 'lucide-react';
 import * as db from './services/databaseService';
 
@@ -323,6 +324,7 @@ const App: React.FC = () => {
             <Route path="/guia-turistico" element={<TouristGuide />} />
             <Route path="/vagas" element={<Jobs />} />
             <Route path="/noticias" element={<News />} />
+            <Route path="/seed-official" element={<SeedOfficial />} />
             <Route path="/politica-de-privacidade" element={<PrivacyPolicy />} />
             <Route path="/termos-de-uso" element={<TermsOfUse />} />
             <Route path="/business/:id" element={<BusinessDetail businesses={businesses} onIncrementView={incrementView} checkAuth={checkCustomerAuth} />} />

@@ -1,12 +1,12 @@
 
 import React from 'react';
-import { 
-  Utensils, 
-  ShoppingCart, 
-  Pill, 
-  ShoppingBag, 
-  Wrench, 
-  Home as HomeIcon, 
+import {
+  Utensils,
+  ShoppingCart,
+  Pill,
+  ShoppingBag,
+  Wrench,
+  Home as HomeIcon,
   Car,
   MessageCircle,
   MapPin,
@@ -38,7 +38,9 @@ import {
   UserCheck,
   ExternalLink,
   Info,
-  Instagram
+  Instagram,
+  BadgeCheck,
+  Star
 } from 'lucide-react';
 import { CategoryType } from './types';
 
@@ -75,12 +77,15 @@ export const ICONS = {
   UserCheck,
   ExternalLink,
   Info,
-  Instagram
+  Instagram,
+  BadgeCheck,
+  Star
 };
 
 export const CATEGORY_ICONS: Record<CategoryType, React.ReactNode> = {
   [CategoryType.RESTAURANTES]: <Utensils className="w-6 h-6" />,
   [CategoryType.MERCADOS]: <ShoppingCart className="w-6 h-6" />,
+  [CategoryType.OFICIAIS]: <BadgeCheck className="w-6 h-6 text-brand-teal" />,
   [CategoryType.FARMACIAS]: <Pill className="w-6 h-6" />,
   [CategoryType.LOJAS]: <ShoppingBag className="w-6 h-6" />,
   [CategoryType.SERVICOS]: <Wrench className="w-6 h-6" />,
@@ -103,6 +108,6 @@ export const PIRACICABA_NEIGHBORHOODS: Record<string, string[]> = {
   "Distritos e Regiões Rurais": ["Ártemis", "Ibitiruna", "Tupi", "Santana", "Guamium"]
 };
 
-export const WHATSAPP_ADMIN = "5519995901620"; 
+export const WHATSAPP_ADMIN = "5519995901620";
 export const WHATSAPP_MSG_DEFAULT = "Olá, encontrei seu comércio no Guia-me Piracicaba e gostaria de mais informações.";
 export const INSTAGRAM_URL = "https://www.instagram.com/guiamepiracicaba";

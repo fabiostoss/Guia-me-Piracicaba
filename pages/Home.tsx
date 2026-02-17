@@ -252,6 +252,36 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
         </div>
       </section>
 
+      {/* Seção de Parceiros Oficiais */}
+      {businesses.some(b => b.category === CategoryType.OFICIAIS) && (
+        <section className="py-32 bg-white relative overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-8 reveal">
+              <div className="max-w-2xl">
+                <span className="text-brand-orange font-black text-[10px] uppercase tracking-[0.3em] mb-4 block">Parcerias de Sucesso</span>
+                <h2 className="text-4xl md:text-7xl font-black text-brand-teal-deep tracking-tighter leading-none mb-6">
+                  Destaques <span className="text-brand-teal">Oficiais</span>
+                </h2>
+                <p className="text-slate-500 font-medium text-lg max-w-xl">
+                  As maiores redes nacionais e internacionais presentes em nossa cidade.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {businesses
+                .filter(b => b.category === CategoryType.OFICIAIS)
+                .slice(0, 8)
+                .map((biz, idx) => (
+                  <div key={biz.id} className={`reveal stagger-${(idx % 4) + 1}`}>
+                    <BusinessCard business={biz} checkAuth={checkAuth} />
+                  </div>
+                ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Seção de Notícias */}
       <section className="py-32 bg-slate-50 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>

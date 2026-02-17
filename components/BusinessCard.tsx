@@ -28,8 +28,8 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
   return (
     <div className="bg-white rounded-[2rem] overflow-hidden border border-slate-100 card-hover transition-all duration-500 group flex flex-col h-full shadow-sm hover:shadow-xl">
       <div className="relative h-56 overflow-hidden">
-        <img 
-          src={business.imageUrl} 
+        <img
+          src={business.imageUrl}
           alt={business.name}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
         />
@@ -54,11 +54,21 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
       </div>
 
       <div className="p-8 flex-grow flex flex-col">
-        <Link to={`/business/${business.id}`} className="block mb-4">
+        <Link to={`/business/${business.id}`} className="block mb-2">
           <h3 className="text-2xl font-black text-brand-teal-deep group-hover:text-brand-teal transition-colors leading-tight tracking-tight">
             {business.name}
           </h3>
         </Link>
+
+        {business.rating ? (
+          <div className="flex items-center gap-1 mb-4">
+            <div className="flex items-center text-amber-500">
+              <ICONS.Star size={14} fill="currentColor" />
+              <span className="ml-1.5 text-slate-700 font-black text-sm">{business.rating}</span>
+            </div>
+            <span className="text-slate-400 text-[10px] font-bold">({business.reviewsCount} avaliações)</span>
+          </div>
+        ) : null}
 
         <p className="text-slate-500 text-sm font-medium leading-relaxed mb-6 line-clamp-2">
           {business.description}
@@ -76,7 +86,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
         </div>
 
         <div className="mt-auto pt-6 border-t border-slate-50">
-          <button 
+          <button
             onClick={handleWhatsAppClick}
             className="w-full bg-brand-teal hover:bg-brand-teal-dark text-white font-black py-4 rounded-xl flex items-center justify-center transition-all shadow-lg shadow-brand-teal/10 uppercase tracking-widest text-[9px]"
           >

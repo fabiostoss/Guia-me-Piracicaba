@@ -12,7 +12,8 @@ export enum CategoryType {
   SAUDE_BELEZA = 'Saúde & Beleza',
   EDUCACAO = 'Educação',
   CONSTRUCAO = 'Construção',
-  EVENTOS = 'Eventos'
+  EVENTOS = 'Eventos',
+  OFICIAIS = 'Destaques Piracicaba'
 }
 
 export interface DaySchedule {
@@ -41,6 +42,9 @@ export interface Business {
   logoUrl: string;
   isOpen?: boolean;
   isActive: boolean;
+  rating?: number;
+  reviewsCount?: number;
+  googleMapsLink?: string;
   schedule: WeekSchedule;
   businessHours: string;
   offersDelivery: boolean;
@@ -87,7 +91,7 @@ export interface TouristEvent {
   id: string;
   title: string;
   date: string;
-  dateIso: string; 
+  dateIso: string;
   location: string;
   description: string;
   imageUrl: string;
