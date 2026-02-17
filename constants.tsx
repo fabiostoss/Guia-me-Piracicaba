@@ -120,6 +120,7 @@ export const CATEGORY_ICONS: Record<CategoryType, React.ReactNode> = {
   [CategoryType.EDUCACAO]: <GraduationCap className="w-6 h-6" />,
   [CategoryType.CONSTRUCAO]: <Hammer className="w-6 h-6" />,
   [CategoryType.EVENTOS]: <PartyPopper className="w-6 h-6" />,
+  [CategoryType.OFICIAIS]: <BadgeCheck className="w-6 h-6" />,
 };
 
 export const PIRACICABA_NEIGHBORHOODS: string[] = [
