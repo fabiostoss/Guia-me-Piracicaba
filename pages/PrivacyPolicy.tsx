@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ICONS } from '../constants';
+import { ICONS, WHATSAPP_ADMIN } from '../constants';
 
 const PrivacyPolicy: React.FC = () => {
   // Scroll to top on mount
@@ -117,7 +117,7 @@ const PrivacyPolicy: React.FC = () => {
           <div className="absolute bottom-0 right-0 w-80 h-80 rounded-full bg-brand-orange blur-3xl"></div>
         </div>
 
-        <div className="max-w-4xl mx-auto px-6 relative z-10 text-center">
+        <div className="max-w-4xl mx-auto px-6 relative z-10 flex flex-col items-center text-center">
           <Link to="/" className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-8 transition-colors group bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm hover:bg-white/20">
             <ICONS.ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
             <span className="text-xs font-black uppercase tracking-widest">Voltar para Início</span>
@@ -176,12 +176,13 @@ const PrivacyPolicy: React.FC = () => {
               </p>
             </div>
 
-            <a
-              href="mailto:contato@guiamepiracicaba.com.br"
-              className="bg-white text-brand-teal-deep px-8 py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:bg-brand-orange hover:text-white transition-all shadow-lg active:scale-95 whitespace-nowrap"
+            <button
+              onClick={() => window.open(`https://wa.me/${WHATSAPP_ADMIN}?text=Olá, tenho dúvidas sobre a política de privacidade.`, '_blank')}
+              className="bg-white text-brand-teal-deep px-8 py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:bg-brand-orange hover:text-white transition-all shadow-lg active:scale-95 whitespace-nowrap flex items-center gap-2"
             >
+              <ICONS.MessageCircle size={18} />
               Fale Conosco
-            </a>
+            </button>
           </div>
         </div>
       </div>
