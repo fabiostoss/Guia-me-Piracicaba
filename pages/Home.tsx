@@ -232,49 +232,6 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
               )}
             </div>
 
-            {/* Search Bar - Enhanced Visual Design */}
-            <div className="relative max-w-3xl mx-auto md:mx-0 pt-4">
-              <div className="flex flex-col gap-6">
-                {/* Multi-layered shadow container with hover effects */}
-                <div className="bg-white rounded-[2rem] md:rounded-[2.5rem] overflow-visible p-4 md:p-1.5 flex flex-col md:flex-row gap-2 border border-slate-200/50 ring-1 ring-slate-100 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15),0_10px_25px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.2),0_15px_35px_-10px_rgba(0,0,0,0.15)] hover:scale-[1.02] transition-all duration-500 ease-out backdrop-blur-sm group relative z-50">
-
-                  {/* Search Input Section */}
-                  <div className="flex-grow relative flex items-center px-6 py-4 md:border-r border-slate-200 group/input">
-                    <ICONS.Search className="text-slate-400 mr-4 group-hover/input:text-brand-teal transition-colors duration-300" size={24} />
-                    <input
-                      type="text"
-                      placeholder="O que você procura?"
-                      className="w-full text-lg font-bold outline-none text-slate-700 bg-transparent placeholder:text-slate-400 focus:placeholder:text-slate-500 transition-all"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </div>
-
-                  {/* Neighborhood Selector Section */}
-                  <div className="flex items-center px-6 py-4 md:min-w-[240px] group/select relative bg-slate-50/50 md:bg-transparent rounded-2xl md:rounded-none">
-                    <ICONS.MapPin className="text-brand-orange mr-4 group-hover/select:scale-110 transition-transform duration-300" size={20} />
-                    <div className="flex-grow flex flex-col min-w-0 pointer-events-auto">
-                      <span className="text-slate-400 font-black text-[8px] uppercase tracking-widest mb-1 text-left">Filtrar por Bairro</span>
-                      <NeighborhoodSelector
-                        value={selectedNeighborhood}
-                        onChange={setSelectedNeighborhood}
-                        placeholder="Todos os Bairros"
-                        triggerClassName="bg-transparent text-slate-700 font-bold outline-none cursor-pointer text-left hover:text-brand-teal transition-colors"
-                        dropdownClassName="min-w-[280px] left-0"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Search Action Button with Gradient Hover */}
-                  <button className="relative bg-brand-teal text-white px-8 py-4 rounded-xl md:rounded-2xl font-black text-sm transition-all duration-300 active:scale-95 shadow-lg shadow-brand-teal/30 uppercase tracking-widest whitespace-nowrap overflow-hidden group/button hover:shadow-xl hover:shadow-brand-teal/40 hover:scale-105">
-                    {/* Gradient overlay on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-brand-teal via-brand-teal-dark to-brand-teal opacity-0 group-hover/button:opacity-100 transition-opacity duration-300"></div>
-                    <span className="relative z-10">Buscando...</span>
-                  </button>
-                </div>
-              </div>
-
-            </div>
           </div>
         </div>
       </section>
@@ -381,7 +338,46 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       {/* Categories & Business Grid */}
       <section className="bg-slate-50 pt-6 pb-6">
         <div className="max-w-7xl mx-auto px-4 -mt-10 relative z-30 mb-10 reveal">
-          <div className="bg-white p-4 md:p-6 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl border border-slate-100 relative overflow-hidden">
+          <div className="bg-white p-4 md:p-6 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl border border-slate-100 relative overflow-visible">
+
+            {/* Search Bar - Integrated here */}
+            <div className="mb-8">
+              <div className="bg-white rounded-[2rem] overflow-visible p-2 flex flex-col md:flex-row gap-2 border border-slate-100 ring-4 ring-slate-50/50 shadow-inner group relative z-50">
+                {/* Search Input Section */}
+                <div className="flex-grow relative flex items-center px-6 py-4 md:border-r border-slate-100 group/input">
+                  <ICONS.Search className="text-slate-400 mr-4 group-hover/input:text-brand-teal transition-colors duration-300" size={24} />
+                  <input
+                    type="text"
+                    placeholder="O que você procura?"
+                    className="w-full text-lg font-bold outline-none text-slate-700 bg-transparent placeholder:text-slate-400 focus:placeholder:text-slate-500 transition-all"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+
+                {/* Neighborhood Selector Section */}
+                <div className="flex items-center px-6 py-4 md:min-w-[240px] group/select relative bg-slate-50 md:bg-transparent rounded-2xl md:rounded-none">
+                  <ICONS.MapPin className="text-brand-orange mr-4 group-hover/select:scale-110 transition-transform duration-300" size={20} />
+                  <div className="flex-grow flex flex-col min-w-0 pointer-events-auto">
+                    <span className="text-slate-400 font-black text-[8px] uppercase tracking-widest mb-1 text-left">Filtrar por Bairro</span>
+                    <NeighborhoodSelector
+                      value={selectedNeighborhood}
+                      onChange={setSelectedNeighborhood}
+                      placeholder="Todos os Bairros"
+                      triggerClassName="bg-transparent text-slate-700 font-bold outline-none cursor-pointer text-left hover:text-brand-teal transition-colors"
+                      dropdownClassName="min-w-[280px] left-0"
+                    />
+                  </div>
+                </div>
+
+                {/* Search Action Button */}
+                <button className="relative bg-brand-teal text-white px-8 py-4 rounded-2xl font-black text-sm transition-all duration-300 active:scale-95 shadow-lg shadow-brand-teal/30 uppercase tracking-widest whitespace-nowrap group/button hover:shadow-xl hover:shadow-brand-teal/40 hover:scale-105 flex items-center justify-center gap-2">
+                  <ICONS.Search size={18} />
+                  <span className="relative z-10">Buscar</span>
+                </button>
+              </div>
+            </div>
+
             {/* Quick Filters - Integrated with Categories */}
             <div className="flex flex-wrap items-center justify-center gap-3 mb-8 border-b border-slate-50 pb-8">
               <button
