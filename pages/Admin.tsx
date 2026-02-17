@@ -140,6 +140,23 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
     navigate('/admin-login');
   };
 
+  const updateCurrentGps = () => {
+    if (!navigator.geolocation) {
+      alert('Geolocalização não suportada');
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setFormData(prev => ({
+          ...prev,
+          latitude: pos.coords.latitude,
+          longitude: pos.coords.longitude
+        }));
+      },
+      () => alert('Erro ao obter localização')
+    );
+  };
+
   // Abre o modal de edição com clonagem segura para garantir que o formulário receba os dados
   const openEditModal = (biz: Business) => {
     const bizToEdit = JSON.parse(JSON.stringify(biz)) as Business;
@@ -773,28 +790,33 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Latitude (GPS)</label>
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Latitude (Automático)</label>
                       <input
                         type="number"
-                        step="any"
-                        placeholder="Ex: -22.72..."
-                        className="w-full px-6 py-4 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold outline-none focus:border-brand-teal"
+                        readOnly
+                        className="w-full px-6 py-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-400 font-bold outline-none"
                         value={formData.latitude || ''}
-                        onChange={e => setFormData({ ...formData, latitude: parseFloat(e.target.value) })}
+                        placeholder="Clique no botão abaixo..."
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Longitude (GPS)</label>
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Longitude (Automático)</label>
                       <input
                         type="number"
-                        step="any"
-                        placeholder="Ex: -47.63..."
-                        className="w-full px-6 py-4 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold outline-none focus:border-brand-teal"
+                        readOnly
+                        className="w-full px-6 py-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-400 font-bold outline-none"
                         value={formData.longitude || ''}
-                        onChange={e => setFormData({ ...formData, longitude: parseFloat(e.target.value) })}
+                        placeholder="Clique no botão abaixo..."
                       />
                     </div>
                   </div>
+                  <button
+                    type="button"
+                    onClick={updateCurrentGps}
+                    className="flex items-center gap-3 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all border border-emerald-100"
+                  >
+                    <ICONS.MapPin size={14} /> Atualizar para Coordenadas Atuais
+                  </button>
                 </div>
 
                 <div className="space-y-8">
