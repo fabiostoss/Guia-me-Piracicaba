@@ -47,46 +47,78 @@ const MerchantRegister: React.FC = () => {
     return () => observerRef.current?.disconnect();
   }, []);
 
-  const updateGpsByCep = async (cep: string) => {
-    setIsGeocoding(true);
-    try {
-      const query = encodeURIComponent(`CEP ${cep} Piracicaba Brazil`);
-      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}&limit=1`);
-      const data = await response.json();
-
-      if (data && data.length > 0) {
-        setFormData(prev => ({
-          ...prev,
-          latitude: parseFloat(data[0].lat),
-          longitude: parseFloat(data[0].lon)
-        }));
-      } else {
-        const responseFall = await fetch(`https://nominatim.openstreetmap.org/search?format=json&postalcode=${cep}&country=Brazil&limit=1`);
-        const dataFall = await responseFall.json();
-        if (dataFall && dataFall.length > 0) {
-          setFormData(prev => ({
-            ...prev,
-            latitude: parseFloat(dataFall[0].lat),
-            longitude: parseFloat(dataFall[0].lon)
-          }));
-        } else {
-          alert('Não foi possível encontrar as coordenadas para este CEP. Insira manualmente se necessário.');
-        }
-      }
-    } catch (error) {
-      console.error('Erro ao buscar coordenadas:', error);
-    } finally {
-      setIsGeocoding(false);
-    }
-  };
-
-  const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCepChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     let val = e.target.value.replace(/\D/g, '');
     if (val.length <= 8) {
       if (val.length > 5) {
         val = val.slice(0, 5) + '-' + val.slice(5);
       }
-      setFormData({ ...formData, cep: val });
+      setFormData(prev => ({ ...prev, cep: val }));
+
+      // Quando o CEP estiver completo, buscar endereço automaticamente
+      if (val.replace('-', '').length === 8) {
+        setIsGeocoding(true);
+        try {
+          // 1. Buscar endereço via ViaCEP
+          const cepClean = val.replace('-', '');
+          const viaCepResponse = await fetch(`https://viacep.com.br/ws/${cepClean}/json/`);
+          const viaCepData = await viaCepResponse.json();
+
+          if (viaCepData.erro) {
+            alert('CEP não encontrado. Verifique o número digitado.');
+            setIsGeocoding(false);
+            return;
+          }
+
+          // Preencher automaticamente rua e bairro
+          setFormData(prev => ({
+            ...prev,
+            street: viaCepData.logradouro || '',
+            neighborhood: viaCepData.bairro || '',
+            cep: val
+          }));
+
+          // 2. Buscar coordenadas GPS usando o endereço completo
+          const fullAddress = `${viaCepData.logradouro}, ${viaCepData.bairro}, Piracicaba, SP, Brasil`;
+          const geoQuery = encodeURIComponent(fullAddress);
+          const geoResponse = await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&q=${geoQuery}&limit=1`,
+            { headers: { 'User-Agent': 'Guia-me-Piracicaba/1.0' } }
+          );
+          const geoData = await geoResponse.json();
+
+          if (geoData && geoData.length > 0) {
+            setFormData(prev => ({
+              ...prev,
+              latitude: parseFloat(geoData[0].lat),
+              longitude: parseFloat(geoData[0].lon)
+            }));
+          } else {
+            // Fallback: tentar apenas com Piracicaba + bairro
+            const fallbackQuery = encodeURIComponent(`${viaCepData.bairro}, Piracicaba, SP, Brasil`);
+            const fallbackResponse = await fetch(
+              `https://nominatim.openstreetmap.org/search?format=json&q=${fallbackQuery}&limit=1`,
+              { headers: { 'User-Agent': 'Guia-me-Piracicaba/1.0' } }
+            );
+            const fallbackData = await fallbackResponse.json();
+
+            if (fallbackData && fallbackData.length > 0) {
+              setFormData(prev => ({
+                ...prev,
+                latitude: parseFloat(fallbackData[0].lat),
+                longitude: parseFloat(fallbackData[0].lon)
+              }));
+            }
+          }
+
+          alert('✅ Endereço encontrado! Confira os dados e preencha o número.');
+        } catch (error) {
+          console.error('Erro ao buscar CEP:', error);
+          alert('Não foi possível buscar o endereço. Verifique sua conexão e tente novamente.');
+        } finally {
+          setIsGeocoding(false);
+        }
+      }
     }
   };
 
@@ -249,30 +281,61 @@ _Solicitação enviada via formulário de adesão_`;
             {/* Endereço */}
             <div className="space-y-8">
               <h3 className="text-xs font-black text-brand-teal uppercase tracking-widest border-l-4 border-brand-teal pl-4">Localização em Piracicaba</h3>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div className="md:col-span-3 space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Rua / Avenida</label>
-                  <input required className="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all shadow-inner" value={formData.street} onChange={e => setFormData({ ...formData, street: e.target.value })} />
+
+              {/* CEP primeiro - busca automática */}
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">CEP (Digite para buscar endereço automaticamente)</label>
+                <div className="relative">
+                  <input
+                    required
+                    className="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all shadow-inner"
+                    value={formData.cep}
+                    onChange={handleCepChange}
+                    placeholder="00000-000"
+                  />
+                  {isGeocoding && (
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                      <div className="w-5 h-5 border-2 border-brand-teal/30 border-t-brand-teal rounded-full animate-spin"></div>
+                    </div>
+                  )}
                 </div>
-                <div className="md:col-span-1 space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Nº</label>
-                  <input required className="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all shadow-inner" value={formData.number} onChange={e => setFormData({ ...formData, number: e.target.value })} />
-                </div>
+                <p className="text-[9px] text-slate-400 font-medium ml-1">O endereço será preenchido automaticamente após digitar o CEP completo</p>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">CEP</label>
-                  <div className="flex gap-2">
-                    <input required className="flex-grow px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all shadow-inner" value={formData.cep} onChange={handleCepChange} placeholder="00000-000" />
-                    <button type="button" onClick={() => formData.cep.length >= 8 && updateGpsByCep(formData.cep)} disabled={isGeocoding || formData.cep.length < 8} className="px-6 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 font-bold text-[10px] uppercase tracking-widest hover:bg-emerald-100 disabled:opacity-50 transition-all flex items-center justify-center">
-                      {isGeocoding ? <div className="w-4 h-4 border-2 border-emerald-600/30 border-t-emerald-600 rounded-full animate-spin"></div> : <ICONS.MapPin size={16} />}
-                    </button>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Bairro</label>
-                  <NeighborhoodSelector value={formData.neighborhood} onChange={val => setFormData({ ...formData, neighborhood: val })} triggerClassName="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all shadow-inner" />
-                </div>
+
+              {/* Rua (preenchida automaticamente) */}
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Rua / Avenida (Preenchido automaticamente)</label>
+                <input
+                  required
+                  readOnly
+                  className="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-100 font-bold outline-none text-slate-600 cursor-not-allowed"
+                  value={formData.street}
+                  placeholder="Aguardando CEP..."
+                />
+              </div>
+
+              {/* Bairro (preenchido automaticamente) */}
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Bairro (Preenchido automaticamente)</label>
+                <input
+                  required
+                  readOnly
+                  className="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-100 font-bold outline-none text-slate-600 cursor-not-allowed"
+                  value={formData.neighborhood}
+                  placeholder="Aguardando CEP..."
+                />
+              </div>
+
+              {/* Número (manual) */}
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Número do Imóvel</label>
+                <input
+                  required
+                  className="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all shadow-inner"
+                  value={formData.number}
+                  onChange={e => setFormData({ ...formData, number: e.target.value })}
+                  placeholder="Ex: 123 ou S/N"
+                />
               </div>
             </div>
 
