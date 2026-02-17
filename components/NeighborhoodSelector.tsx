@@ -66,7 +66,7 @@ const NeighborhoodSelector: React.FC<NeighborhoodSelectorProps> = ({
 
             {/* Expanded List */}
             {isOpen && (
-                <div className={`absolute z-[100] top-full mt-2 left-0 w-full bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden animate-fade-in ${dropdownClassName}`}>
+                <div className={`absolute z-[150] top-full mt-2 left-0 w-full bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden animate-fade-in ${dropdownClassName}`}>
                     {/* Search Input INSIDE the list */}
                     <div className="p-3 border-b border-slate-50 bg-slate-50/50">
                         <div className="relative flex items-center">
