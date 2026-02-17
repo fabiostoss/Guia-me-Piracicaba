@@ -343,9 +343,9 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
 
           <div ref={jobsRef} className="flex gap-3 md:gap-4 overflow-x-auto pb-6 snap-x no-scrollbar px-2 md:px-0 scroll-smooth">
             {recentJobs.slice(0, 4).map((job) => (
-              <div key={job.id} className="w-[210px] md:w-[280px] shrink-0 snap-start bg-white/5 backdrop-blur-sm p-4 md:p-5 rounded-2xl md:rounded-3xl border border-white/10 hover:border-brand-teal/50 transition-all group">
-                <div className="bg-brand-teal/20 w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-teal mb-4 md:mb-8 group-hover:scale-110 transition-transform">
-                  <ICONS.Briefcase size={20} />
+              <div key={job.id} className="w-[210px] md:w-[320px] shrink-0 snap-start bg-white/5 backdrop-blur-sm p-3 md:p-4 rounded-2xl md:rounded-3xl border border-white/10 hover:border-brand-teal/50 transition-all group">
+                <div className="bg-brand-teal/20 w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-teal mb-3 md:mb-4 group-hover:scale-110 transition-transform">
+                  <ICONS.Briefcase size={18} />
                 </div>
                 <h3 className="text-sm md:text-xl font-black mb-1 md:mb-2 leading-tight line-clamp-2">{job.role}</h3>
                 <p className="text-brand-orange text-[8px] md:text-[10px] font-black uppercase tracking-widest mb-3 md:mb-6 line-clamp-1">{job.company}</p>
@@ -394,11 +394,11 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
 
           <div ref={tourismRef} className="flex gap-3 md:gap-4 overflow-x-auto pb-6 snap-x no-scrollbar px-2 md:px-0 scroll-smooth">
             {featuredSpots.slice(0, 4).map((spot) => (
-              <div key={spot.id} className="w-[210px] md:w-[280px] shrink-0 snap-start bg-slate-50 rounded-2xl md:rounded-3xl p-4 md:p-5 border border-slate-100 group hover:bg-white hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center">
-                <div className="bg-brand-teal/10 w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-teal mb-4 md:mb-6 group-hover:bg-brand-teal group-hover:text-white group-hover:scale-110 transition-all duration-500">
-                  {getTouristIcon(spot.category, 20)}
+              <div key={spot.id} className="w-[210px] md:w-[320px] shrink-0 snap-start bg-slate-50 rounded-2xl md:rounded-3xl p-3 md:p-4 border border-slate-100 group hover:bg-white hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center">
+                <div className="bg-brand-teal/10 w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-teal mb-3 md:mb-4 group-hover:bg-brand-teal group-hover:text-white group-hover:scale-110 transition-all duration-500">
+                  {getTouristIcon(spot.category, 18)}
                 </div>
-                <div className="space-y-2 md:space-y-3">
+                <div className="space-y-1 md:space-y-2">
                   <span className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] text-brand-orange">{spot.category}</span>
                   <h3 className="text-xs md:text-lg font-black text-brand-teal-deep group-hover:text-brand-teal transition-colors leading-tight line-clamp-1">{spot.name.replace(/^\d+\.\s*/, '')}</h3>
                   <p className="hidden md:block text-slate-500 text-sm font-medium line-clamp-3 leading-relaxed">{spot.description}</p>
@@ -454,14 +454,14 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
 
           <div ref={newsRef} className="flex gap-3 md:gap-4 overflow-x-auto pb-6 snap-x no-scrollbar px-2 md:px-0 scroll-smooth">
             {latestNews.slice(0, 4).map((item, idx) => (
-              <div key={idx} className="w-[230px] md:w-[320px] shrink-0 snap-start">
+              <div key={idx} className="w-[210px] md:w-[320px] shrink-0 snap-start">
                 <a
                   href={item.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="group bg-white rounded-2xl md:rounded-3xl p-3 md:p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 flex flex-col h-full"
+                  className="group bg-white rounded-2xl md:rounded-3xl p-3 md:p-4 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 flex flex-col h-full"
                 >
-                  <div className="h-32 md:h-44 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-6 relative">
+                  <div className="h-28 md:h-36 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-4 relative">
                     <div className="absolute inset-0 bg-brand-teal/20 group-hover:bg-transparent transition-colors z-10"></div>
                     <img
                       src={item.imageUrl}
