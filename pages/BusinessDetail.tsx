@@ -180,10 +180,17 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ businesses, onIncrement
                 </div>
 
                 <div className="p-8 flex-grow flex flex-col">
-                  <p className="text-slate-600 font-medium leading-relaxed mb-6 flex-grow">
-                    {business.address}, {business.number} <br />
-                    <span className="text-slate-400 text-sm">{business.neighborhood} - {business.cep}</span>
-                  </p>
+                  {/* Endereço Limpo: Prioriza campos estruturados se disponíveis */}
+                  <div className="mb-6 flex-grow">
+                    <h4 className="text-slate-800 font-bold text-lg leading-tight mb-1">
+                      {business.street ? `${business.street}, ${business.number}` : business.address.split(',')[0]}
+                    </h4>
+                    <p className="text-slate-500 text-sm font-medium">
+                      {business.neighborhood}
+                      {business.cep ? ` - CEP ${business.cep}` : ''}
+                    </p>
+                    <p className="text-slate-400 text-xs mt-1">Piracicaba - SP</p>
+                  </div>
 
                   <a
                     href={mapsUrl}
@@ -197,7 +204,7 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ businesses, onIncrement
                 </div>
               </div>
 
-              {/* Card Horário - Lista Formatada */}
+              {/* Card Horário - Lista Formatada e Corrigida */}
               <div className="bg-white rounded-[2.5rem] p-8 shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col reveal h-full">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-10 h-10 rounded-xl bg-brand-teal/10 flex items-center justify-center text-brand-teal">
@@ -209,16 +216,20 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ businesses, onIncrement
                 <div className="space-y-3 flex-grow">
                   {hoursList.length > 0 ? (
                     hoursList.map((hour, index) => {
-                      const [day, time] = hour.split(':');
-                      const isToday = day && day.toLowerCase().includes(today.toLowerCase().slice(0, 3)); // Tentativa simples de match
+                      // Correção: Separa apenas no primeiro ':' para não quebrar o horário (ex: 08:00)
+                      const splitIndex = hour.indexOf(':');
+                      const day = splitIndex !== -1 ? hour.substring(0, splitIndex).trim() : hour;
+                      const time = splitIndex !== -1 ? hour.substring(splitIndex + 1).trim() : '';
+
+                      const isToday = day && day.toLowerCase().includes(today.toLowerCase().slice(0, 3));
 
                       return (
                         <div key={index} className={`flex items-center justify-between p-3 rounded-xl border ${isToday ? 'bg-brand-teal/5 border-brand-teal/20' : 'bg-slate-50 border-slate-100'}`}>
                           <span className={`text-xs font-black uppercase tracking-widest ${isToday ? 'text-brand-teal' : 'text-slate-500'}`}>
-                            {day ? day : hour}
+                            {day}
                           </span>
                           <span className="text-xs font-bold text-slate-700">
-                            {time ? `:${time}` : ''}
+                            {time}
                           </span>
                         </div>
                       );
