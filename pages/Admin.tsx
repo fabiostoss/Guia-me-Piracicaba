@@ -245,22 +245,25 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                       </div>
                     </td>
                     <td className="px-10 py-6">
-                      <div className="flex flex-col">
-                        <input
-                          type="number"
-                          className="w-20 bg-transparent font-black text-slate-700 outline-none focus:bg-white focus:ring-2 focus:ring-brand-teal/20 rounded-lg px-2 -ml-2 transition-all"
-                          value={biz.views || 0}
-                          onChange={(e) => {
-                            const val = parseInt(e.target.value) || 0;
-                            onUpdate({ ...biz, views: val });
-                          }}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              (e.target as HTMLInputElement).blur();
-                            }
-                          }}
-                        />
-                        <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Visualizações</span>
+                      <div className="flex flex-col group/views">
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            className="w-24 bg-slate-50 border border-slate-100 font-black text-brand-teal-deep outline-none focus:border-brand-teal focus:bg-white focus:ring-4 focus:ring-brand-teal/10 rounded-xl px-3 py-1.5 transition-all text-sm"
+                            value={biz.views || 0}
+                            onChange={(e) => {
+                              const val = parseInt(e.target.value) || 0;
+                              onUpdate({ ...biz, views: val });
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                (e.target as HTMLInputElement).blur();
+                              }
+                            }}
+                          />
+                          <ICONS.Edit size={12} className="text-slate-300 opacity-0 group-hover/views:opacity-100 transition-opacity" />
+                        </div>
+                        <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1 ml-1">Visualizações</span>
                       </div>
                     </td>
                     <td className="px-10 py-6">

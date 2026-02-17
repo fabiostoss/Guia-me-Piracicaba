@@ -252,8 +252,13 @@ const App: React.FC = () => {
   }, []);
 
   const updateBusiness = useCallback(async (biz: Business) => {
+    // Optimistic update: update local state immediately
+    setBusinesses(prev => prev.map(b => String(b.id) === String(biz.id) ? { ...b, ...biz } : b));
+
+    // Sync with database
     const updated = await db.updateBusiness(biz);
     if (updated) {
+      // Final sync with data from server
       setBusinesses(prev => prev.map(b => String(b.id) === String(biz.id) ? updated : b));
     }
   }, []);
