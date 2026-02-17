@@ -872,7 +872,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                       <div className="space-y-4 pt-6">
                         <label className="flex items-center cursor-pointer p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-slate-100 transition-colors">
                           <input type="checkbox" className="w-6 h-6 rounded border-slate-200 text-brand-orange mr-4" checked={formData.isOfficial || false} onChange={e => setFormData({ ...formData, isOfficial: e.target.checked })} />
-                          <span className="text-[11px] font-black uppercase tracking-widest text-brand-orange">Parceiro Oficial (Destaque)</span>
+                          <span className="text-[11px] font-black uppercase tracking-widest text-brand-orange">Parceiro Patrocinador</span>
                         </label>
                       </div>
 

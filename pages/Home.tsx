@@ -303,6 +303,104 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
         </div>
       </section>
 
+      {/* Patrocinadores Section */}
+      {businesses.filter(b => b.isOfficial && b.isActive).length > 0 && (
+        <section className="bg-gradient-to-br from-brand-orange/5 via-white to-brand-teal/5 py-12 md:py-16 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-brand-orange/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-brand-teal/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+
+          <div className="max-w-7xl mx-auto px-4 relative z-10">
+            <div className="text-center mb-10 reveal">
+              <div className="inline-flex items-center gap-2 px-6 py-3 bg-brand-orange/10 rounded-full border border-brand-orange/20 mb-4">
+                <ICONS.Star className="text-brand-orange animate-pulse" size={20} />
+                <span className="text-brand-orange text-xs font-black uppercase tracking-[0.3em]">Parceiros Patrocinadores</span>
+              </div>
+              <h2 className="text-3xl md:text-5xl font-black text-brand-teal-deep tracking-tight mb-3">
+                Empresas em <span className="text-brand-orange">Destaque</span>
+              </h2>
+              <p className="text-slate-500 font-medium text-lg max-w-2xl mx-auto">
+                Conheça os parceiros que impulsionam o Guia-me Piracicaba
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 reveal">
+              {businesses
+                .filter(b => b.isOfficial && b.isActive)
+                .slice(0, 6)
+                .map((biz) => (
+                  <div key={biz.id} className="group relative">
+                    {/* Badge Patrocinador */}
+                    <div className="absolute -top-3 -right-3 z-20 bg-brand-orange text-white px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg shadow-brand-orange/30 flex items-center gap-1.5 animate-bounce-subtle">
+                      <ICONS.Star size={12} className="animate-pulse" />
+                      Patrocinador
+                    </div>
+
+                    {/* Card */}
+                    <div className="bg-white rounded-[2rem] overflow-hidden border-2 border-brand-orange/20 shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 hover:border-brand-orange/40">
+                      {/* Image */}
+                      <div className="relative h-48 overflow-hidden bg-gradient-to-br from-brand-teal/10 to-brand-orange/10">
+                        <img
+                          src={biz.imageUrl}
+                          alt={biz.name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+
+                        {/* Logo overlay */}
+                        <div className="absolute bottom-4 left-4 w-16 h-16 rounded-xl overflow-hidden border-4 border-white shadow-lg">
+                          <img src={biz.logoUrl} alt={biz.name} className="w-full h-full object-cover" />
+                        </div>
+                      </div>
+
+                      {/* Content */}
+                      <div className="p-6">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-grow">
+                            <h3 className="text-xl font-black text-brand-teal-deep mb-1 group-hover:text-brand-orange transition-colors">
+                              {biz.name}
+                            </h3>
+                            <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                              <ICONS.Tag size={12} className="text-brand-teal" />
+                              {biz.category}
+                            </div>
+                          </div>
+                        </div>
+
+                        <p className="text-sm text-slate-600 font-medium mb-4 line-clamp-2">
+                          {biz.description}
+                        </p>
+
+                        <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">
+                          <ICONS.MapPin size={12} className="text-brand-orange" />
+                          {biz.neighborhood}
+                        </div>
+
+                        {/* CTA Button */}
+                        <Link
+                          to={`/business/${biz.id}`}
+                          className="w-full bg-gradient-to-r from-brand-teal to-brand-teal-dark text-white py-3 rounded-xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-2 hover:shadow-lg hover:scale-105 transition-all group/btn"
+                        >
+                          <ICONS.MessageCircle size={16} className="group-hover/btn:animate-bounce" />
+                          Ver Detalhes
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+            </div>
+
+            {/* Ver Todos os Patrocinadores */}
+            {businesses.filter(b => b.isOfficial && b.isActive).length > 6 && (
+              <div className="text-center mt-10">
+                <button className="px-8 py-4 bg-white text-brand-orange border-2 border-brand-orange rounded-full font-black text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-white transition-all shadow-lg hover:shadow-xl">
+                  Ver Todos os Patrocinadores
+                </button>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
       {/* Categories & Business Grid */}
       <section className="bg-slate-50 pt-6 pb-6">
         <div className="max-w-7xl mx-auto px-4 -mt-10 relative z-30 mb-10 reveal">
