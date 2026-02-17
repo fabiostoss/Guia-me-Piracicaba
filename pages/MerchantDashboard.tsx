@@ -90,6 +90,35 @@ const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ businesses, onUpd
     navigate('/merchant-login');
   };
 
+  const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let val = e.target.value.replace(/\D/g, '');
+    if (val.length > 8) val = val.slice(0, 8);
+    if (val.length > 5) {
+      val = val.slice(0, 5) + '-' + val.slice(5);
+    }
+    setFormData(prev => ({ ...prev, cep: val }));
+
+    if (val.length === 9) {
+      updateGpsByCep(val);
+    }
+  };
+
+  const updateGpsByCep = async (cep: string) => {
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&postalcode=${cep}&country=Brazil&limit=1`);
+      const data = await response.json();
+      if (data && data.length > 0) {
+        setFormData(prev => ({
+          ...prev,
+          latitude: parseFloat(data[0].lat),
+          longitude: parseFloat(data[0].lon)
+        }));
+      }
+    } catch (error) {
+      console.error('Erro ao buscar CEP:', error);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -100,9 +129,15 @@ const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ businesses, onUpd
       return;
     }
 
+    // Validação de CEP
+    if (!formData.cep || !formData.cep.match(/^\d{5}-\d{3}$/)) {
+      alert('Por favor, insira um CEP válido no formato 00000-000.');
+      return;
+    }
+
     if (business && formData) {
       const finalSchedule = formData.schedule || getDefaultSchedule();
-      const fullAddress = `${formData.street}, ${formData.number}${formData.neighborhood ? ` - ${formData.neighborhood}` : ''}, Piracicaba, SP`;
+      const fullAddress = `${formData.street}, ${formData.number}${formData.neighborhood ? ` - ${formData.neighborhood}` : ''}, Piracicaba, SP - CEP ${formData.cep}`;
 
       const updatedBiz = {
         ...business,
@@ -361,14 +396,26 @@ const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ businesses, onUpd
                     <input required className="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all shadow-inner" value={formData.number || ''} onChange={e => setFormData({ ...formData, number: e.target.value })} />
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Bairro</label>
-                  <NeighborhoodSelector
-                    value={formData.neighborhood || ''}
-                    onChange={val => setFormData({ ...formData, neighborhood: val })}
-                    placeholder="Selecione o bairro..."
-                    triggerClassName="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all shadow-inner"
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">CEP (Obrigatório)</label>
+                    <input
+                      required
+                      placeholder="00000-000"
+                      className="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all shadow-inner placeholder:font-normal placeholder:text-slate-300"
+                      value={formData.cep || ''}
+                      onChange={handleCepChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Bairro</label>
+                    <NeighborhoodSelector
+                      value={formData.neighborhood || ''}
+                      onChange={val => setFormData({ ...formData, neighborhood: val })}
+                      placeholder="Selecione o bairro..."
+                      triggerClassName="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all shadow-inner"
+                    />
+                  </div>
                 </div>
               </div>
 

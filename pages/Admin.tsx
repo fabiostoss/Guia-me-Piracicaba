@@ -142,6 +142,38 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
     navigate('/admin-login');
   };
 
+  const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let val = e.target.value.replace(/\D/g, '');
+    if (val.length > 8) val = val.slice(0, 8);
+    if (val.length > 5) {
+      val = val.slice(0, 5) + '-' + val.slice(5);
+    }
+    setFormData(prev => ({ ...prev, cep: val }));
+
+    if (val.length === 9) {
+      updateGpsByCep(val);
+    }
+  };
+
+  const updateGpsByCep = async (cep: string) => {
+    setIsGeocoding(true);
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&postalcode=${cep}&country=Brazil&limit=1`);
+      const data = await response.json();
+      if (data && data.length > 0) {
+        setFormData(prev => ({
+          ...prev,
+          latitude: parseFloat(data[0].lat),
+          longitude: parseFloat(data[0].lon)
+        }));
+      }
+    } catch (error) {
+      console.error('Erro ao buscar CEP:', error);
+    } finally {
+      setIsGeocoding(false);
+    }
+  };
+
   const updateGpsByAddress = async () => {
     if (!formData.street || !formData.number) {
       alert('Por favor, preencha a rua e o número primeiro.');
@@ -150,7 +182,9 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
 
     setIsGeocoding(true);
     const searchStrategies = [
-      // 1. Endereço completo
+      // 0. Endereço com CEP (Mais preciso)
+      `${formData.street}, ${formData.number}, Piracicaba, SP, ${formData.cep || ''}, Brasil`,
+      // 1. Endereço completo sem CEP
       `${formData.street}, ${formData.number}, ${formData.neighborhood || ''}, Piracicaba, SP, Brasil`,
       // 2. Sem o bairro (às vezes o bairro no OSM está diferente)
       `${formData.street}, ${formData.number}, Piracicaba, SP, Brasil`,
@@ -234,8 +268,14 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
       return;
     }
 
+    // Validação de CEP
+    if (!formData.cep || !formData.cep.match(/^\d{5}-\d{3}$/)) {
+      alert('Por favor, insira um CEP válido no formato 00000-000.');
+      return;
+    }
+
     const finalSchedule = formData.schedule || getDefaultSchedule();
-    const fullAddress = `${formData.street}, ${formData.number}${formData.neighborhood ? ` - ${formData.neighborhood}` : ''}, Piracicaba, SP`;
+    const fullAddress = `${formData.street}, ${formData.number}${formData.neighborhood ? ` - ${formData.neighborhood}` : ''}, Piracicaba, SP - CEP ${formData.cep}`;
 
     const bizData = {
       ...formData,
@@ -810,14 +850,26 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                         <input required className="w-full px-6 py-4 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold outline-none" value={formData.number || ''} onChange={e => setFormData({ ...formData, number: e.target.value })} />
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Bairro de Piracicaba</label>
-                      <NeighborhoodSelector
-                        value={formData.neighborhood || ''}
-                        onChange={val => setFormData({ ...formData, neighborhood: val })}
-                        placeholder="Selecione o bairro..."
-                        triggerClassName="w-full px-6 py-4 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold outline-none"
-                      />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">CEP (Obrigatório)</label>
+                        <input
+                          required
+                          placeholder="00000-000"
+                          className="w-full px-6 py-4 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold outline-none focus:border-brand-teal"
+                          value={formData.cep || ''}
+                          onChange={handleCepChange}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Bairro de Piracicaba</label>
+                        <NeighborhoodSelector
+                          value={formData.neighborhood || ''}
+                          onChange={val => setFormData({ ...formData, neighborhood: val })}
+                          placeholder="Selecione o bairro..."
+                          triggerClassName="w-full px-6 py-4 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold outline-none"
+                        />
+                      </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       <div className="space-y-2">
