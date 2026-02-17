@@ -18,7 +18,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(null);
   const [selectedNeighborhood, setSelectedNeighborhood] = useState<string>('');
-  
+
   // Intersection Observer para animações
   const observerRef = useRef<IntersectionObserver | null>(null);
 
@@ -40,20 +40,20 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
 
   const filteredBusinesses = useMemo(() => {
     return businesses.filter(b => {
-      const matchesSearch = b.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                            b.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            b.code?.toLowerCase().includes(searchTerm.toLowerCase());
-      
+      const matchesSearch = b.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        b.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        b.code?.toLowerCase().includes(searchTerm.toLowerCase());
+
       const matchesCategory = selectedCategory ? b.category === selectedCategory : true;
       const matchesNeighborhood = selectedNeighborhood ? b.neighborhood === selectedNeighborhood : true;
       const isActive = b.isActive !== false;
-      
+
       return matchesSearch && matchesCategory && matchesNeighborhood && isActive;
     });
   }, [businesses, searchTerm, selectedCategory, selectedNeighborhood]);
 
-  const featuredSpots = TOURIST_SPOTS.slice(0, 3);
-  const recentJobs = getLatestJobs().slice(0, 4);
+  const featuredSpots = (TOURIST_SPOTS || []).slice(0, 3);
+  const recentJobs = (getLatestJobs() || []).slice(0, 4);
 
   const getTouristIcon = (category: string, size: number = 24) => {
     switch (category) {
@@ -79,29 +79,29 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             <p className="text-lg md:text-2xl text-slate-500 font-medium max-w-2xl">
               Pesquise, encontre e peça via WhatsApp sem intermediários. O guia direto da Noiva da Colina.
             </p>
-            
+
             {/* Search Bar - Enhanced Visual Design */}
             <div className="relative max-w-3xl mx-auto md:mx-0 pt-4">
               <div className="flex flex-col gap-6">
                 {/* Multi-layered shadow container with hover effects */}
                 <div className="bg-white rounded-[2.5rem] overflow-visible p-2 flex flex-col md:flex-row gap-2 border border-slate-200/50 ring-1 ring-slate-100 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15),0_10px_25px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.2),0_15px_35px_-10px_rgba(0,0,0,0.15)] hover:scale-[1.02] transition-all duration-500 ease-out backdrop-blur-sm group">
-                  
+
                   {/* Search Input Section */}
                   <div className="flex-grow relative flex items-center px-6 py-4 md:border-r border-slate-100 group/input">
                     <ICONS.Search className="text-slate-300 mr-4 group-hover/input:text-brand-teal transition-colors duration-300" size={24} />
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       placeholder="O que você procura?"
                       className="w-full text-lg font-bold outline-none text-slate-700 bg-transparent placeholder:text-slate-300 focus:placeholder:text-slate-400 transition-all"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
                   </div>
-                  
+
                   {/* Neighborhood Selector Section */}
                   <div className="flex items-center px-6 py-4 min-w-[200px] group/select relative">
                     <ICONS.MapPin className="text-brand-orange mr-4 group-hover/select:scale-110 transition-transform duration-300" size={20} />
-                    <select 
+                    <select
                       className="w-full bg-transparent text-slate-600 font-bold outline-none cursor-pointer appearance-none pr-8 focus:text-brand-teal transition-colors"
                       value={selectedNeighborhood}
                       onChange={(e) => setSelectedNeighborhood(e.target.value)}
@@ -147,7 +147,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
           <div className="bg-white p-6 md:p-12 rounded-[3rem] shadow-2xl border border-slate-100 overflow-x-auto no-scrollbar">
             <div className="flex gap-10">
               {Object.values(CategoryType).map((category, idx) => (
-                <button 
+                <button
                   key={category}
                   onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
                   className={`flex flex-col items-center group transition-all shrink-0 reveal stagger-${(idx % 4) + 1}`}
@@ -183,17 +183,17 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       <section className="bg-slate-900 py-32 text-white overflow-hidden relative">
         <div className="absolute top-0 right-0 w-96 h-96 bg-brand-teal/5 rounded-full blur-3xl"></div>
         <div className="max-w-7xl mx-auto px-4 relative z-10">
-           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8 reveal">
-              <div className="text-center md:text-left">
-                <h2 className="text-4xl md:text-7xl font-black tracking-tighter">Vagas em <span className="text-brand-teal">Pira</span></h2>
-                <p className="text-slate-400 font-bold uppercase text-xs tracking-widest mt-4">As melhores oportunidades para trabalhar em Piracicaba</p>
-              </div>
-              <Link to="/vagas" className="hidden md:flex items-center gap-3 text-brand-teal font-black uppercase tracking-widest text-xs hover:text-white transition-colors">
-                 Ver todas as vagas <ICONS.ArrowRight size={16} />
-              </Link>
-           </div>
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8 reveal">
+            <div className="text-center md:text-left">
+              <h2 className="text-4xl md:text-7xl font-black tracking-tighter">Vagas em <span className="text-brand-teal">Pira</span></h2>
+              <p className="text-slate-400 font-bold uppercase text-xs tracking-widest mt-4">As melhores oportunidades para trabalhar em Piracicaba</p>
+            </div>
+            <Link to="/vagas" className="hidden md:flex items-center gap-3 text-brand-teal font-black uppercase tracking-widest text-xs hover:text-white transition-colors">
+              Ver todas as vagas <ICONS.ArrowRight size={16} />
+            </Link>
+          </div>
 
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {recentJobs.map((job, idx) => (
               <div key={job.id} className={`bg-white/5 backdrop-blur-sm p-10 rounded-[2.5rem] border border-white/10 hover:border-brand-teal/50 transition-all group reveal stagger-${idx + 1}`}>
                 <div className="bg-brand-teal/20 w-14 h-14 rounded-2xl flex items-center justify-center text-brand-teal mb-8 group-hover:scale-110 transition-transform">
@@ -207,9 +207,9 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
           </div>
 
           <div className="mt-16 text-center reveal">
-             <Link to="/vagas" className="inline-flex items-center gap-4 bg-brand-teal text-white px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-brand-teal/20 hover:bg-brand-teal-dark hover:scale-105 active:scale-95 transition-all">
-                Ver Todas as Vagas <ICONS.ArrowRight size={18} />
-             </Link>
+            <Link to="/vagas" className="inline-flex items-center gap-4 bg-brand-teal text-white px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-brand-teal/20 hover:bg-brand-teal-dark hover:scale-105 active:scale-95 transition-all">
+              Ver Todas as Vagas <ICONS.ArrowRight size={18} />
+            </Link>
           </div>
         </div>
       </section>
@@ -217,12 +217,12 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       {/* Guia Turístico Section */}
       <section className="bg-white py-32">
         <div className="max-w-7xl mx-auto px-4">
-           <div className="text-center mb-16 reveal">
-             <h2 className="text-4xl md:text-7xl font-black text-brand-teal-deep tracking-tighter leading-none">Turismo em <span className="text-brand-orange">Pira</span></h2>
-             <p className="text-slate-400 font-bold uppercase text-xs tracking-widest mt-6">Descubra os pontos icônicos da Noiva da Colina</p>
-           </div>
-           
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="text-center mb-16 reveal">
+            <h2 className="text-4xl md:text-7xl font-black text-brand-teal-deep tracking-tighter leading-none">Turismo em <span className="text-brand-orange">Pira</span></h2>
+            <p className="text-slate-400 font-bold uppercase text-xs tracking-widest mt-6">Descubra os pontos icônicos da Noiva da Colina</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {featuredSpots.map((spot, idx) => (
               <div key={spot.id} className={`bg-slate-50 rounded-[3rem] p-10 border border-slate-100 group hover:bg-white hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center reveal stagger-${idx + 1}`}>
                 <div className="bg-brand-teal/10 w-24 h-24 rounded-3xl flex items-center justify-center text-brand-teal mb-8 group-hover:bg-brand-teal group-hover:text-white group-hover:scale-110 transition-all duration-500">
