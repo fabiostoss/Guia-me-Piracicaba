@@ -137,7 +137,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
   return (
     <div className="space-y-0 pb-0">
       {/* Hero Section - Animação Inicial */}
-      <section className="relative overflow-hidden bg-white pt-24 pb-32 animate-fade-in">
+      <section className="relative overflow-hidden bg-white pt-16 pb-20 md:pt-24 md:pb-32 animate-fade-in">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-brand-teal/5 -skew-x-12 translate-x-1/4 pointer-events-none"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="max-w-4xl space-y-8 text-center md:text-left animate-slide-up">
@@ -237,7 +237,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
         </div>
 
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-10">
             {filteredBusinesses.map((biz, idx) => (
               <div key={biz.id} className={`reveal stagger-${(idx % 3) + 1}`}>
                 <BusinessCard business={biz} checkAuth={checkAuth} />
@@ -254,28 +254,28 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       </section>
 
       {/* Vagas Section (Dark) - Adicionado Botão "Ver Todas" */}
-      <section className="bg-slate-900 py-32 text-white overflow-hidden relative">
+      <section className="bg-slate-900 py-16 md:py-32 text-white overflow-hidden relative">
         <div className="absolute top-0 right-0 w-96 h-96 bg-brand-teal/5 rounded-full blur-3xl"></div>
         <div className="max-w-7xl mx-auto px-4 relative z-10">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8 reveal">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-10 md:mb-16 gap-8 reveal">
             <div className="text-center md:text-left">
-              <h2 className="text-4xl md:text-7xl font-black tracking-tighter">Vagas em <span className="text-brand-teal">Pira</span></h2>
-              <p className="text-slate-400 font-bold uppercase text-xs tracking-widest mt-4">As melhores oportunidades para trabalhar em Piracicaba</p>
+              <h2 className="text-3xl md:text-7xl font-black tracking-tighter">Vagas em <span className="text-brand-teal">Pira</span></h2>
+              <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest mt-2 md:mt-4">Oportunidades em Piracicaba</p>
             </div>
             <Link to="/vagas" className="hidden md:flex items-center gap-3 text-brand-teal font-black uppercase tracking-widest text-xs hover:text-white transition-colors">
               Ver todas as vagas <ICONS.ArrowRight size={16} />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {recentJobs.map((job, idx) => (
-              <div key={job.id} className={`bg-white/5 backdrop-blur-sm p-10 rounded-[2.5rem] border border-white/10 hover:border-brand-teal/50 transition-all group reveal stagger-${idx + 1}`}>
-                <div className="bg-brand-teal/20 w-14 h-14 rounded-2xl flex items-center justify-center text-brand-teal mb-8 group-hover:scale-110 transition-transform">
-                  <ICONS.Briefcase size={24} />
+              <div key={job.id} className={`bg-white/5 backdrop-blur-sm p-5 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-white/10 hover:border-brand-teal/50 transition-all group reveal stagger-${idx + 1}`}>
+                <div className="bg-brand-teal/20 w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-teal mb-4 md:mb-8 group-hover:scale-110 transition-transform">
+                  <ICONS.Briefcase size={20} />
                 </div>
-                <h3 className="text-2xl font-black mb-2 leading-tight">{job.role}</h3>
-                <p className="text-brand-orange text-[10px] font-black uppercase tracking-widest mb-6">{job.company}</p>
-                <Link to="/vagas" className="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-brand-teal transition-colors">Detalhes da Vaga</Link>
+                <h3 className="text-sm md:text-2xl font-black mb-1 md:mb-2 leading-tight line-clamp-2">{job.role}</h3>
+                <p className="text-brand-orange text-[8px] md:text-[10px] font-black uppercase tracking-widest mb-3 md:mb-6 line-clamp-1">{job.company}</p>
+                <Link to="/vagas" className="text-[8px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-brand-teal transition-colors">Detalhes</Link>
               </div>
             ))}
           </div>
@@ -289,26 +289,26 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       </section>
 
       {/* Guia Turístico Section */}
-      <section className="bg-white py-32">
+      <section className="bg-white py-16 md:py-32">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16 reveal">
-            <h2 className="text-4xl md:text-7xl font-black text-brand-teal-deep tracking-tighter leading-none">Turismo em <span className="text-brand-orange">Pira</span></h2>
-            <p className="text-slate-400 font-bold uppercase text-xs tracking-widest mt-6">Descubra os pontos icônicos de Piracicaba</p>
+          <div className="text-center mb-10 md:mb-16 reveal">
+            <h2 className="text-3xl md:text-7xl font-black text-brand-teal-deep tracking-tighter leading-none">Turismo em <span className="text-brand-orange">Pira</span></h2>
+            <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest mt-4 md:mt-6">Descubra Piracicaba</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
             {featuredSpots.map((spot, idx) => (
-              <div key={spot.id} className={`bg-slate-50 rounded-[2rem] p-6 border border-slate-100 group hover:bg-white hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center reveal stagger-${idx + 1}`}>
-                <div className="bg-brand-teal/10 w-16 h-16 rounded-2xl flex items-center justify-center text-brand-teal mb-6 group-hover:bg-brand-teal group-hover:text-white group-hover:scale-110 transition-all duration-500">
-                  {getTouristIcon(spot.category, 32)}
+              <div key={spot.id} className={`bg-slate-50 rounded-3xl md:rounded-[2rem] p-4 md:p-6 border border-slate-100 group hover:bg-white hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center reveal stagger-${idx + 1}`}>
+                <div className="bg-brand-teal/10 w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-teal mb-4 md:mb-6 group-hover:bg-brand-teal group-hover:text-white group-hover:scale-110 transition-all duration-500">
+                  {getTouristIcon(spot.category, 24)}
                 </div>
-                <div className="space-y-3">
-                  <span className="text-[9px] font-black uppercase tracking-[0.2em] text-brand-orange">{spot.category}</span>
-                  <h3 className="text-xl font-black text-brand-teal-deep group-hover:text-brand-teal transition-colors leading-tight">{spot.name.replace(/^\d+\.\s*/, '')}</h3>
-                  <p className="text-slate-500 text-sm font-medium line-clamp-3 leading-relaxed">{spot.description}</p>
+                <div className="space-y-2 md:space-y-3">
+                  <span className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] text-brand-orange">{spot.category}</span>
+                  <h3 className="text-xs md:text-xl font-black text-brand-teal-deep group-hover:text-brand-teal transition-colors leading-tight line-clamp-1">{spot.name.replace(/^\d+\.\s*/, '')}</h3>
+                  <p className="hidden md:block text-slate-500 text-sm font-medium line-clamp-3 leading-relaxed">{spot.description}</p>
                 </div>
-                <Link to="/guia-turistico" className="mt-6 text-[10px] font-black uppercase tracking-widest text-brand-teal-deep hover:text-brand-orange transition-colors flex items-center gap-2">
-                  Ver Mais <ICONS.ArrowRight size={14} />
+                <Link to="/guia-turistico" className="mt-4 md:mt-6 text-[8px] md:text-[10px] font-black uppercase tracking-widest text-brand-teal-deep hover:text-brand-orange transition-colors flex items-center gap-2">
+                  Ver Mais <ICONS.ArrowRight size={12} />
                 </Link>
               </div>
             ))}
@@ -316,43 +316,14 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
         </div>
       </section>
 
-      {/* Seção de Parceiros Oficiais */}
-      {businessesWithDistance.some(b => b.isOfficial) && (
-        <section className="py-32 bg-white relative overflow-hidden">
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-8 reveal">
-              <div className="max-w-2xl">
-                <span className="text-brand-orange font-black text-[10px] uppercase tracking-[0.3em] mb-4 block">Parcerias de Sucesso</span>
-                <h2 className="text-4xl md:text-7xl font-black text-brand-teal-deep tracking-tighter leading-none mb-6">
-                  Destaques <span className="text-brand-teal">Oficiais</span>
-                </h2>
-                <p className="text-slate-500 font-medium text-lg max-w-xl">
-                  As maiores redes nacionais e internacionais presentes em nossa cidade.
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {businessesWithDistance
-                .filter(b => b.isOfficial)
-                .slice(0, 8)
-                .map((biz, idx) => (
-                  <div key={biz.id} className={`reveal stagger-${(idx % 4) + 1}`}>
-                    <BusinessCard business={biz} checkAuth={checkAuth} />
-                  </div>
-                ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* Seção de Notícias */}
-      <section className="py-32 bg-slate-50 relative overflow-hidden">
+      <section className="py-16 md:py-32 bg-slate-50 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-8 reveal">
-            <div className="max-w-2xl">
-              <h2 className="text-4xl md:text-6xl font-black text-brand-teal-deep tracking-tighter leading-none mb-6">
+          <div className="flex flex-col md:flex-row items-end justify-between mb-10 md:mb-16 gap-8 reveal">
+            <div className="max-w-2xl text-center md:text-left">
+              <h2 className="text-3xl md:text-6xl font-black text-brand-teal-deep tracking-tighter leading-none mb-4 md:mb-6">
                 Notícias da <span className="text-brand-orange">Região</span>
               </h2>
               <p className="text-slate-500 font-medium text-lg max-w-xl">
@@ -370,16 +341,16 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
             {latestNews.slice(0, 3).map((item, idx) => (
               <a
                 key={idx}
                 href={item.url}
                 target="_blank"
                 rel="noreferrer"
-                className={`group bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 flex flex-col h-full reveal stagger-${idx + 1}`}
+                className={`group bg-white rounded-3xl p-5 md:p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 flex flex-col h-full reveal stagger-${idx + 1}`}
               >
-                <div className="h-48 rounded-2xl overflow-hidden mb-6 relative">
+                <div className="h-40 md:h-48 rounded-2xl overflow-hidden mb-4 md:mb-6 relative">
                   <div className="absolute inset-0 bg-brand-teal/20 group-hover:bg-transparent transition-colors z-10"></div>
                   <img
                     src={item.imageUrl}
@@ -390,7 +361,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
                     {item.date}
                   </div>
                 </div>
-                <h3 className="text-xl font-bold text-slate-800 mb-4 group-hover:text-brand-teal transition-colors line-clamp-3 leading-tight">
+                <h3 className="text-base md:text-xl font-bold text-slate-800 mb-4 group-hover:text-brand-teal transition-colors line-clamp-3 leading-tight">
                   {item.title}
                 </h3>
                 <p className="text-slate-500 text-sm font-medium line-clamp-3 mb-6 flex-1">

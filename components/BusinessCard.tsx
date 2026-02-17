@@ -26,8 +26,8 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
   };
 
   return (
-    <div className="bg-white rounded-[2rem] overflow-hidden border border-slate-100 card-hover transition-all duration-500 group flex flex-col h-full shadow-sm hover:shadow-xl">
-      <div className="relative h-56 overflow-hidden">
+    <div className="bg-white rounded-[1.5rem] md:rounded-[2rem] overflow-hidden border border-slate-100 card-hover transition-all duration-500 group flex flex-col h-full shadow-sm hover:shadow-xl">
+      <div className="relative h-40 md:h-56 overflow-hidden">
         <img
           src={business.imageUrl}
           alt={business.name}
@@ -70,10 +70,10 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
         </div>
       </div>
 
-      <div className="p-8 flex-grow flex flex-col">
+      <div className="p-5 md:p-8 flex-grow flex flex-col">
         <div className="flex items-center gap-2 mb-2">
           <Link to={`/business/${business.id}`} className="block">
-            <h3 className="text-2xl font-black text-brand-teal-deep group-hover:text-brand-teal transition-colors leading-tight tracking-tight">
+            <h3 className="text-lg md:text-2xl font-black text-brand-teal-deep group-hover:text-brand-teal transition-colors leading-tight tracking-tight">
               {business.name}
             </h3>
           </Link>
@@ -95,11 +95,11 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
           </div>
         ) : null}
 
-        <p className="text-slate-500 text-sm font-medium leading-relaxed mb-6 line-clamp-2">
+        <p className="text-slate-500 text-[13px] md:text-sm font-medium leading-relaxed mb-4 md:mb-6 line-clamp-2">
           {business.description}
         </p>
 
-        <div className="space-y-3 mb-8">
+        <div className="space-y-2 md:space-y-3 mb-6 md:mb-8">
           <a
             href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${business.street}, ${business.number} - ${business.neighborhood}, Piracicaba - SP`)}`}
             target="_blank"
@@ -124,10 +124,10 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
           {(!business.isOfficial || (business.isOfficial && business.phone.replace(/\D/g, '').length >= 12)) && (
             <button
               onClick={handleWhatsAppClick}
-              className="w-full bg-brand-teal hover:bg-brand-teal-dark text-white font-black py-4 rounded-xl flex items-center justify-center transition-all shadow-lg shadow-brand-teal/10 uppercase tracking-widest text-[9px]"
+              className="w-full bg-brand-teal hover:bg-brand-teal-dark text-white font-black py-3.5 md:py-4 rounded-xl flex items-center justify-center transition-all shadow-lg shadow-brand-teal/10 uppercase tracking-widest text-[9px]"
             >
               <ICONS.MessageCircle className="w-4 h-4 mr-2" />
-              Falar no WhatsApp
+              WhatsApp
             </button>
           )}
         </div>
