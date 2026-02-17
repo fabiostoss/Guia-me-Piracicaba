@@ -19,6 +19,7 @@ const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ businesses, onUpd
   const [business, setBusiness] = useState<Business | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState<Partial<Business>>({});
+  const [isGeocoding, setIsGeocoding] = useState(false);
 
   const logoInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
@@ -104,6 +105,7 @@ const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ businesses, onUpd
   };
 
   const updateGpsByCep = async (cep: string) => {
+    setIsGeocoding(true);
     try {
       const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&postalcode=${cep}&country=Brazil&limit=1`);
       const data = await response.json();
@@ -116,6 +118,8 @@ const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ businesses, onUpd
       }
     } catch (error) {
       console.error('Erro ao buscar CEP:', error);
+    } finally {
+      setIsGeocoding(false);
     }
   };
 
@@ -379,7 +383,6 @@ const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ businesses, onUpd
                       value={formData.street || ''}
                       onChange={e => {
                         let val = e.target.value;
-                        // Auto-correção proativa
                         if (val.toLowerCase().startsWith('r. ')) val = 'Rua ' + val.slice(3);
                         if (val.toLowerCase().startsWith('av. ')) val = 'Avenida ' + val.slice(4);
                         setFormData({ ...formData, street: val });
@@ -411,6 +414,46 @@ const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ businesses, onUpd
                       triggerClassName="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all shadow-inner"
                     />
                   </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Latitude</label>
+                    <input
+                      type="number"
+                      step="any"
+                      className="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all shadow-inner"
+                      value={formData.latitude || ''}
+                      onChange={e => setFormData({ ...formData, latitude: parseFloat(e.target.value) })}
+                      placeholder="Ex: -22.1234..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Longitude</label>
+                    <input
+                      type="number"
+                      step="any"
+                      className="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all shadow-inner"
+                      value={formData.longitude || ''}
+                      onChange={e => setFormData({ ...formData, longitude: parseFloat(e.target.value) })}
+                      placeholder="Ex: -47.1234..."
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col md:flex-row items-center gap-4">
+                  <button
+                    type="button"
+                    onClick={() => formData.cep && updateGpsByCep(formData.cep)}
+                    disabled={isGeocoding || !formData.cep}
+                    className="flex items-center gap-3 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all border border-emerald-100 disabled:opacity-50"
+                  >
+                    {isGeocoding ? (
+                      <div className="w-3 h-3 border-2 border-emerald-600/30 border-t-emerald-600 rounded-full animate-spin"></div>
+                    ) : (
+                      <ICONS.MapPin size={14} />
+                    )}
+                    {isGeocoding ? 'Buscando...' : 'Obter Coordenadas pelo CEP'}
+                  </button>
+                  <p className="text-[9px] font-bold text-slate-400 italic">As coordenadas são necessárias para aparecer no mapa de proximidade.</p>
                 </div>
               </div>
 
@@ -462,6 +505,13 @@ const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ businesses, onUpd
                         <div className="flex flex-col">
                           <span className="text-[10px] font-black uppercase tracking-widest text-slate-700">Retirada no Local</span>
                           <span className="text-[9px] font-bold text-slate-400 mt-0.5">Cliente busca no comércio</span>
+                        </div>
+                      </label>
+                      <label className="flex items-center cursor-pointer p-6 bg-white rounded-3xl border border-slate-100 hover:shadow-xl transition-all group">
+                        <input type="checkbox" className="w-6 h-6 rounded-lg border-slate-200 text-brand-teal mr-4 focus:ring-brand-teal" checked={formData.is24h} onChange={e => setFormData({ ...formData, is24h: e.target.checked })} />
+                        <div className="flex flex-col">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-slate-700">Aberto 24 Horas</span>
+                          <span className="text-[9px] font-bold text-slate-400 mt-0.5">Sempre aberto para Piracicaba</span>
                         </div>
                       </label>
                     </div>

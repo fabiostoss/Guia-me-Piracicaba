@@ -59,6 +59,7 @@ export interface Business {
   businessHours: string;
   offersDelivery: boolean;
   offersPickup: boolean;
+  is24h?: boolean;
   createdAt: number;
   views: number;
 }

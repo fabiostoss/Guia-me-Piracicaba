@@ -371,7 +371,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-16">
           <div>
-            <h1 className="text-4xl font-black text-brand-teal-deep tracking-tighter mb-4">Pira <span className="text-brand-orange">Admin</span> Center</h1>
+            <h1 className="text-4xl font-black text-brand-teal-deep tracking-tighter mb-4">Pira Admin Center</h1>
             <div className="flex flex-wrap gap-2">
               <button onClick={() => setAdminView('dashboard')} className={`text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-xl transition-all ${adminView === 'dashboard' ? 'bg-brand-teal text-white shadow-lg' : 'bg-slate-100 text-slate-400'}`}>Visão Geral</button>
               <button onClick={() => setAdminView('management')} className={`text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-xl transition-all ${adminView === 'management' ? 'bg-brand-teal text-white shadow-lg' : 'bg-slate-100 text-slate-400'}`}>Lojistas</button>
@@ -683,7 +683,6 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                         <td className="px-8 py-6 text-right">
                           <div className="flex items-center justify-end gap-1">
                             <a href={`#/business/${biz.id}`} target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg text-slate-300 hover:text-brand-teal hover:bg-brand-teal/5 transition-all"><ICONS.ExternalLink size={16} /></a>
-                            <a href={`https://wa.me/${biz.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg text-slate-300 hover:text-emerald-500 hover:bg-emerald-50 transition-all"><ICONS.MessageCircle size={16} /></a>
                             <button onClick={() => openEditModal(biz)} className="p-2 rounded-lg text-slate-300 hover:text-brand-orange hover:bg-brand-orange/5 transition-all"><ICONS.Edit size={16} /></button>
                             <button onClick={() => window.confirm(`Remover ${biz.name}?`) && onDelete(biz.id)} className="p-2 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 transition-all"><ICONS.Trash2 size={16} /></button>
                           </div>
@@ -898,8 +897,8 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                     <div className="flex flex-col md:flex-row items-center gap-4">
                       <button
                         type="button"
-                        onClick={updateGpsByAddress}
-                        disabled={isGeocoding}
+                        onClick={() => formData.cep && updateGpsByCep(formData.cep)}
+                        disabled={isGeocoding || !formData.cep}
                         className="flex items-center gap-3 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all border border-emerald-100 disabled:opacity-50"
                       >
                         {isGeocoding ? (
@@ -907,7 +906,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                         ) : (
                           <ICONS.MapPin size={14} />
                         )}
-                        {isGeocoding ? 'Buscando...' : 'Obter Coordenadas pelo Endereço'}
+                        {isGeocoding ? 'Buscando...' : 'Obter Coordenadas pelo CEP'}
                       </button>
 
                       <a
@@ -963,6 +962,10 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                           <label className="flex items-center cursor-pointer p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-slate-100 transition-colors">
                             <input type="checkbox" className="w-6 h-6 rounded border-slate-200 text-brand-teal mr-4" checked={formData.offersPickup} onChange={e => setFormData({ ...formData, offersPickup: e.target.checked })} />
                             <span className="text-[11px] font-black uppercase tracking-widest text-slate-500">Aceita Retirada</span>
+                          </label>
+                          <label className="flex items-center cursor-pointer p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-slate-100 transition-colors">
+                            <input type="checkbox" className="w-6 h-6 rounded border-slate-200 text-brand-teal mr-4" checked={formData.is24h} onChange={e => setFormData({ ...formData, is24h: e.target.checked })} />
+                            <span className="text-[11px] font-black uppercase tracking-widest text-slate-500">Loja 24 Horas</span>
                           </label>
                         </div>
                       </div>

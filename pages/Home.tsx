@@ -20,6 +20,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(null);
   const [selectedNeighborhood, setSelectedNeighborhood] = useState<string>('');
+  const [is24hOnly, setIs24hOnly] = useState(false);
   const [latestNews, setLatestNews] = useState<NewsArticle[]>(NEWS_MOCK);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [isLocating, setIsLocating] = useState(false);
@@ -154,9 +155,10 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
 
       const matchesCategory = selectedCategory ? b.category === selectedCategory : true;
       const matchesNeighborhood = selectedNeighborhood ? b.neighborhood === selectedNeighborhood : true;
+      const matches24h = is24hOnly ? b.is24h === true : true;
       const isActive = b.isActive !== false;
 
-      return matchesSearch && matchesCategory && matchesNeighborhood && isActive;
+      return matchesSearch && matchesCategory && matchesNeighborhood && matches24h && isActive;
     });
 
     // Ordenar por distância se disponível
@@ -169,7 +171,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
     }
 
     return result;
-  }, [businessesWithDistance, searchTerm, selectedCategory, selectedNeighborhood, userLocation]);
+  }, [businessesWithDistance, searchTerm, selectedCategory, selectedNeighborhood, is24hOnly, userLocation]);
 
   const featuredSpots = (TOURIST_SPOTS || []).slice(0, 3);
   const recentJobs = (getLatestJobs() || []).slice(0, 4);
@@ -259,7 +261,18 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
                     </div>
                   </div>
 
-                  {/* Enhanced Search Button with Gradient Hover */}
+                  {/* 24h Filter Toggle */}
+                  <div className="flex items-center px-6 py-4 md:min-w-[120px] group/24h relative bg-slate-50/50 md:bg-transparent rounded-2xl md:rounded-none">
+                    <button
+                      onClick={() => setIs24hOnly(!is24hOnly)}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${is24hOnly ? 'bg-brand-teal text-white shadow-lg' : 'bg-white text-slate-400 border border-slate-100'}`}
+                    >
+                      <ICONS.Clock size={14} className={is24hOnly ? 'animate-pulse' : ''} />
+                      {is24hOnly ? '24h Ativo' : 'Lojas 24h'}
+                    </button>
+                  </div>
+
+                  {/* Search Action Button with Gradient Hover */}
                   <button className="relative bg-brand-teal text-white px-8 py-4 rounded-xl md:rounded-2xl font-black text-sm transition-all duration-300 active:scale-95 shadow-lg shadow-brand-teal/30 uppercase tracking-widest whitespace-nowrap overflow-hidden group/button hover:shadow-xl hover:shadow-brand-teal/40 hover:scale-105">
                     {/* Gradient overlay on hover */}
                     <div className="absolute inset-0 bg-gradient-to-r from-brand-teal via-brand-teal-dark to-brand-teal opacity-0 group-hover/button:opacity-100 transition-opacity duration-300"></div>
