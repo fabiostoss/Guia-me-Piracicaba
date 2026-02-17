@@ -101,7 +101,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
 
         <div className="space-y-3 mb-8">
           <a
-            href={business.googleMapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${business.street}, ${business.number} - ${business.neighborhood}, Piracicaba - SP`)}`}
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${business.street}, ${business.number} - ${business.neighborhood}, Piracicaba - SP`)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-start text-slate-400 text-xs hover:text-brand-orange transition-colors group/address"
