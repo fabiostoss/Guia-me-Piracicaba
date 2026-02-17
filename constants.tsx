@@ -54,7 +54,8 @@ import {
   Zap,
   CheckCircle,
   Tag,
-  Crown
+  Crown,
+  Shield
 } from 'lucide-react';
 import { CategoryType } from './types';
 
@@ -107,7 +108,8 @@ export const ICONS = {
   Zap,
   CheckCircle,
   Tag,
-  Crown
+  Crown,
+  Shield
 };
 
 export const CATEGORY_ICONS: Record<CategoryType, React.ReactNode> = {

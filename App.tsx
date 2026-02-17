@@ -117,57 +117,69 @@ const CustomerRegistrationModal: React.FC<{
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-brand-teal-deep/80 backdrop-blur-md animate-in fade-in duration-300">
-      <div className="bg-white w-full max-w-sm rounded-[2rem] shadow-2xl overflow-visible p-6 md:p-8 space-y-5 animate-in zoom-in duration-300 relative">
+      <div className="bg-white w-full max-w-[320px] rounded-3xl shadow-2xl overflow-visible p-5 space-y-3 animate-in zoom-in duration-300 relative">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-brand-orange hover:bg-slate-50 p-2 rounded-full transition-all"
+          className="absolute top-3 right-3 text-slate-300 hover:text-brand-orange p-1 rounded-full transition-all hover:bg-slate-50"
         >
-          <ICONS.X size={20} />
+          <ICONS.X size={18} />
         </button>
-        <div className="text-center space-y-1">
-          <div className="bg-brand-orange/10 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 text-brand-orange">
-            <ICONS.UserCheck size={24} />
+        <div className="text-center space-y-0.5">
+          <div className="bg-brand-orange/10 w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-2 text-brand-orange">
+            <ICONS.UserCheck size={20} />
           </div>
-          <h2 className="text-xl font-black text-brand-teal-deep">Identifique-se</h2>
-          <p className="text-slate-500 text-xs font-medium max-w-[200px] mx-auto">Cadastro rápido para liberar seu pedido no WhatsApp.</p>
+          <h2 className="text-lg font-black text-brand-teal-deep">Identifique-se</h2>
+          <p className="text-slate-400 text-[10px] font-medium max-w-[180px] mx-auto leading-tight">Cadastro rápido para liberar seu pedido.</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3">
           <div className="space-y-1 text-left">
-            <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Nome Completo</label>
+            <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-1">Nome</label>
             <input
               required
-              className="w-full px-5 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-bold text-sm outline-none focus:border-brand-teal focus:bg-white transition-all"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-bold text-xs outline-none focus:border-brand-teal focus:bg-white transition-all"
               value={name}
               onChange={e => setName(e.target.value)}
-              placeholder="João Silva"
+              placeholder="Seu nome"
             />
           </div>
           <div className="space-y-1 text-left">
-            <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">WhatsApp</label>
+            <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-1">WhatsApp</label>
             <input
               required
               type="tel"
-              className="w-full px-5 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-bold text-sm outline-none focus:border-brand-teal focus:bg-white transition-all"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-bold text-xs outline-none focus:border-brand-teal focus:bg-white transition-all"
               value={phone}
               onChange={e => setPhone(e.target.value)}
-              placeholder="+55 19..."
+              placeholder="(19) 9..."
             />
           </div>
           <div className="space-y-1 text-left">
-            <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Onde você mora em Piracicaba?</label>
+            <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-1">Bairro</label>
             <NeighborhoodSelector
               value={neighborhood}
               onChange={setNeighborhood}
-              placeholder="Selecione o Bairro..."
-              triggerClassName="w-full px-5 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-bold text-sm outline-none focus:border-brand-teal focus:bg-white transition-all appearance-none"
+              placeholder="Selecione..."
+              triggerClassName="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-bold text-xs outline-none focus:border-brand-teal focus:bg-white transition-all appearance-none"
             />
           </div>
-          <button className="w-full bg-brand-teal text-white py-4 rounded-xl font-black uppercase tracking-widest text-[10px] shadow-lg shadow-brand-teal/20 hover:scale-[1.02] active:scale-95 transition-all mt-2">
-            Confirmar e Continuar
+          <button className="w-full bg-brand-teal text-white py-3 rounded-xl font-black uppercase tracking-widest text-[10px] shadow-lg shadow-brand-teal/20 hover:scale-[1.02] active:scale-95 transition-all mt-2">
+            Confirmar
           </button>
         </form>
-        <button onClick={onClose} className="w-full text-slate-300 font-black text-[9px] uppercase tracking-[0.2em] hover:text-slate-500 pt-2">Talvez depois</button>
+
+        <div className="pt-2 text-center space-y-3">
+          <button onClick={onClose} className="text-slate-300 font-black text-[9px] uppercase tracking-[0.2em] hover:text-slate-500">
+            Agora não
+          </button>
+
+          <div className="border-t border-slate-50 pt-3">
+            <a href="/politicas-de-privacidade" target="_blank" className="text-[8px] font-bold text-slate-300 hover:text-brand-teal transition-colors flex items-center justify-center gap-1 group">
+              <ICONS.Shield size={10} />
+              <span className="group-hover:underline">Políticas de Privacidade</span>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );
