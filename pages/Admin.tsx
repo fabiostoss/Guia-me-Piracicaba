@@ -149,33 +149,40 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
     }
 
     setIsGeocoding(true);
+    const searchStrategies = [
+      // 1. Endereço completo
+      `${formData.street}, ${formData.number}, ${formData.neighborhood || ''}, Piracicaba, SP, Brasil`,
+      // 2. Sem o bairro (às vezes o bairro no OSM está diferente)
+      `${formData.street}, ${formData.number}, Piracicaba, SP, Brasil`,
+      // 3. Rua completa (por extenso)
+      `${formData.street.replace('R. ', 'Rua ').replace('Av. ', 'Avenida ')}, ${formData.number}, Piracicaba, SP, Brasil`,
+      // 4. Apenas o nome do estabelecimento (útil para lugares grandes como Atacadão)
+      `${formData.name}, Piracicaba, SP, Brasil`
+    ];
+
     try {
-      const query = `${formData.street}, ${formData.number}, ${formData.neighborhood || ''}, Piracicaba, SP, Brasil`;
-      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`);
-      const data = await response.json();
+      let found = false;
+      for (const query of searchStrategies) {
+        if (found) break;
 
-      if (data && data.length > 0) {
-        setFormData(prev => ({
-          ...prev,
-          latitude: parseFloat(data[0].lat),
-          longitude: parseFloat(data[0].lon)
-        }));
-      } else {
-        // Tenta uma busca mais genérica se a específica falhar
-        const fallbackQuery = `${formData.street}, Piracicaba, SP, Brasil`;
-        const fallbackResponse = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fallbackQuery)}&limit=1`);
-        const fallbackData = await fallbackResponse.json();
+        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`);
+        const data = await response.json();
 
-        if (fallbackData && fallbackData.length > 0) {
+        if (data && data.length > 0) {
           setFormData(prev => ({
             ...prev,
-            latitude: parseFloat(fallbackData[0].lat),
-            longitude: parseFloat(fallbackData[0].lon)
+            latitude: parseFloat(data[0].lat),
+            longitude: parseFloat(data[0].lon)
           }));
-          alert('Localizamos a rua, mas não o número exato. Coordenadas aproximadas aplicadas.');
-        } else {
-          alert('Não foi possível encontrar o endereço automaticamente. Verifique se o nome da rua está correto.');
+          found = true;
+          if (query.includes(formData.name) && !query.includes(formData.street)) {
+            alert('Localizamos pelo nome do estabelecimento!');
+          }
         }
+      }
+
+      if (!found) {
+        alert('Não foi possível encontrar automaticamente. Você pode digitar as coordenadas manuais ou pesquisar no Google Maps e colar os números aqui.');
       }
     } catch (error) {
       console.error('Erro ao buscar coordenadas:', error);
@@ -796,39 +803,52 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       <div className="space-y-2">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Latitude (Automático)</label>
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Latitude</label>
                         <input
                           type="number"
-                          readOnly
-                          className="w-full px-6 py-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-400 font-bold outline-none"
+                          step="any"
+                          className="w-full px-6 py-4 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold outline-none focus:border-brand-teal"
                           value={formData.latitude || ''}
-                          placeholder="Clique no botão abaixo..."
+                          onChange={e => setFormData({ ...formData, latitude: parseFloat(e.target.value) })}
+                          placeholder="Ex: -22.1234..."
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Longitude (Automático)</label>
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Longitude</label>
                         <input
                           type="number"
-                          readOnly
-                          className="w-full px-6 py-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-400 font-bold outline-none"
+                          step="any"
+                          className="w-full px-6 py-4 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold outline-none focus:border-brand-teal"
                           value={formData.longitude || ''}
-                          placeholder="Clique no botão abaixo..."
+                          onChange={e => setFormData({ ...formData, longitude: parseFloat(e.target.value) })}
+                          placeholder="Ex: -47.1234..."
                         />
                       </div>
                     </div>
-                    <button
-                      type="button"
-                      onClick={updateGpsByAddress}
-                      disabled={isGeocoding}
-                      className="flex items-center gap-3 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all border border-emerald-100 disabled:opacity-50"
-                    >
-                      {isGeocoding ? (
-                        <div className="w-3 h-3 border-2 border-emerald-600/30 border-t-emerald-600 rounded-full animate-spin"></div>
-                      ) : (
-                        <ICONS.MapPin size={14} />
-                      )}
-                      {isGeocoding ? 'Buscando...' : 'Obter Coordenadas pelo Endereço'}
-                    </button>
+                    <div className="flex flex-col md:flex-row items-center gap-4">
+                      <button
+                        type="button"
+                        onClick={updateGpsByAddress}
+                        disabled={isGeocoding}
+                        className="flex items-center gap-3 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all border border-emerald-100 disabled:opacity-50"
+                      >
+                        {isGeocoding ? (
+                          <div className="w-3 h-3 border-2 border-emerald-600/30 border-t-emerald-600 rounded-full animate-spin"></div>
+                        ) : (
+                          <ICONS.MapPin size={14} />
+                        )}
+                        {isGeocoding ? 'Buscando...' : 'Obter Coordenadas pelo Endereço'}
+                      </button>
+
+                      <a
+                        href={`https://www.google.com/maps/search/${encodeURIComponent(formData.name + ' ' + formData.street + ' Piracicaba')}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[9px] font-black text-slate-400 hover:text-brand-orange transition-colors uppercase tracking-widest border-b border-dashed border-slate-300 pb-1"
+                      >
+                        Não encontrou? Abrir no Google Maps
+                      </a>
+                    </div>
                   </div>
 
                   <div className="space-y-8">
