@@ -228,27 +228,90 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
               </thead>
               <tbody className="divide-y divide-slate-50">
                 {filteredBusinesses.map(biz => (
-                  <tr key={biz.id} className="hover:bg-slate-50/50 group">
-                    <td className="px-10 py-6 flex items-center gap-4">
-                      <img src={biz.logoUrl} className="w-10 h-10 rounded-xl object-cover" />
-                      <div>
-                        <p className="font-black text-brand-teal-deep text-sm">{biz.name}</p>
-                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{biz.code}</p>
+                  <tr key={biz.id} className="hover:bg-slate-50/50 transition-colors group">
+                    <td className="px-10 py-6">
+                      <div className="flex items-center gap-4">
+                        <div className="relative">
+                          <img src={biz.logoUrl} className="w-12 h-12 rounded-2xl object-cover shadow-sm" />
+                          <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${biz.isActive ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
+                        </div>
+                        <div>
+                          <p className="font-black text-brand-teal-deep text-sm group-hover:text-brand-teal transition-colors">{biz.name}</p>
+                          <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                            {biz.code} • {biz.category}
+                          </p>
+                        </div>
                       </div>
                     </td>
-                    <td className="px-10 py-6 font-black text-slate-400">{biz.views}</td>
                     <td className="px-10 py-6">
-                      <button onClick={() => handleToggleStatus(biz)} className={`text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-lg ${biz.isActive ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-400'}`}>
-                        {biz.isActive ? 'Ativo' : 'Inativo'}
+                      <div className="flex flex-col">
+                        <span className="font-black text-slate-700">{biz.views}</span>
+                        <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Visualizações</span>
+                      </div>
+                    </td>
+                    <td className="px-10 py-6">
+                      <button
+                        onClick={() => handleToggleStatus(biz)}
+                        className={`group/toggle flex items-center gap-3 px-4 py-2 rounded-xl border transition-all ${biz.isActive
+                          ? 'bg-emerald-50 border-emerald-100 text-emerald-600'
+                          : 'bg-slate-50 border-slate-200 text-slate-400'
+                          }`}
+                        title={biz.isActive ? "Clique para Pausar Anúncio" : "Clique para Ativar Anúncio"}
+                      >
+                        <div className={`w-8 h-4 rounded-full relative transition-colors ${biz.isActive ? 'bg-emerald-500' : 'bg-slate-300'}`}>
+                          <div className={`absolute top-0.5 w-3 h-3 bg-white rounded-full transition-transform ${biz.isActive ? 'translate-x-4.5' : 'translate-x-0.5'}`}></div>
+                        </div>
+                        <span className="text-[10px] font-black uppercase tracking-widest">
+                          {biz.isActive ? 'Ativo' : 'Pausado'}
+                        </span>
                       </button>
                     </td>
                     <td className="px-10 py-6 text-right">
-                      <button
-                        onClick={() => openEditModal(biz)}
-                        className="text-brand-teal hover:text-brand-orange transition-colors p-2 rounded-lg hover:bg-brand-teal/5"
-                      >
-                        <ICONS.Edit size={20} />
-                      </button>
+                      <div className="flex items-center justify-end gap-2">
+                        {/* View Live */}
+                        <a
+                          href={`/business/${biz.username}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2.5 rounded-xl text-slate-400 hover:text-brand-teal hover:bg-brand-teal/5 transition-all"
+                          title="Ver Página do Comércio"
+                        >
+                          <ICONS.ExternalLink size={18} />
+                        </a>
+
+                        {/* WhatsApp Admin shortcut */}
+                        <a
+                          href={`https://wa.me/${biz.phone.replace(/\D/g, '')}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2.5 rounded-xl text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 transition-all"
+                          title="Falar com Lojista"
+                        >
+                          <ICONS.MessageCircle size={18} />
+                        </a>
+
+                        {/* Edit */}
+                        <button
+                          onClick={() => openEditModal(biz)}
+                          className="p-2.5 rounded-xl text-slate-400 hover:text-brand-orange hover:bg-brand-orange/5 transition-all"
+                          title="Editar Cadastro"
+                        >
+                          <ICONS.Edit size={18} />
+                        </button>
+
+                        {/* Delete */}
+                        <button
+                          onClick={() => {
+                            if (window.confirm(`Deseja realmente REMOVER ${biz.name}? Esta ação não pode ser desfeita.`)) {
+                              onDelete(biz.id);
+                            }
+                          }}
+                          className="p-2.5 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all"
+                          title="Excluir Comércio"
+                        >
+                          <ICONS.Trash2 size={18} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
