@@ -35,11 +35,11 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
         {business.isOfficial && (
-          <div className="absolute top-4 left-4">
-            <div className="bg-white/90 backdrop-blur-md p-1.5 rounded-full border border-white/20 shadow-lg">
+          <div className="absolute top-4 left-4 z-10">
+            <div className="bg-white/90 backdrop-blur-md p-1 rounded-full shadow-lg border border-white/20">
               <img
-                src="https://img.freepik.com/vetores-premium/icone-de-conta-confirmada-icone-vetorial-do-conceito-de-conta-verificada_654297-327.jpg"
-                className="w-6 h-6 object-contain"
+                src="https://cdn-icons-png.flaticon.com/512/6364/6364343.png"
+                className="w-5 h-5 object-contain"
                 alt="Oficial"
                 title="Parceiro Oficial"
               />
@@ -77,14 +77,6 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
               {business.name}
             </h3>
           </Link>
-          {business.isOfficial && (
-            <img
-              src="https://img.freepik.com/vetores-premium/icone-de-conta-confirmada-icone-vetorial-do-conceito-de-conta-verificada_654297-327.jpg"
-              className="w-5 h-5 object-contain"
-              alt="Oficial"
-              title="Parceiro Oficial"
-            />
-          )}
         </div>
 
         {business.segment && (

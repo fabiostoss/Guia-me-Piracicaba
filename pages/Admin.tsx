@@ -531,13 +531,6 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                                 value={currentName}
                                 onChange={e => setDraftChanges(prev => ({ ...prev, [biz.id]: { ...prev[biz.id], name: e.target.value } }))}
                               />
-                              {biz.isOfficial && (
-                                <img
-                                  src="https://img.freepik.com/vetores-premium/icone-de-conta-confirmada-icone-vetorial-do-conceito-de-conta-verificada_654297-327.jpg"
-                                  className="w-4 h-4 object-contain"
-                                  alt="Oficial"
-                                />
-                              )}
                               <ICONS.Edit size={10} className="text-slate-200 opacity-0 group-hover/field:opacity-100 transition-opacity" />
                             </div>
                             <div className="flex items-center gap-2">
