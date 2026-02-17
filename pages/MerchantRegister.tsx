@@ -111,7 +111,20 @@ const MerchantRegister: React.FC = () => {
             }
           }
 
-          alert('✅ Endereço encontrado! Confira os dados e preencha o número.');
+
+          // Verificar se as coordenadas foram salvas
+          setTimeout(() => {
+            setFormData(prev => {
+              const hasCoords = prev.latitude !== 0 && prev.longitude !== 0;
+              if (hasCoords) {
+                alert(`✅ Endereço e coordenadas GPS encontrados!\n\nRua: ${prev.street}\nBairro: ${prev.neighborhood}\nCoordenadas: ${prev.latitude.toFixed(6)}, ${prev.longitude.toFixed(6)}\n\nAgora preencha o número do imóvel.`);
+              } else {
+                alert('✅ Endereço encontrado! Coordenadas GPS não localizadas, mas você pode continuar.');
+              }
+              return prev;
+            });
+          }, 500);
+
         } catch (error) {
           console.error('Erro ao buscar CEP:', error);
           alert('Não foi possível buscar o endereço. Verifique sua conexão e tente novamente.');
