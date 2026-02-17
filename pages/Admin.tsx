@@ -388,7 +388,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-16">
           <div>
-            <h1 className="text-4xl font-black text-brand-teal-deep tracking-tighter mb-4">Centro de Controle Guia-me</h1>
+            <h1 className="text-4xl font-black text-brand-teal-deep tracking-tighter mb-4">Painel de Controle</h1>
             <div className="flex flex-wrap gap-2">
               <button onClick={() => setAdminView('dashboard')} className={`text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-xl transition-all ${adminView === 'dashboard' ? 'bg-brand-teal text-white shadow-lg' : 'bg-slate-100 text-slate-400'}`}>Visão Geral</button>
               <button onClick={() => setAdminView('management')} className={`text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-xl transition-all ${adminView === 'management' ? 'bg-brand-teal text-white shadow-lg' : 'bg-slate-100 text-slate-400'}`}>Lojistas</button>
@@ -983,6 +983,13 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                           <label className="flex items-center cursor-pointer p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-slate-100 transition-colors">
                             <input type="checkbox" className="w-6 h-6 rounded border-slate-200 text-brand-teal mr-4" checked={formData.is24h} onChange={e => setFormData({ ...formData, is24h: e.target.checked })} />
                             <span className="text-[11px] font-black uppercase tracking-widest text-slate-500">Loja 24 Horas</span>
+                          </label>
+                          <label className="flex items-center cursor-pointer p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-slate-100 transition-colors">
+                            <input type="checkbox" className="w-6 h-6 rounded border-slate-200 text-brand-teal mr-4" checked={formData.isOfficial} onChange={e => setFormData({ ...formData, isOfficial: e.target.checked })} />
+                            <div className="flex flex-col">
+                              <span className="text-[11px] font-black uppercase tracking-widest text-brand-teal">Selo Oficial</span>
+                              <span className="text-[8px] font-bold text-slate-400 mt-1 uppercase">Apenas Administradores</span>
+                            </div>
                           </label>
                         </div>
                       </div>

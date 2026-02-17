@@ -41,7 +41,7 @@ const AdminLogin: React.FC = () => {
           </div>
 
           <h1 className="text-4xl font-black text-brand-teal-deep mb-4 tracking-tighter">
-            Centro de Controle Guia-me
+            Painel de Controle
           </h1>
           <p className="text-slate-500 mb-10 font-bold text-sm uppercase tracking-widest opacity-60">
             Acesso Restrito • Guia-me Piracicaba
