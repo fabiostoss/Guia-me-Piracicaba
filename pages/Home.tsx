@@ -143,10 +143,10 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
           <div className="max-w-4xl space-y-8 text-center md:text-left animate-slide-up">
             <span className="text-brand-orange text-xs font-black uppercase tracking-[0.5em] block mb-4">Marketplace Oficial Piracicaba</span>
             <h1 className="text-4xl md:text-8xl font-black text-brand-teal-deep tracking-tighter leading-[0.9]">
-              Conectando <span className="text-brand-orange">Piracicaba</span> ao comércio local.
+              Encontre tudo em <span className="text-brand-orange">Piracicaba</span>, resolva no Zap.
             </h1>
             <p className="text-lg md:text-2xl text-slate-500 font-medium max-w-2xl">
-              Pesquise, encontre e peça via WhatsApp sem intermediários. O guia direto da Noiva da Colina.
+              O guia definitivo que une agilidade e orgulho local. Conexão direta com quem faz a Noiva da Colina crescer.
             </p>
 
             <div className="flex flex-wrap gap-4 pt-2">
