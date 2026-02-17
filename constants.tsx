@@ -40,7 +40,14 @@ import {
   Info,
   Instagram,
   BadgeCheck,
-  Star
+  Star,
+  Check,
+  Dumbbell,
+  Smartphone,
+  Lamp,
+  Palmtree,
+  Beef,
+  Baby
 } from 'lucide-react';
 import { CategoryType } from './types';
 
@@ -79,7 +86,14 @@ export const ICONS = {
   Info,
   Instagram,
   BadgeCheck,
-  Star
+  Star,
+  Check,
+  Dumbbell,
+  Smartphone,
+  Lamp,
+  Palmtree,
+  Beef,
+  Baby
 };
 
 export const CATEGORY_ICONS: Record<CategoryType, React.ReactNode> = {
@@ -94,6 +108,12 @@ export const CATEGORY_ICONS: Record<CategoryType, React.ReactNode> = {
   [CategoryType.MODA]: <Shirt className="w-6 h-6" />,
   [CategoryType.PET_SHOP]: <PawPrint className="w-6 h-6" />,
   [CategoryType.SAUDE_BELEZA]: <HeartPulse className="w-6 h-6" />,
+  [CategoryType.ACADEMIAS]: <Dumbbell className="w-6 h-6" />,
+  [CategoryType.ELETRONICOS]: <Smartphone className="w-6 h-6" />,
+  [CategoryType.CASA_DECORACAO]: <Lamp className="w-6 h-6" />,
+  [CategoryType.LAZER]: <Palmtree className="w-6 h-6" />,
+  [CategoryType.SUPLEMENTOS]: <Beef className="w-6 h-6" />,
+  [CategoryType.INFANTIL]: <Baby className="w-6 h-6" />,
   [CategoryType.EDUCACAO]: <GraduationCap className="w-6 h-6" />,
   [CategoryType.CONSTRUCAO]: <Hammer className="w-6 h-6" />,
   [CategoryType.EVENTOS]: <PartyPopper className="w-6 h-6" />,
@@ -118,22 +138,28 @@ export const BUSINESS_SPECIALTIES = [
   "Alimentação",
   "Atacadista",
   "Automotivo",
+  "Artigos de Lazer",
   "Bar / Choperia",
   "Barbearia",
+  "Brinquedos",
   "Cafeteria / Doceria",
   "Construção",
   "Consultório / Clínica",
   "Educação / Cursos",
+  "Eletrônicos",
   "Eventos / Festas",
   "Farmácia",
   "Fast Food",
   "Hambúrgueria",
   "Imobiliária",
   "Informática",
+  "Livraria",
   "Loja de Roupas / Moda",
   "Mercado / Supermercado",
+  "Moda Infantil",
   "Móveis / Decoração",
   "Padaria",
+  "Papelaria",
   "Pet Shop / Veterinária",
   "Pizzaria",
   "Posto de Combustível",
@@ -142,6 +168,7 @@ export const BUSINESS_SPECIALTIES = [
   "Serviços Gráficos",
   "Sorveteria",
   "Suplementos",
+  "Tecnologia",
   "Transporte / Logística",
   "Outros"
 ].sort();
