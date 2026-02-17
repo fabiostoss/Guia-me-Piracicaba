@@ -237,7 +237,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
         </div>
 
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-10">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-10">
             {filteredBusinesses.map((biz, idx) => (
               <div key={biz.id} className={`reveal stagger-${(idx % 3) + 1}`}>
                 <BusinessCard business={biz} checkAuth={checkAuth} />
@@ -257,8 +257,8 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       <section className="bg-slate-900 py-16 md:py-32 text-white overflow-hidden relative">
         <div className="absolute top-0 right-0 w-96 h-96 bg-brand-teal/5 rounded-full blur-3xl"></div>
         <div className="max-w-7xl mx-auto px-4 relative z-10">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-10 md:mb-16 gap-8 reveal">
-            <div className="text-center md:text-left">
+          <div className="flex flex-col justify-center items-center mb-10 md:mb-16 gap-8 reveal">
+            <div className="text-center">
               <h2 className="text-3xl md:text-7xl font-black tracking-tighter">Vagas em <span className="text-brand-teal">Pira</span></h2>
               <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest mt-2 md:mt-4">Oportunidades em Piracicaba</p>
             </div>
@@ -321,8 +321,8 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       <section className="py-16 md:py-32 bg-slate-50 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-end justify-between mb-10 md:mb-16 gap-8 reveal">
-            <div className="max-w-2xl text-center md:text-left">
+          <div className="flex flex-col items-center justify-center mb-10 md:mb-16 gap-8 reveal">
+            <div className="max-w-2xl text-center">
               <h2 className="text-3xl md:text-6xl font-black text-brand-teal-deep tracking-tighter leading-none mb-4 md:mb-6">
                 Notícias da <span className="text-brand-orange">Região</span>
               </h2>
@@ -341,34 +341,34 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
             {latestNews.slice(0, 3).map((item, idx) => (
               <a
                 key={idx}
                 href={item.url}
                 target="_blank"
                 rel="noreferrer"
-                className={`group bg-white rounded-3xl p-5 md:p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 flex flex-col h-full reveal stagger-${idx + 1}`}
+                className={`group bg-white rounded-2xl md:rounded-3xl p-3 md:p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 flex flex-col h-full reveal stagger-${idx + 1}`}
               >
-                <div className="h-40 md:h-48 rounded-2xl overflow-hidden mb-4 md:mb-6 relative">
+                <div className="h-32 md:h-48 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-6 relative">
                   <div className="absolute inset-0 bg-brand-teal/20 group-hover:bg-transparent transition-colors z-10"></div>
                   <img
                     src={item.imageUrl}
                     alt={item.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
-                  <div className="absolute bottom-3 left-3 z-20 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest text-brand-teal-deep shadow-sm">
+                  <div className="absolute bottom-2 left-2 z-20 bg-white/90 backdrop-blur-md px-2 py-1 rounded-lg text-[7px] md:text-[9px] font-black uppercase tracking-widest text-brand-teal-deep shadow-sm">
                     {item.date}
                   </div>
                 </div>
-                <h3 className="text-base md:text-xl font-bold text-slate-800 mb-4 group-hover:text-brand-teal transition-colors line-clamp-3 leading-tight">
+                <h3 className="text-[11px] md:text-xl font-bold text-slate-800 mb-2 md:mb-4 group-hover:text-brand-teal transition-colors line-clamp-2 md:line-clamp-3 leading-tight">
                   {item.title}
                 </h3>
-                <p className="text-slate-500 text-sm font-medium line-clamp-3 mb-6 flex-1">
+                <p className="hidden md:block text-slate-500 text-sm font-medium line-clamp-3 mb-6 flex-1">
                   {item.summary}
                 </p>
-                <div className="flex items-center text-[10px] font-black text-brand-orange uppercase tracking-widest mt-auto">
-                  Ler na íntegra <ICONS.ExternalLink size={12} className="ml-2" />
+                <div className="flex items-center text-[7px] md:text-[10px] font-black text-brand-orange uppercase tracking-widest mt-auto">
+                  Ler tudo <ICONS.ExternalLink size={10} className="ml-1 md:ml-2" />
                 </div>
               </a>
             ))}

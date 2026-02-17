@@ -70,10 +70,10 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
         </div>
       </div>
 
-      <div className="p-5 md:p-8 flex-grow flex flex-col">
+      <div className="p-3 py-4 md:p-8 flex-grow flex flex-col">
         <div className="flex items-center gap-2 mb-2">
           <Link to={`/business/${business.id}`} className="block">
-            <h3 className="text-lg md:text-2xl font-black text-brand-teal-deep group-hover:text-brand-teal transition-colors leading-tight tracking-tight">
+            <h3 className="text-sm md:text-2xl font-black text-brand-teal-deep group-hover:text-brand-teal transition-colors leading-tight tracking-tight line-clamp-2">
               {business.name}
             </h3>
           </Link>
@@ -86,16 +86,16 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
         )}
 
         {business.rating ? (
-          <div className="flex items-center gap-1 mb-4">
+          <div className="flex items-center gap-1 mb-3">
             <div className="flex items-center text-amber-500">
-              <ICONS.Star size={14} fill="currentColor" />
-              <span className="ml-1.5 text-slate-700 font-black text-sm">{business.rating}</span>
+              <ICONS.Star size={10} fill="currentColor" />
+              <span className="ml-1 text-slate-700 font-black text-[10px] md:text-sm">{business.rating}</span>
             </div>
-            <span className="text-slate-400 text-[10px] font-bold">({business.reviewsCount} avaliações)</span>
+            <span className="text-slate-400 text-[8px] md:text-[10px] font-bold">({business.reviewsCount})</span>
           </div>
         ) : null}
 
-        <p className="text-slate-500 text-[13px] md:text-sm font-medium leading-relaxed mb-4 md:mb-6 line-clamp-2">
+        <p className="hidden md:block text-slate-500 text-[13px] md:text-sm font-medium leading-relaxed mb-4 md:mb-6 line-clamp-2">
           {business.description}
         </p>
 
@@ -104,14 +104,14 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
             href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${business.street}, ${business.number} - ${business.neighborhood}, Piracicaba - SP`)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-start text-slate-400 text-xs hover:text-brand-orange transition-colors group/address"
+            className="flex items-start text-slate-400 text-[10px] hover:text-brand-orange transition-colors group/address"
           >
-            <ICONS.MapPin className="w-4 h-4 mr-3 flex-shrink-0 text-brand-orange group-hover/address:scale-110 transition-transform" />
-            <div className="flex flex-col gap-1 min-w-0">
-              <p className="font-bold truncate">
-                {business.street}, {business.number} - {business.neighborhood}
+            <ICONS.MapPin className="w-3 h-3 md:w-4 md:h-4 mr-2 md:mr-3 flex-shrink-0 text-brand-orange group-hover/address:scale-110 transition-transform" />
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <p className="font-bold truncate text-[8px] md:text-xs">
+                {business.neighborhood}
               </p>
-              <span className="text-[8px] font-black uppercase tracking-widest text-slate-300">Clique para ver no mapa</span>
+              <span className="hidden md:inline text-[8px] font-black uppercase tracking-widest text-slate-300">Ver no mapa</span>
             </div>
           </a>
           <div className="flex items-center text-slate-400 text-[10px] font-black uppercase tracking-widest">
