@@ -218,8 +218,14 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       {/* Categories & Business Grid */}
       <section className="bg-slate-50 pt-20 pb-32">
         <div className="max-w-7xl mx-auto px-4 -mt-32 relative z-30 mb-20 reveal">
-          <div className="bg-white p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] shadow-2xl border border-slate-100 overflow-x-auto no-scrollbar">
-            <div className="flex gap-4 md:gap-10">
+          <div className="bg-white p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] shadow-2xl border border-slate-100 relative overflow-hidden">
+            {/* Arraste Indicator for Categories */}
+            <div className="flex md:hidden items-center justify-end gap-2 text-brand-orange mb-4 animate-bounce-horizontal">
+              <span className="text-[10px] font-black uppercase tracking-widest">Arraste</span>
+              <ICONS.ArrowRight size={14} />
+            </div>
+
+            <div className="flex gap-4 md:gap-10 overflow-x-auto no-scrollbar">
               {Object.values(CategoryType).map((category, idx) => (
                 <button
                   key={category}
