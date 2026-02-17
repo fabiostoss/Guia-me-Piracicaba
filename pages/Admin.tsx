@@ -5,6 +5,12 @@ import { Business, CategoryType, Customer } from '../types';
 import { ICONS, PIRACICABA_NEIGHBORHOODS, BUSINESS_SPECIALTIES } from '../constants';
 import { isBusinessOpen, getDefaultSchedule, formatScheduleSummary } from '../utils/businessUtils';
 import * as db from '../services/databaseService';
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  Cell, PieChart, Pie, Legend, LineChart, Line
+} from 'recharts';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface AdminProps {
   businesses: Business[];
@@ -55,13 +61,76 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
   const stats = useMemo(() => {
     const totalViews = businesses.reduce((acc, b) => acc + (b.views || 0), 0);
     const activeCount = businesses.filter(b => b.isActive).length;
-    const topRanking = [...businesses].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5);
-    const categoryMap: Record<string, number> = {};
+    const topRanking = [...businesses].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
+
+    const categoryDataMap: Record<string, number> = {};
     businesses.forEach(b => {
-      categoryMap[b.category] = (categoryMap[b.category] || 0) + 1;
+      categoryDataMap[b.category] = (categoryDataMap[b.category] || 0) + 1;
     });
-    return { totalViews, activeCount, topRanking, categoryMap };
+
+    const categoryChartData = Object.entries(categoryDataMap).map(([name, value]) => ({ name, value }));
+    const rankingChartData = topRanking.map(b => ({ name: b.name.substring(0, 15), views: b.views || 0 }));
+
+    return { totalViews, activeCount, topRanking, categoryChartData, rankingChartData };
   }, [businesses]);
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    const now = new Date().toLocaleDateString('pt-BR');
+
+    // Header
+    doc.setFillColor(20, 184, 166); // brand-teal
+    doc.rect(0, 0, 210, 40, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Relatório Administrativo - Guia-me Piracicaba', 15, 25);
+
+    doc.setFontSize(10);
+    doc.text(`Gerado em: ${now}`, 160, 35);
+
+    // Stats Summary
+    doc.setTextColor(51, 65, 85); // slate-700
+    doc.setFontSize(16);
+    doc.text('Sumário de Performance', 15, 55);
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    const summaryData = [
+      ['Total de Visualizações', stats.totalViews.toString()],
+      ['Empresas Cadastradas', businesses.length.toString()],
+      ['Empresas Ativas', stats.activeCount.toString()],
+      ['Base de Clientes', customers.length.toString()],
+    ];
+
+    autoTable(doc, {
+      startY: 65,
+      head: [['Métrica', 'Valor']],
+      body: summaryData,
+      theme: 'striped',
+      headStyles: { fillStyle: 'F', fillColor: [20, 184, 166] }
+    });
+
+    // Top Businesses Table
+    doc.text('Top 10 Empresas mais Acessadas', 15, (doc as any).lastAutoTable.finalY + 20);
+
+    const businessTable = stats.topRanking.map((b, i) => [
+      (i + 1).toString(),
+      b.name,
+      b.category,
+      b.views.toString()
+    ]);
+
+    autoTable(doc, {
+      startY: (doc as any).lastAutoTable.finalY + 30,
+      head: [['#', 'Empresa', 'Categoria', 'Acessos']],
+      body: businessTable,
+      theme: 'grid',
+      headStyles: { fillColor: [15, 23, 42] } // slate-900
+    });
+
+    doc.save(`relatorio-guiame-piracicaba-${now.replace(/\//g, '-')}.pdf`);
+  };
 
   const handleLogout = async () => {
     localStorage.removeItem('pira_admin_auth');
@@ -222,22 +291,161 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
       </div>
 
       {adminView === 'dashboard' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-in fade-in duration-500">
-          <div className="bg-slate-900 p-8 rounded-[2.5rem] text-white">
-            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Acessos Totais</p>
-            <h3 className="text-4xl font-black">{stats.totalViews}</h3>
+        <div className="space-y-10 animate-in fade-in duration-500">
+          {/* Quick Stats Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-slate-900 p-8 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden group">
+              <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:scale-110 transition-transform">
+                <ICONS.Eye size={64} />
+              </div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 relative z-10">Acessos Totais</p>
+              <h3 className="text-4xl font-black relative z-10">{stats.totalViews}</h3>
+              <div className="mt-4 flex items-center gap-2 text-[10px] font-bold text-emerald-400">
+                <ICONS.Plus size={10} /> 12% este mês
+              </div>
+            </div>
+            <div className="bg-slate-900 p-8 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden group">
+              <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:scale-110 transition-transform">
+                <ICONS.Package size={64} />
+              </div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 relative z-10">Empresas Ativas</p>
+              <h3 className="text-4xl font-black text-brand-teal relative z-10">{stats.activeCount}</h3>
+              <p className="mt-4 text-[10px] font-bold text-slate-500 uppercase">de {businesses.length} cadastradas</p>
+            </div>
+            <div className="bg-slate-900 p-8 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden group">
+              <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:scale-110 transition-transform">
+                <ICONS.UserCheck size={64} />
+              </div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 relative z-10">Clientes</p>
+              <h3 className="text-4xl font-black text-brand-orange relative z-10">{customers.length}</h3>
+              <div className="mt-4 flex items-center gap-2 text-[10px] font-bold text-emerald-400">
+                <ICONS.Plus size={10} /> Novos Leads
+              </div>
+            </div>
+            <div className="bg-brand-teal p-8 rounded-[2.5rem] text-white shadow-2xl shadow-brand-teal/20">
+              <p className="text-[10px] font-black uppercase tracking-widest text-brand-teal-deep mb-2">Taxa de Conversão</p>
+              <h3 className="text-4xl font-black">{(customers.length > 0 && stats.totalViews > 0 ? (customers.length / stats.totalViews * 100).toFixed(1) : 0)}%</h3>
+              <button
+                onClick={exportToPDF}
+                className="mt-6 w-full bg-brand-teal-deep/20 hover:bg-brand-teal-deep/40 text-white py-3 rounded-xl font-black text-[9px] uppercase tracking-widest transition-all flex items-center justify-center gap-2"
+              >
+                <ICONS.ArrowRight size={14} /> Exportar Relatório PDF
+              </button>
+            </div>
           </div>
-          <div className="bg-slate-900 p-8 rounded-[2.5rem] text-white">
-            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Empresas Ativas</p>
-            <h3 className="text-4xl font-black text-brand-teal">{stats.activeCount}</h3>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Category Distribution Chart */}
+            <div className="lg:col-span-1 bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm flex flex-col h-[500px]">
+              <div className="mb-8">
+                <h4 className="text-sm font-black text-brand-teal-deep uppercase tracking-widest">Distribuição por Categoria</h4>
+                <p className="text-[10px] font-bold text-slate-400 uppercase mt-1">Presença de mercado local</p>
+              </div>
+              <div className="flex-grow">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={stats.categoryChartData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={100}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
+                      {stats.categoryChartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={['#14b8a6', '#f97316', '#0f172a', '#64748b', '#2dd4bf'][index % 5]} />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{ borderRadius: '20px', border: 'none', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', fontVariant: 'small-caps', fontWeight: 'bold' }}
+                    />
+                    <Legend iconType="circle" wrapperStyle={{ fontSize: '10px', fontWeight: 'bold', paddingTop: '20px' }} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Performance Ranking Chart */}
+            <div className="lg:col-span-2 bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm flex flex-col h-[500px]">
+              <div className="mb-8 flex justify-between items-end">
+                <div>
+                  <h4 className="text-sm font-black text-brand-teal-deep uppercase tracking-widest">Top Performance (Ranking de Acessos)</h4>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase mt-1">Lojas mais visitadas na plataforma</p>
+                </div>
+                <div className="bg-slate-50 px-4 py-2 rounded-xl border border-slate-100 flex items-center gap-2 text-[9px] font-black text-slate-500 uppercase tracking-widest">
+                  <ICONS.Filter size={12} /> Últimos 30 dias
+                </div>
+              </div>
+              <div className="flex-grow">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={stats.rankingChartData} margin={{ top: 10, right: 30, left: 0, bottom: 30 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                    <XAxis
+                      dataKey="name"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 9, fontWeight: 800, fill: '#64748b' }}
+                      angle={-45}
+                      textAnchor="end"
+                      height={60}
+                    />
+                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 700, fill: '#cbd5e1' }} />
+                    <Tooltip
+                      cursor={{ fill: '#f8fafc' }}
+                      contentStyle={{ borderRadius: '20px', border: 'none', boxShadow: '0 10px 25px rgba(0,0,0,0.1)' }}
+                    />
+                    <Bar dataKey="views" radius={[6, 6, 0, 0]} barSize={32}>
+                      {stats.rankingChartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={index === 0 ? '#f97316' : '#14b8a6'} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
           </div>
-          <div className="bg-slate-900 p-8 rounded-[2.5rem] text-white">
-            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Clientes Cadastrados</p>
-            <h3 className="text-4xl font-black text-brand-orange">{customers.length}</h3>
-          </div>
-          <div className="bg-brand-teal p-8 rounded-[2.5rem] text-white">
-            <p className="text-[10px] font-black uppercase tracking-widest text-brand-teal-deep mb-2">Conversão</p>
-            <h3 className="text-4xl font-black">{(customers.length > 0 && stats.totalViews > 0 ? (customers.length / stats.totalViews * 100).toFixed(1) : 0)}%</h3>
+
+          {/* Detailed Ranking Table */}
+          <div className="bg-white rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden">
+            <div className="p-10 border-b border-slate-50">
+              <h4 className="text-sm font-black text-brand-teal-deep uppercase tracking-widest">Ranking Detalhado das 10 Maiores</h4>
+            </div>
+            <table className="w-full text-left">
+              <thead className="bg-slate-50/50">
+                <tr>
+                  <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Ranking</th>
+                  <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Loja</th>
+                  <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Categoria</th>
+                  <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Visualizações</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-50">
+                {stats.topRanking.map((biz, idx) => (
+                  <tr key={biz.id} className="group hover:bg-slate-50/30 transition-colors">
+                    <td className="px-10 py-6">
+                      <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-black text-xs ${idx === 0 ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/20' :
+                          idx === 1 ? 'bg-slate-200 text-slate-600' :
+                            idx === 2 ? 'bg-brand-teal/20 text-brand-teal' :
+                              'bg-slate-50 text-slate-400'
+                        }`}>
+                        {idx + 1}
+                      </div>
+                    </td>
+                    <td className="px-10 py-6">
+                      <div className="flex items-center gap-4">
+                        <img src={biz.logoUrl} className="w-10 h-10 rounded-xl object-cover" />
+                        <span className="font-black text-slate-700 text-sm">{biz.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-10 py-6 font-bold text-slate-400 text-xs uppercase tracking-widest">{biz.category}</td>
+                    <td className="px-10 py-6">
+                      <span className="bg-emerald-50 text-emerald-600 px-4 py-2 rounded-xl font-black text-xs">{biz.views}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
