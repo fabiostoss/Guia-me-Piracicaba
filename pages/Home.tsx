@@ -274,30 +274,6 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
                 </div>
               </div>
 
-              {/* Quick Filters Under Search Bar */}
-              <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
-                <button
-                  onClick={() => setIs24hOnly(!is24hOnly)}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${is24hOnly ? 'bg-brand-teal text-white shadow-lg' : 'bg-white text-slate-400 border border-slate-100'}`}
-                >
-                  <ICONS.Clock size={14} className={is24hOnly ? 'animate-pulse' : ''} />
-                  {is24hOnly ? 'Filtro 24h Ativo' : 'Aberto 24h'}
-                </button>
-                <button
-                  onClick={() => setIsDeliveryOnly(!isDeliveryOnly)}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${isDeliveryOnly ? 'bg-brand-teal text-white shadow-lg' : 'bg-white text-slate-400 border border-slate-100'}`}
-                >
-                  <ICONS.Truck size={14} />
-                  {isDeliveryOnly ? 'Somente Delivery' : 'Delivery'}
-                </button>
-                <button
-                  onClick={() => setIsPickupOnly(!isPickupOnly)}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${isPickupOnly ? 'bg-brand-teal text-white shadow-lg' : 'bg-white text-slate-400 border border-slate-100'}`}
-                >
-                  <ICONS.Package size={14} />
-                  {isPickupOnly ? 'Somente Retirada' : 'Retirada'}
-                </button>
-              </div>
             </div>
           </div>
         </div>
@@ -406,6 +382,31 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       <section className="bg-slate-50 pt-6 pb-6">
         <div className="max-w-7xl mx-auto px-4 -mt-10 relative z-30 mb-10 reveal">
           <div className="bg-white p-4 md:p-6 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl border border-slate-100 relative overflow-hidden">
+            {/* Quick Filters - Integrated with Categories */}
+            <div className="flex flex-wrap items-center justify-center gap-3 mb-8 border-b border-slate-50 pb-8">
+              <button
+                onClick={() => setIs24hOnly(!is24hOnly)}
+                className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${is24hOnly ? 'bg-brand-teal text-white shadow-lg shadow-brand-teal/20' : 'bg-slate-50 text-slate-400 border border-slate-100 hover:bg-slate-100'}`}
+              >
+                <ICONS.Clock size={14} className={is24hOnly ? 'animate-pulse' : ''} />
+                {is24hOnly ? 'Filtro 24h Ativo' : 'Aberto 24h'}
+              </button>
+              <button
+                onClick={() => setIsDeliveryOnly(!isDeliveryOnly)}
+                className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${isDeliveryOnly ? 'bg-brand-teal text-white shadow-lg shadow-brand-teal/20' : 'bg-slate-50 text-slate-400 border border-slate-100 hover:bg-slate-100'}`}
+              >
+                <ICONS.Truck size={14} />
+                {isDeliveryOnly ? 'Somente Delivery' : 'Delivery'}
+              </button>
+              <button
+                onClick={() => setIsPickupOnly(!isPickupOnly)}
+                className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${isPickupOnly ? 'bg-brand-teal text-white shadow-lg shadow-brand-teal/20' : 'bg-slate-50 text-slate-400 border border-slate-100 hover:bg-slate-100'}`}
+              >
+                <ICONS.Package size={14} />
+                {isPickupOnly ? 'Somente Retirada' : 'Retirada'}
+              </button>
+            </div>
+
             {/* Pagination Controls for Categories */}
             <div className="flex items-center justify-between mb-6">
               <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Categorias</span>
