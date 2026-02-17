@@ -18,8 +18,7 @@ export enum CategoryType {
   INFANTIL = 'Infantil',
   EDUCACAO = 'Educação',
   CONSTRUCAO = 'Construção',
-  EVENTOS = 'Eventos',
-  OFICIAIS = 'Destaques Piracicaba'
+  EVENTOS = 'Eventos'
 }
 
 export interface DaySchedule {

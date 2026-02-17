@@ -99,7 +99,6 @@ export const ICONS = {
 export const CATEGORY_ICONS: Record<CategoryType, React.ReactNode> = {
   [CategoryType.RESTAURANTES]: <Utensils className="w-6 h-6" />,
   [CategoryType.MERCADOS]: <ShoppingCart className="w-6 h-6" />,
-  [CategoryType.OFICIAIS]: <BadgeCheck className="w-6 h-6 text-brand-teal" />,
   [CategoryType.FARMACIAS]: <Pill className="w-6 h-6" />,
   [CategoryType.LOJAS]: <ShoppingBag className="w-6 h-6" />,
   [CategoryType.SERVICOS]: <Wrench className="w-6 h-6" />,

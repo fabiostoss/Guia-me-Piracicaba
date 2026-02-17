@@ -164,20 +164,18 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
         <div className="max-w-7xl mx-auto px-4 -mt-32 relative z-30 mb-20 reveal">
           <div className="bg-white p-6 md:p-12 rounded-[3rem] shadow-2xl border border-slate-100 overflow-x-auto no-scrollbar">
             <div className="flex gap-10">
-              {Object.values(CategoryType)
-                .filter(cat => cat !== CategoryType.OFICIAIS)
-                .map((category, idx) => (
-                  <button
-                    key={category}
-                    onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
-                    className={`flex flex-col items-center group transition-all shrink-0 reveal stagger-${(idx % 4) + 1}`}
-                  >
-                    <div className={`w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center transition-all border-2 mb-4 ${selectedCategory === category ? 'bg-brand-teal border-brand-teal text-white shadow-xl scale-110' : 'bg-slate-50 border-transparent text-brand-teal-deep hover:bg-slate-100'}`}>
-                      {CATEGORY_ICONS[category]}
-                    </div>
-                    <span className={`text-[9px] font-black uppercase tracking-widest text-center ${selectedCategory === category ? 'text-brand-teal' : 'text-slate-400'}`}>{category}</span>
-                  </button>
-                ))}
+              {Object.values(CategoryType).map((category, idx) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
+                  className={`flex flex-col items-center group transition-all shrink-0 reveal stagger-${(idx % 4) + 1}`}
+                >
+                  <div className={`w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center transition-all border-2 mb-4 ${selectedCategory === category ? 'bg-brand-teal border-brand-teal text-white shadow-xl scale-110' : 'bg-slate-50 border-transparent text-brand-teal-deep hover:bg-slate-100'}`}>
+                    {CATEGORY_ICONS[category]}
+                  </div>
+                  <span className={`text-[9px] font-black uppercase tracking-widest text-center ${selectedCategory === category ? 'text-brand-teal' : 'text-slate-400'}`}>{category}</span>
+                </button>
+              ))}
             </div>
           </div>
         </div>

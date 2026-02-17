@@ -495,7 +495,6 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Segmento Principal (Categoria)</label>
                       <select className="w-full px-6 py-4 rounded-2xl border border-slate-200 bg-white text-slate-700 font-bold outline-none focus:border-brand-teal" value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value as CategoryType })}>
                         {Object.values(CategoryType)
-                          .filter(cat => cat !== CategoryType.OFICIAIS)
                           .map(cat => <option key={cat} value={cat}>{cat}</option>)}
                       </select>
                     </div>
