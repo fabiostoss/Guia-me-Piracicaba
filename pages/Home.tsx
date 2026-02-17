@@ -24,6 +24,20 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [isLocating, setIsLocating] = useState(false);
 
+  // Refs para controle de scroll
+  const categoriesRef = useRef<HTMLDivElement>(null);
+  const shopsRef = useRef<HTMLDivElement>(null);
+  const jobsRef = useRef<HTMLDivElement>(null);
+  const tourismRef = useRef<HTMLDivElement>(null);
+  const newsRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (ref: React.RefObject<HTMLDivElement | null>, direction: 'left' | 'right') => {
+    if (ref.current) {
+      const scrollAmount = direction === 'left' ? -300 : 300;
+      ref.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
   useEffect(() => {
     // Tenta atualizar com notícias reais, se falhar, mantém o mock (que já está no estado inicial)
     getLocalNews().then(news => {
@@ -219,13 +233,26 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       <section className="bg-slate-50 pt-20 pb-32">
         <div className="max-w-7xl mx-auto px-4 -mt-32 relative z-30 mb-20 reveal">
           <div className="bg-white p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] shadow-2xl border border-slate-100 relative overflow-hidden">
-            {/* Arraste Indicator for Categories */}
-            <div className="flex md:hidden items-center justify-end gap-2 text-brand-orange mb-4 animate-bounce-horizontal">
-              <span className="text-[10px] font-black uppercase tracking-widest">Arraste</span>
-              <ICONS.ArrowRight size={14} />
+            {/* Pagination Controls for Categories */}
+            <div className="flex items-center justify-between mb-6">
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Categorias</span>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => scroll(categoriesRef, 'left')}
+                  className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-brand-teal hover:bg-brand-teal hover:text-white transition-all border border-slate-100 shadow-sm"
+                >
+                  <ICONS.ChevronLeft size={16} />
+                </button>
+                <button
+                  onClick={() => scroll(categoriesRef, 'right')}
+                  className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-brand-teal hover:bg-brand-teal hover:text-white transition-all border border-slate-100 shadow-sm"
+                >
+                  <ICONS.ChevronRight size={16} />
+                </button>
+              </div>
             </div>
 
-            <div className="flex gap-4 md:gap-10 overflow-x-auto no-scrollbar">
+            <div ref={categoriesRef} className="flex gap-4 md:gap-10 overflow-x-auto no-scrollbar scroll-smooth">
               {Object.values(CategoryType).map((category, idx) => (
                 <button
                   key={category}
@@ -248,13 +275,23 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
               <h2 className="text-2xl md:text-4xl font-black text-brand-teal-deep tracking-tight">Comércios Próximos</h2>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Ordenados por distância</p>
             </div>
-            <div className="flex items-center gap-2 text-brand-orange animate-bounce-horizontal">
-              <span className="text-[10px] font-black uppercase tracking-widest">Arraste</span>
-              <ICONS.ArrowRight size={16} />
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => scroll(shopsRef, 'left')}
+                className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-brand-teal hover:bg-brand-teal hover:text-white transition-all border border-slate-200 shadow-lg"
+              >
+                <ICONS.ChevronLeft size={20} />
+              </button>
+              <button
+                onClick={() => scroll(shopsRef, 'right')}
+                className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-brand-teal hover:bg-brand-teal hover:text-white transition-all border border-slate-200 shadow-lg"
+              >
+                <ICONS.ChevronRight size={20} />
+              </button>
             </div>
           </div>
 
-          <div className="flex gap-4 md:gap-8 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar px-2 md:px-0">
+          <div ref={shopsRef} className="flex gap-4 md:gap-8 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar px-2 md:px-0 scroll-smooth">
             {filteredBusinesses.slice(0, 12).map((biz, idx) => (
               <div key={biz.id} className={`w-[280px] md:w-[380px] shrink-0 snap-start reveal stagger-${(idx % 3) + 1}`}>
                 <BusinessCard business={biz} checkAuth={checkAuth} />
@@ -282,18 +319,28 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       <section className="bg-slate-900 py-16 md:py-32 text-white overflow-hidden relative">
         <div className="absolute top-0 right-0 w-96 h-96 bg-brand-teal/5 rounded-full blur-3xl"></div>
         <div className="max-w-7xl mx-auto px-4 relative z-10">
-          <div className="flex flex-col items-center justify-center mb-10 md:mb-16 gap-4 reveal">
+          <div className="flex flex-col items-center justify-center mb-10 md:mb-16 gap-6 reveal">
             <div className="text-center">
               <h2 className="text-3xl md:text-7xl font-black tracking-tighter">Vagas em <span className="text-brand-teal">Pira</span></h2>
               <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest mt-2 md:mt-4">Oportunidades em Piracicaba</p>
             </div>
-            <div className="flex items-center gap-2 text-brand-teal animate-bounce-horizontal">
-              <span className="text-[10px] font-black uppercase tracking-widest">Arraste para ver mais</span>
-              <ICONS.ArrowRight size={14} />
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => scroll(jobsRef, 'left')}
+                className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-brand-teal hover:bg-brand-teal hover:text-white transition-all border border-white/10"
+              >
+                <ICONS.ChevronLeft size={24} />
+              </button>
+              <button
+                onClick={() => scroll(jobsRef, 'right')}
+                className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-brand-teal hover:bg-brand-teal hover:text-white transition-all border border-white/10"
+              >
+                <ICONS.ChevronRight size={24} />
+              </button>
             </div>
           </div>
 
-          <div className="flex gap-4 md:gap-6 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar px-2 md:px-0">
+          <div ref={jobsRef} className="flex gap-4 md:gap-6 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar px-2 md:px-0 scroll-smooth">
             {recentJobs.slice(0, 4).map((job, idx) => (
               <div key={job.id} className={`w-[260px] md:w-[320px] shrink-0 snap-start bg-white/5 backdrop-blur-sm p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-white/10 hover:border-brand-teal/50 transition-all group reveal stagger-${idx + 1}`}>
                 <div className="bg-brand-teal/20 w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-teal mb-4 md:mb-8 group-hover:scale-110 transition-transform">
@@ -328,13 +375,23 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
           <div className="text-center mb-10 md:mb-16 reveal">
             <h2 className="text-3xl md:text-7xl font-black text-brand-teal-deep tracking-tighter leading-none">Turismo em <span className="text-brand-orange">Pira</span></h2>
             <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest mt-4 md:mt-6">Descubra Piracicaba</p>
-            <div className="flex items-center justify-center gap-2 text-brand-orange animate-bounce-horizontal mt-6">
-              <span className="text-[10px] font-black uppercase tracking-widest">Deslize</span>
-              <ICONS.ArrowRight size={16} />
+            <div className="flex items-center justify-center gap-4 mt-10">
+              <button
+                onClick={() => scroll(tourismRef, 'left')}
+                className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-brand-teal hover:bg-brand-teal hover:text-white transition-all shadow-md"
+              >
+                <ICONS.ChevronLeft size={24} />
+              </button>
+              <button
+                onClick={() => scroll(tourismRef, 'right')}
+                className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-brand-teal hover:bg-brand-teal hover:text-white transition-all shadow-md"
+              >
+                <ICONS.ChevronRight size={24} />
+              </button>
             </div>
           </div>
 
-          <div className="flex gap-4 md:gap-8 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar px-2 md:px-0">
+          <div ref={tourismRef} className="flex gap-4 md:gap-8 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar px-2 md:px-0 scroll-smooth">
             {featuredSpots.slice(0, 4).map((spot, idx) => (
               <div key={spot.id} className={`w-[260px] md:w-[320px] shrink-0 snap-start bg-slate-50 rounded-3xl md:rounded-[2rem] p-4 md:p-6 border border-slate-100 group hover:bg-white hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center reveal stagger-${idx + 1}`}>
                 <div className="bg-brand-teal/10 w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-teal mb-4 md:mb-6 group-hover:bg-brand-teal group-hover:text-white group-hover:scale-110 transition-all duration-500">
@@ -368,10 +425,20 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
                 Acompanhe o que está acontecendo em Piracicaba.
               </p>
             </div>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 text-brand-orange animate-bounce-horizontal mr-4">
-                <span className="text-[10px] font-black uppercase tracking-widest">Veja mais</span>
-                <ICONS.ArrowRight size={16} />
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => scroll(newsRef, 'left')}
+                  className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-brand-teal hover:bg-brand-teal hover:text-white transition-all border border-slate-200 shadow-md"
+                >
+                  <ICONS.ChevronLeft size={20} />
+                </button>
+                <button
+                  onClick={() => scroll(newsRef, 'right')}
+                  className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-brand-teal hover:bg-brand-teal hover:text-white transition-all border border-slate-200 shadow-md"
+                >
+                  <ICONS.ChevronRight size={20} />
+                </button>
               </div>
               <Link
                 to="/noticias"
@@ -385,7 +452,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             </div>
           </div>
 
-          <div className="flex gap-4 md:gap-8 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar px-2 md:px-0">
+          <div ref={newsRef} className="flex gap-4 md:gap-8 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar px-2 md:px-0 scroll-smooth">
             {latestNews.slice(0, 4).map((item, idx) => (
               <div key={idx} className="w-[280px] md:w-[350px] shrink-0 snap-start">
                 <a
