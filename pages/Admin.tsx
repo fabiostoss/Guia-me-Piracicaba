@@ -71,6 +71,8 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
     const categoryChartData = Object.entries(categoryDataMap).map(([name, value]) => ({ name, value }));
     const rankingChartData = topRanking.map(b => ({ name: b.name.substring(0, 15), views: b.views || 0 }));
 
+    console.log('Admin Dashboard Stats:', { totalViews, activeCount, categoryChartData, rankingChartData });
+
     return { totalViews, activeCount, topRanking, categoryChartData, rankingChartData };
   }, [businesses]);
 
@@ -425,9 +427,9 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                   <tr key={biz.id} className="group hover:bg-slate-50/30 transition-colors">
                     <td className="px-10 py-6">
                       <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-black text-xs ${idx === 0 ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/20' :
-                          idx === 1 ? 'bg-slate-200 text-slate-600' :
-                            idx === 2 ? 'bg-brand-teal/20 text-brand-teal' :
-                              'bg-slate-50 text-slate-400'
+                        idx === 1 ? 'bg-slate-200 text-slate-600' :
+                          idx === 2 ? 'bg-brand-teal/20 text-brand-teal' :
+                            'bg-slate-50 text-slate-400'
                         }`}>
                         {idx + 1}
                       </div>
