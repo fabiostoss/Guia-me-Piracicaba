@@ -224,16 +224,16 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {featuredSpots.map((spot, idx) => (
-              <div key={spot.id} className={`bg-slate-50 rounded-[3rem] p-10 border border-slate-100 group hover:bg-white hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center reveal stagger-${idx + 1}`}>
-                <div className="bg-brand-teal/10 w-24 h-24 rounded-3xl flex items-center justify-center text-brand-teal mb-8 group-hover:bg-brand-teal group-hover:text-white group-hover:scale-110 transition-all duration-500">
-                  {getTouristIcon(spot.category, 40)}
+              <div key={spot.id} className={`bg-slate-50 rounded-[2rem] p-6 border border-slate-100 group hover:bg-white hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center reveal stagger-${idx + 1}`}>
+                <div className="bg-brand-teal/10 w-16 h-16 rounded-2xl flex items-center justify-center text-brand-teal mb-6 group-hover:bg-brand-teal group-hover:text-white group-hover:scale-110 transition-all duration-500">
+                  {getTouristIcon(spot.category, 32)}
                 </div>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <span className="text-[9px] font-black uppercase tracking-[0.2em] text-brand-orange">{spot.category}</span>
-                  <h3 className="text-2xl font-black text-brand-teal-deep group-hover:text-brand-teal transition-colors leading-tight">{spot.name.replace(/^\d+\.\s*/, '')}</h3>
+                  <h3 className="text-xl font-black text-brand-teal-deep group-hover:text-brand-teal transition-colors leading-tight">{spot.name.replace(/^\d+\.\s*/, '')}</h3>
                   <p className="text-slate-500 text-sm font-medium line-clamp-3 leading-relaxed">{spot.description}</p>
                 </div>
-                <Link to="/guia-turistico" className="mt-8 text-[10px] font-black uppercase tracking-widest text-brand-teal-deep hover:text-brand-orange transition-colors flex items-center gap-2">
+                <Link to="/guia-turistico" className="mt-6 text-[10px] font-black uppercase tracking-widest text-brand-teal-deep hover:text-brand-orange transition-colors flex items-center gap-2">
                   Ver Mais <ICONS.ArrowRight size={14} />
                 </Link>
               </div>

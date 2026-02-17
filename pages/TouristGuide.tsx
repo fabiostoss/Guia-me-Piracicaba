@@ -88,27 +88,27 @@ const TouristGuide: React.FC = () => {
         {activeTab === 'spots' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {spots.map((spot, index) => (
-              <div key={spot.id} className="bg-white rounded-[2.5rem] p-10 border border-slate-200 group hover:shadow-2xl transition-all duration-500 flex flex-col h-full animate-in fade-in zoom-in">
-                <div className="flex justify-between items-start mb-10">
-                  <div className="text-6xl font-black text-slate-200 group-hover:text-brand-teal/20 transition-colors">
+              <div key={spot.id} className="bg-white rounded-3xl p-6 border border-slate-200 group hover:shadow-2xl transition-all duration-500 flex flex-col h-full animate-in fade-in zoom-in">
+                <div className="flex justify-between items-start mb-6">
+                  <div className="text-4xl font-black text-slate-200 group-hover:text-brand-teal/20 transition-colors">
                     {String(index + 1).padStart(2, '0')}
                   </div>
-                  <span className="bg-slate-100 text-brand-teal text-[9px] font-black px-4 py-2 rounded-xl uppercase tracking-widest border border-brand-teal/10">
+                  <span className="bg-slate-50 text-brand-teal text-[9px] font-black px-3 py-1.5 rounded-lg uppercase tracking-widest border border-brand-teal/10">
                     {spot.category}
                   </span>
                 </div>
 
-                <h3 className="text-3xl font-black text-brand-teal-deep mb-6 group-hover:text-brand-teal transition-colors leading-tight">{spot.name}</h3>
-                <p className="text-slate-600 font-medium text-lg leading-relaxed mb-10">{spot.description}</p>
+                <h3 className="text-2xl font-black text-brand-teal-deep mb-4 group-hover:text-brand-teal transition-colors leading-tight">{spot.name}</h3>
+                <p className="text-slate-600 font-medium text-base leading-relaxed mb-6">{spot.description}</p>
 
-                <div className="pt-8 border-t border-slate-50 flex flex-col gap-6 mt-auto">
+                <div className="pt-6 border-t border-slate-50 flex flex-col gap-4 mt-auto">
                   <div className="flex items-center text-slate-400 text-[10px] font-black uppercase tracking-widest">
-                    <ICONS.MapPin size={18} className="mr-3 text-brand-orange" />
+                    <ICONS.MapPin size={16} className="mr-2 text-brand-orange" />
                     {spot.address}
                   </div>
                   <div className="flex gap-1">
-                    {[1, 2, 3, 4, 5].map(s => <div key={s} className="w-2.5 h-2.5 bg-emerald-500 rounded-full"></div>)}
-                    <span className="text-[10px] font-black text-emerald-600 ml-3 uppercase tracking-widest">Recomendado</span>
+                    {[1, 2, 3, 4, 5].map(s => <div key={s} className="w-2 h-2 bg-emerald-500 rounded-full"></div>)}
+                    <span className="text-[9px] font-black text-emerald-600 ml-2 uppercase tracking-widest">Recomendado</span>
                   </div>
                 </div>
               </div>
