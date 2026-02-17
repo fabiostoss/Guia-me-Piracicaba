@@ -152,7 +152,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
   return (
     <div className="space-y-0 pb-0">
       {/* Hero Section - Animação Inicial */}
-      <section className="relative overflow-hidden bg-white pt-12 pb-8 md:pt-20 md:pb-12 animate-fade-in">
+      <section className="relative overflow-hidden bg-white pt-10 pb-4 md:pt-16 md:pb-6 animate-fade-in">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-brand-teal/5 -skew-x-12 translate-x-1/4 pointer-events-none"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="max-w-4xl space-y-8 text-center md:text-left animate-slide-up">
@@ -231,8 +231,8 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       </section>
 
       {/* Categories & Business Grid */}
-      <section className="bg-slate-50 pt-8 pb-12">
-        <div className="max-w-7xl mx-auto px-4 -mt-20 relative z-30 mb-20 reveal">
+      <section className="bg-slate-50 pt-6 pb-6">
+        <div className="max-w-7xl mx-auto px-4 -mt-16 relative z-30 mb-20 reveal">
           <div className="bg-white p-6 md:p-8 rounded-[2rem] md:rounded-[3rem] shadow-2xl border border-slate-100 relative overflow-hidden">
             {/* Pagination Controls for Categories */}
             <div className="flex items-center justify-between mb-6">
@@ -253,7 +253,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
               </div>
             </div>
 
-            <div ref={categoriesRef} className="flex gap-4 md:gap-8 overflow-x-auto no-scrollbar scroll-smooth">
+            <div ref={categoriesRef} className="flex gap-3 md:gap-4 overflow-x-auto no-scrollbar scroll-smooth">
               {Object.values(CategoryType).map((category) => (
                 <button
                   key={category}
@@ -271,9 +271,9 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
         </div>
 
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between mb-8 px-2 md:px-0">
+          <div className="flex items-center justify-between mb-4 px-2 md:px-0">
             <div>
-              <h2 className="text-2xl md:text-3xl font-black text-brand-teal-deep tracking-tight">Comércios Próximos</h2>
+              <h2 className="text-xl md:text-2xl font-black text-brand-teal-deep tracking-tight">Comércios Próximos</h2>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Ordenados por distância</p>
             </div>
             <div className="flex items-center gap-2">
@@ -317,12 +317,12 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       </section>
 
       {/* Vagas Section (Dark) - Adicionado Botão "Ver Todas" */}
-      <section className="bg-slate-900 py-10 md:py-14 text-white overflow-hidden relative">
+      <section className="bg-slate-900 py-6 md:py-8 text-white overflow-hidden relative">
         <div className="absolute top-0 right-0 w-96 h-96 bg-brand-teal/5 rounded-full blur-3xl"></div>
         <div className="max-w-7xl mx-auto px-4 relative z-10">
-          <div className="flex flex-col items-center justify-center mb-10 md:mb-16 gap-6 reveal">
+          <div className="flex flex-col items-center justify-center mb-4 md:mb-6 gap-2 reveal">
             <div className="text-center">
-              <h2 className="text-3xl md:text-5xl font-black tracking-tighter">Vagas em <span className="text-brand-teal">Pira</span></h2>
+              <h2 className="text-2xl md:text-3xl font-black tracking-tighter">Vagas em <span className="text-brand-teal">Pira</span></h2>
               <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest mt-2 md:mt-4">Oportunidades em Piracicaba</p>
             </div>
             <div className="flex items-center gap-4">
@@ -347,9 +347,9 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
                 <div className="bg-brand-teal/20 w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-teal mb-3 md:mb-4 group-hover:scale-110 transition-transform">
                   <ICONS.Briefcase size={18} />
                 </div>
-                <h3 className="text-sm md:text-xl font-black mb-1 md:mb-2 leading-tight line-clamp-2">{job.role}</h3>
-                <p className="text-brand-orange text-[8px] md:text-[10px] font-black uppercase tracking-widest mb-3 md:mb-6 line-clamp-1">{job.company}</p>
-                <Link to="/vagas" className="text-[8px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-brand-teal transition-colors">Detalhes</Link>
+                <h3 className="text-sm md:text-lg font-black mb-1 md:mb-1.5 leading-tight line-clamp-2">{job.role}</h3>
+                <p className="text-brand-orange text-[8px] md:text-[9px] font-black uppercase tracking-widest mb-2 md:mb-3 line-clamp-1">{job.company}</p>
+                <Link to="/vagas" className="text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest hover:text-brand-teal transition-colors">Detalhes</Link>
               </div>
             ))}
             <div className="shrink-0 w-48 flex flex-col items-center justify-center p-8 bg-white/5 rounded-[2rem] border border-dashed border-white/10 snap-start">
@@ -362,8 +362,8 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             </div>
           </div>
 
-          <div className="mt-12 text-center reveal">
-            <Link to="/vagas" className="inline-flex items-center gap-4 bg-brand-teal text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-brand-teal/20 hover:bg-brand-teal-dark hover:scale-105 active:scale-95 transition-all">
+          <div className="mt-6 text-center reveal">
+            <Link to="/vagas" className="inline-flex items-center gap-4 bg-brand-teal text-white px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-brand-teal/20 hover:bg-brand-teal-dark hover:scale-105 active:scale-95 transition-all">
               Ver Todas as Vagas <ICONS.ArrowRight size={18} />
             </Link>
           </div>
@@ -371,10 +371,10 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       </section>
 
       {/* Guia Turístico Section */}
-      <section className="bg-white py-10 md:py-14">
+      <section className="bg-white py-6 md:py-8">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-10 md:mb-16 reveal">
-            <h2 className="text-3xl md:text-5xl font-black text-brand-teal-deep tracking-tighter leading-none">Turismo em <span className="text-brand-orange">Pira</span></h2>
+          <div className="text-center mb-4 md:mb-6 reveal">
+            <h2 className="text-2xl md:text-3xl font-black text-brand-teal-deep tracking-tighter leading-none">Turismo em <span className="text-brand-orange">Pira</span></h2>
             <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest mt-4 md:mt-6">Descubra Piracicaba</p>
             <div className="flex items-center justify-center gap-4 mt-6">
               <button
@@ -413,15 +413,15 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       </section>
 
       {/* Seção de Notícias */}
-      <section className="py-10 md:py-14 bg-slate-50 relative overflow-hidden">
+      <section className="py-6 md:py-8 bg-slate-50 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex flex-col items-center justify-center mb-10 md:mb-16 gap-6 reveal">
+          <div className="flex flex-col items-center justify-center mb-4 md:mb-6 gap-2 reveal">
             <div className="max-w-2xl text-center">
-              <h2 className="text-3xl md:text-5xl font-black text-brand-teal-deep tracking-tighter leading-none mb-4 md:mb-6">
+              <h2 className="text-2xl md:text-3xl font-black text-brand-teal-deep tracking-tighter leading-none mb-2">
                 Notícias da <span className="text-brand-orange">Região</span>
               </h2>
-              <p className="text-slate-500 font-medium text-lg max-w-xl">
+              <p className="text-slate-500 font-medium text-base max-w-xl">
                 Acompanhe o que está acontecendo em Piracicaba.
               </p>
             </div>
