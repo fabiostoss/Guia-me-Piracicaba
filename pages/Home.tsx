@@ -152,7 +152,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
   return (
     <div className="space-y-0 pb-0">
       {/* Hero Section - Animação Inicial */}
-      <section className="relative overflow-hidden bg-white pt-10 pb-16 md:pt-16 md:pb-24 animate-fade-in">
+      <section className="relative bg-white pt-10 pb-16 md:pt-16 md:pb-24 animate-fade-in z-50">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-brand-teal/5 -skew-x-12 translate-x-1/4 pointer-events-none"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="max-w-4xl space-y-8 text-center md:text-left animate-slide-up">
@@ -183,7 +183,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             <div className="relative max-w-3xl mx-auto md:mx-0 pt-4">
               <div className="flex flex-col gap-6">
                 {/* Multi-layered shadow container with hover effects */}
-                <div className="bg-white rounded-[2rem] md:rounded-[2.5rem] overflow-visible p-4 md:p-1.5 flex flex-col md:flex-row gap-2 border border-slate-200/50 ring-1 ring-slate-100 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15),0_10px_25px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.2),0_15px_35px_-10px_rgba(0,0,0,0.15)] hover:scale-[1.02] transition-all duration-500 ease-out backdrop-blur-sm group relative z-40">
+                <div className="bg-white rounded-[2rem] md:rounded-[2.5rem] overflow-visible p-4 md:p-1.5 flex flex-col md:flex-row gap-2 border border-slate-200/50 ring-1 ring-slate-100 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15),0_10px_25px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.2),0_15px_35px_-10px_rgba(0,0,0,0.15)] hover:scale-[1.02] transition-all duration-500 ease-out backdrop-blur-sm group relative z-50">
 
                   {/* Search Input Section */}
                   <div className="flex-grow relative flex items-center px-6 py-4 md:border-r border-slate-200 group/input">
