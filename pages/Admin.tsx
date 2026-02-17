@@ -154,9 +154,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
       `${formData.street}, ${formData.number}, ${formData.neighborhood || ''}, Piracicaba, SP, Brasil`,
       // 2. Sem o bairro (às vezes o bairro no OSM está diferente)
       `${formData.street}, ${formData.number}, Piracicaba, SP, Brasil`,
-      // 3. Rua completa (por extenso)
-      `${formData.street.replace('R. ', 'Rua ').replace('Av. ', 'Avenida ')}, ${formData.number}, Piracicaba, SP, Brasil`,
-      // 4. Apenas o nome do estabelecimento (útil para lugares grandes como Atacadão)
+      // 3. Apenas o nome do estabelecimento (útil para lugares grandes como Atacadão)
       `${formData.name}, Piracicaba, SP, Brasil`
     ];
 
@@ -228,6 +226,14 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validação de abreviações
+    const street = (formData.street || '').trim();
+    if (street.match(/^(R\.|Av\.|Rod\.|Pç\.|Lgo\.)\s/i) || street.match(/\s(R\.|Av\.|Rod\.|Pç\.|Lgo\.)\s/i)) {
+      alert('Por favor, não use abreviações como "R." ou "Av.". Escreva o nome por extenso (Rua, Avenida, etc).');
+      return;
+    }
+
     const finalSchedule = formData.schedule || getDefaultSchedule();
     const fullAddress = `${formData.street}, ${formData.number}${formData.neighborhood ? ` - ${formData.neighborhood}` : ''}, Piracicaba, SP`;
 
@@ -784,8 +790,20 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                     <h3 className="text-xs font-black text-brand-teal uppercase tracking-widest border-l-4 border-brand-teal pl-4">Localização</h3>
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                       <div className="md:col-span-3 space-y-2">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Rua / Logradouro</label>
-                        <input required className="w-full px-6 py-4 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold outline-none" value={formData.street || ''} onChange={e => setFormData({ ...formData, street: e.target.value })} />
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Rua / Logradouro (Sem Abreviações)</label>
+                        <input
+                          required
+                          className="w-full px-6 py-4 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold outline-none placeholder:font-normal placeholder:text-slate-300"
+                          placeholder="Ex: Rua Ricardo Melotto (Não use R.)"
+                          value={formData.street || ''}
+                          onChange={e => {
+                            let val = e.target.value;
+                            // Auto-correção proativa de abreviações comuns no início
+                            if (val.toLowerCase().startsWith('r. ')) val = 'Rua ' + val.slice(3);
+                            if (val.toLowerCase().startsWith('av. ')) val = 'Avenida ' + val.slice(4);
+                            setFormData({ ...formData, street: val });
+                          }}
+                        />
                       </div>
                       <div className="md:col-span-1 space-y-2">
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Número</label>

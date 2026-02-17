@@ -18,7 +18,8 @@ export enum CategoryType {
   INFANTIL = 'Infantil',
   EDUCACAO = 'Educação',
   CONSTRUCAO = 'Construção',
-  EVENTOS = 'Eventos'
+  EVENTOS = 'Eventos',
+  OFICIAIS = 'Oficiais'
 }
 
 export interface DaySchedule {

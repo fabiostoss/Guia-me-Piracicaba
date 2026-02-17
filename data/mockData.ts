@@ -7,7 +7,7 @@ schedule1[0] = { enabled: true, open: '18:00', close: '23:30' }; // Dom
 schedule1[6] = { enabled: true, open: '18:00', close: '23:30' }; // Sáb
 
 const schedule2 = getDefaultSchedule();
-for(let i=0; i<7; i++) schedule2[i] = { enabled: true, open: '00:00', close: '23:59' };
+for (let i = 0; i < 7; i++) schedule2[i] = { enabled: true, open: '00:00', close: '23:59' };
 
 export const INITIAL_BUSINESSES: Business[] = [
   {
@@ -17,11 +17,11 @@ export const INITIAL_BUSINESSES: Business[] = [
     username: 'piraburguer',
     description: 'Os melhores hambúrgueres artesanais feitos com carinho no coração de Piracicaba.',
     category: CategoryType.RESTAURANTES,
-    street: 'Av. Independência',
+    street: 'Avenida Independência',
     number: '1200',
     neighborhood: 'Bairro Alto',
     cep: '13419-160',
-    address: 'Av. Independência, 1200 - Bairro Alto, Piracicaba, SP',
+    address: 'Avenida Independência, 1200 - Bairro Alto, Piracicaba, SP',
     phone: '5519988887777',
     password: '123',
     imageUrl: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?q=80&w=2072&auto=format&fit=crop',

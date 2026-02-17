@@ -92,6 +92,14 @@ const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ businesses, onUpd
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validação de abreviações
+    const street = (formData.street || '').trim();
+    if (street.match(/^(R\.|Av\.|Rod\.|Pç\.|Lgo\.)\s/i) || street.match(/\s(R\.|Av\.|Rod\.|Pç\.|Lgo\.)\s/i)) {
+      alert('Por favor, não use abreviações como "R." ou "Av.". Escreva o nome por extenso (Rua, Avenida, etc).');
+      return;
+    }
+
     if (business && formData) {
       const finalSchedule = formData.schedule || getDefaultSchedule();
       const fullAddress = `${formData.street}, ${formData.number}${formData.neighborhood ? ` - ${formData.neighborhood}` : ''}, Piracicaba, SP`;
@@ -333,8 +341,20 @@ const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ businesses, onUpd
                 <h3 className="text-xs font-black text-brand-teal uppercase tracking-[0.3em] border-l-4 border-brand-teal pl-4">Endereço em Piracicaba</h3>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                   <div className="md:col-span-3 space-y-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Rua / Logradouro</label>
-                    <input required className="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all shadow-inner" value={formData.street || ''} onChange={e => setFormData({ ...formData, street: e.target.value })} />
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Rua / Logradouro (Sem Abreviações)</label>
+                    <input
+                      required
+                      className="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all shadow-inner placeholder:font-normal placeholder:text-slate-300"
+                      placeholder="Ex: Rua Ricardo Melotto (Não use R.)"
+                      value={formData.street || ''}
+                      onChange={e => {
+                        let val = e.target.value;
+                        // Auto-correção proativa
+                        if (val.toLowerCase().startsWith('r. ')) val = 'Rua ' + val.slice(3);
+                        if (val.toLowerCase().startsWith('av. ')) val = 'Avenida ' + val.slice(4);
+                        setFormData({ ...formData, street: val });
+                      }}
+                    />
                   </div>
                   <div className="md:col-span-1 space-y-2">
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Nº</label>
