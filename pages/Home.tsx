@@ -8,6 +8,7 @@ import { getLocalNews, NEWS_MOCK } from '../services/newsService';
 import { isBusinessOpen } from '../utils/businessUtils';
 import { TOURIST_SPOTS } from '../services/touristService';
 import { getLatestJobs } from '../services/jobService';
+import { calculateDistance } from '../utils/geoUtils';
 
 interface HomeProps {
   businesses: Business[];
@@ -20,6 +21,8 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
   const [selectedNeighborhood, setSelectedNeighborhood] = useState<string>('');
   const [neighborhoodFilterTerm, setNeighborhoodFilterTerm] = useState('');
   const [latestNews, setLatestNews] = useState<NewsArticle[]>(NEWS_MOCK);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [isLocating, setIsLocating] = useState(false);
 
   useEffect(() => {
     // Tenta atualizar com notícias reais, se falhar, mantém o mock (que já está no estado inicial)
@@ -28,7 +31,39 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
         setLatestNews(news);
       }
     });
+
+    // Check if location was already granted/stored
+    const storedLoc = localStorage.getItem('user_location');
+    if (storedLoc) {
+      setUserLocation(JSON.parse(storedLoc));
+    }
   }, []);
+
+  const requestLocation = () => {
+    if (!navigator.geolocation) {
+      alert('Geolocalização não suportada pelo seu navegador.');
+      return;
+    }
+
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const coords = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        setUserLocation(coords);
+        localStorage.setItem('user_location', JSON.stringify(coords));
+        setIsLocating(false);
+      },
+      (error) => {
+        console.error('Erro ao obter localização:', error);
+        setIsLocating(false);
+        alert('Não foi possível obter sua localização. Verifique as permissões do navegador.');
+      },
+      { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+    );
+  };
 
   // Intersection Observer para animações
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -50,7 +85,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
   }, [searchTerm, selectedCategory]);
 
   const filteredBusinesses = useMemo(() => {
-    return businesses.filter(b => {
+    let result = businesses.filter(b => {
       const matchesSearch = b.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         b.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
         b.code?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -61,7 +96,26 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
 
       return matchesSearch && matchesCategory && matchesNeighborhood && isActive;
     });
-  }, [businesses, searchTerm, selectedCategory, selectedNeighborhood]);
+
+    // Se a localização estiver disponível, adicionar distância e ordenar
+    if (userLocation) {
+      result = result.map(b => {
+        if (b.latitude && b.longitude) {
+          const distance = calculateDistance(userLocation.lat, userLocation.lng, b.latitude, b.longitude);
+          return { ...b, distance }; // Temporariamente adicionando distância para ordenação
+        }
+        return b;
+      });
+
+      result.sort((a, b) => {
+        const distA = (a as any).distance ?? 9999;
+        const distB = (b as any).distance ?? 9999;
+        return distA - distB;
+      });
+    }
+
+    return result;
+  }, [businesses, searchTerm, selectedCategory, selectedNeighborhood, userLocation]);
 
   const featuredSpots = (TOURIST_SPOTS || []).slice(0, 3);
   const recentJobs = (getLatestJobs() || []).slice(0, 4);
@@ -90,6 +144,29 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             <p className="text-lg md:text-2xl text-slate-500 font-medium max-w-2xl">
               Pesquise, encontre e peça via WhatsApp sem intermediários. O guia direto da Noiva da Colina.
             </p>
+
+            <div className="flex flex-wrap gap-4 pt-2">
+              <button
+                onClick={requestLocation}
+                disabled={isLocating}
+                className={`flex items-center gap-2 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${userLocation
+                  ? 'bg-emerald-50 text-emerald-600 border border-emerald-100'
+                  : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                  }`}
+              >
+                <ICONS.MapPin size={14} className={isLocating ? 'animate-bounce' : ''} />
+                {isLocating ? 'Obtendo Localização...' : userLocation ? 'Localização Ativa' : 'Ativar Lojas Próximas'}
+              </button>
+              {userLocation && (
+                <button
+                  onClick={() => { setUserLocation(null); localStorage.removeItem('user_location'); }}
+                  className="p-3 rounded-full bg-slate-100 text-slate-400 hover:text-brand-orange transition-colors"
+                  title="Limpar Localização"
+                >
+                  <ICONS.X size={14} />
+                </button>
+              )}
+            </div>
 
             {/* Search Bar - Enhanced Visual Design */}
             <div className="relative max-w-3xl mx-auto md:mx-0 pt-4">

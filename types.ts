@@ -49,6 +49,8 @@ export interface Business {
   isOpen?: boolean;
   isActive: boolean;
   isOfficial?: boolean;
+  latitude?: number;
+  longitude?: number;
   rating?: number;
   reviewsCount?: number;
   googleMapsLink?: string;

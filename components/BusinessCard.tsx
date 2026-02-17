@@ -1,12 +1,12 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Business } from '../types';
 import { ICONS, WHATSAPP_MSG_DEFAULT } from '../constants';
 import { isBusinessOpen } from '../utils/businessUtils';
+import { formatDistance } from '../utils/geoUtils';
 
 interface BusinessCardProps {
-  business: Business;
+  business: Business & { distance?: number };
   checkAuth?: (action: () => void) => void;
 }
 
@@ -36,9 +36,18 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
         <div className="absolute top-4 left-4">
           <span className="text-white text-[9px] font-black uppercase tracking-[0.3em] bg-brand-teal/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20">
-            {business.category}
           </span>
         </div>
+
+        {business.distance !== undefined && (
+          <div className="absolute top-4 right-4">
+            <span className="text-white text-[9px] font-black uppercase tracking-widest bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 flex items-center gap-2">
+              <ICONS.MapPin size={10} className="text-brand-orange" />
+              {formatDistance(business.distance)}
+            </span>
+          </div>
+        )}
+
         <div className="absolute bottom-4 right-4">
           {isOpen ? (
             <span className="bg-emerald-500 text-white text-[9px] font-black px-3 py-1.5 rounded-xl uppercase tracking-widest flex items-center gap-2 shadow-lg">

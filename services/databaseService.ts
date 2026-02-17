@@ -291,6 +291,8 @@ function transformBusinessFromDB(data: any): Business {
         reviewsCount: data.reviews_count || 0,
         googleMapsLink: data.google_maps_link || '',
         views: data.views || 0,
+        latitude: data.latitude,
+        longitude: data.longitude,
         createdAt: new Date(data.created_at).getTime(),
     };
 }
@@ -324,6 +326,8 @@ function transformBusinessToDB(business: Business): any {
         reviews_count: business.reviewsCount || 0,
         google_maps_link: business.googleMapsLink || '',
         views: business.views || 0,
+        latitude: business.latitude,
+        longitude: business.longitude,
     };
 }
 
