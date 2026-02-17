@@ -183,7 +183,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             <div className="relative max-w-3xl mx-auto md:mx-0 pt-4">
               <div className="flex flex-col gap-6">
                 {/* Multi-layered shadow container with hover effects */}
-                <div className="bg-white rounded-[2rem] md:rounded-[2.5rem] overflow-visible p-4 md:p-2 flex flex-col md:flex-row gap-2 border border-slate-200/50 ring-1 ring-slate-100 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15),0_10px_25px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.2),0_15px_35px_-10px_rgba(0,0,0,0.15)] hover:scale-[1.02] transition-all duration-500 ease-out backdrop-blur-sm group">
+                <div className="bg-white rounded-[2rem] md:rounded-[2.5rem] overflow-hidden p-4 md:p-1.5 flex flex-col md:flex-row gap-2 border border-slate-200/50 ring-1 ring-slate-100 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15),0_10px_25px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.2),0_15px_35px_-10px_rgba(0,0,0,0.15)] hover:scale-[1.02] transition-all duration-500 ease-out backdrop-blur-sm group">
 
                   {/* Search Input Section */}
                   <div className="flex-grow relative flex items-center px-6 py-4 md:border-r border-slate-200 group/input">
@@ -213,7 +213,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
                   </div>
 
                   {/* Enhanced Search Button with Gradient Hover */}
-                  <button className="relative bg-brand-teal text-white px-10 py-5 rounded-2xl font-black text-sm transition-all duration-300 active:scale-95 shadow-lg shadow-brand-teal/30 uppercase tracking-widest whitespace-nowrap overflow-hidden group/button hover:shadow-xl hover:shadow-brand-teal/40 hover:scale-105">
+                  <button className="relative bg-brand-teal text-white px-8 py-4 rounded-xl md:rounded-2xl font-black text-sm transition-all duration-300 active:scale-95 shadow-lg shadow-brand-teal/30 uppercase tracking-widest whitespace-nowrap overflow-hidden group/button hover:shadow-xl hover:shadow-brand-teal/40 hover:scale-105">
                     {/* Gradient overlay on hover */}
                     <div className="absolute inset-0 bg-gradient-to-r from-brand-teal via-brand-teal-dark to-brand-teal opacity-0 group-hover/button:opacity-100 transition-opacity duration-300"></div>
                     {/* Shine effect */}
@@ -232,8 +232,8 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
 
       {/* Categories & Business Grid */}
       <section className="bg-slate-50 pt-6 pb-6">
-        <div className="max-w-7xl mx-auto px-4 -mt-16 relative z-30 mb-20 reveal">
-          <div className="bg-white p-6 md:p-8 rounded-[2rem] md:rounded-[3rem] shadow-2xl border border-slate-100 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 -mt-16 relative z-30 mb-10 reveal">
+          <div className="bg-white p-4 md:p-6 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl border border-slate-100 relative overflow-hidden">
             {/* Pagination Controls for Categories */}
             <div className="flex items-center justify-between mb-6">
               <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Categorias</span>
@@ -260,8 +260,8 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
                   onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
                   className="flex flex-col items-center group transition-all shrink-0"
                 >
-                  <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center transition-all border-2 mb-4 ${selectedCategory === category ? 'bg-brand-teal border-brand-teal text-white shadow-xl scale-110' : 'bg-slate-50 border-transparent text-brand-teal-deep hover:bg-slate-100'}`}>
-                    {React.cloneElement(CATEGORY_ICONS[category] as React.ReactElement<any>, { className: "w-6 h-6 md:w-7 md:h-7" })}
+                  <div className={`w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center transition-all border-2 mb-2 ${selectedCategory === category ? 'bg-brand-teal border-brand-teal text-white shadow-xl scale-110' : 'bg-slate-50 border-transparent text-brand-teal-deep hover:bg-slate-100'}`}>
+                    {React.cloneElement(CATEGORY_ICONS[category] as React.ReactElement<any>, { className: "w-5 h-5 md:w-6 md:h-6" })}
                   </div>
                   <span className={`text-[8px] md:text-[9px] font-black uppercase tracking-widest text-center ${selectedCategory === category ? 'text-brand-teal' : 'text-slate-400'}`}>{category}</span>
                 </button>
