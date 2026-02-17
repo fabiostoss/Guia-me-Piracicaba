@@ -106,7 +106,13 @@ const CustomerRegistrationModal: React.FC<{
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-brand-teal-deep/80 backdrop-blur-md animate-in fade-in duration-300">
-      <div className="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden p-10 space-y-8 animate-in zoom-in duration-300">
+      <div className="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden p-10 space-y-8 animate-in zoom-in duration-300 relative">
+        <button
+          onClick={onClose}
+          className="absolute top-6 right-6 text-slate-300 hover:text-brand-orange transition-colors"
+        >
+          <ICONS.X size={24} />
+        </button>
         <div className="text-center space-y-2">
           <div className="bg-brand-orange/10 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 text-brand-orange">
             <ICONS.UserCheck size={32} />

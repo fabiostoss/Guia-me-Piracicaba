@@ -31,6 +31,7 @@ export interface Business {
   username: string;
   description: string;
   category: CategoryType;
+  segment?: string;
   address: string;
   street: string;
   number: string;

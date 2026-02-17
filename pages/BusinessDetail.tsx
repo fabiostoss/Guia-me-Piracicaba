@@ -40,19 +40,20 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ businesses, onIncrement
     <div className="pb-24 bg-slate-50 min-h-screen">
       {/* Header com Imagem de Capa Restaurada */}
       <div className="relative h-[40vh] md:h-[50vh] overflow-hidden">
-        <img 
-          src={business.imageUrl} 
-          alt="" 
+        <img
+          src={business.imageUrl}
+          alt=""
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-brand-teal-deep/40 backdrop-blur-[2px]"></div>
-        
-        <Link 
-          to="/" 
-          className="absolute top-6 left-6 bg-white/20 hover:bg-white/40 text-white p-3 rounded-2xl transition-all border border-white/10 backdrop-blur-md"
+
+        <button
+          onClick={() => navigate(-1)}
+          className="absolute top-12 right-8 z-[60] bg-white/20 hover:bg-white/40 text-white p-3 rounded-2xl transition-all border border-white/10 backdrop-blur-md shadow-lg active:scale-90"
+          aria-label="Voltar"
         >
           <ICONS.X size={24} />
-        </Link>
+        </button>
 
         <div className="absolute bottom-0 left-0 w-full p-8 md:p-16 text-white">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end gap-8">
@@ -124,7 +125,7 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ businesses, onIncrement
                 <ICONS.Eye size={16} className="text-brand-orange" />
                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{business.views || 0} Visualizações</span>
               </div>
-              
+
               <div className="space-y-4 mb-10">
                 {business.offersDelivery && (
                   <div className="flex items-center bg-emerald-50 text-emerald-700 px-5 py-4 rounded-2xl border border-emerald-100 font-black text-[10px] uppercase tracking-widest">
@@ -137,8 +138,8 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ businesses, onIncrement
                   </div>
                 )}
               </div>
-              
-              <a 
+
+              <a
                 href={whatsappUrl}
                 target="_blank"
                 rel="noreferrer"

@@ -2,7 +2,7 @@
 import React, { useState, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Business, CategoryType, Customer } from '../types';
-import { ICONS, PIRACICABA_NEIGHBORHOODS } from '../constants';
+import { ICONS, PIRACICABA_NEIGHBORHOODS, BUSINESS_SPECIALTIES } from '../constants';
 import { isBusinessOpen, getDefaultSchedule, formatScheduleSummary } from '../utils/businessUtils';
 import * as db from '../services/databaseService';
 
@@ -343,9 +343,22 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                     <input required className="w-full px-6 py-4 rounded-2xl border border-slate-200 bg-white text-slate-700 font-bold outline-none focus:border-brand-teal" value={formData.name || ''} onChange={e => setFormData({ ...formData, name: e.target.value })} />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Segmento Principal</label>
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Segmento Principal (Categoria)</label>
                     <select className="w-full px-6 py-4 rounded-2xl border border-slate-200 bg-white text-slate-700 font-bold outline-none focus:border-brand-teal" value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value as CategoryType })}>
                       {Object.values(CategoryType).map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Especialidade / Seguimento (O que você vende?)</label>
+                    <select
+                      className="w-full px-6 py-4 rounded-2xl border border-slate-200 bg-white text-slate-700 font-bold outline-none focus:border-brand-teal"
+                      value={formData.segment || ''}
+                      onChange={e => setFormData({ ...formData, segment: e.target.value })}
+                    >
+                      <option value="">Selecione a especialidade...</option>
+                      {BUSINESS_SPECIALTIES.map(spec => (
+                        <option key={spec} value={spec}>{spec}</option>
+                      ))}
                     </select>
                   </div>
                 </div>

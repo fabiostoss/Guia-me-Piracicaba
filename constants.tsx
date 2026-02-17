@@ -111,3 +111,37 @@ export const PIRACICABA_NEIGHBORHOODS: Record<string, string[]> = {
 export const WHATSAPP_ADMIN = "5519995901620";
 export const WHATSAPP_MSG_DEFAULT = "Olá, encontrei seu comércio no Guia-me Piracicaba e gostaria de mais informações.";
 export const INSTAGRAM_URL = "https://www.instagram.com/guiamepiracicaba";
+
+export const BUSINESS_SPECIALTIES = [
+  "Academia",
+  "Açougue",
+  "Alimentação",
+  "Atacadista",
+  "Automotivo",
+  "Bar / Choperia",
+  "Barbearia",
+  "Cafeteria / Doceria",
+  "Construção",
+  "Consultório / Clínica",
+  "Educação / Cursos",
+  "Eventos / Festas",
+  "Farmácia",
+  "Fast Food",
+  "Hambúrgueria",
+  "Imobiliária",
+  "Informática",
+  "Loja de Roupas / Moda",
+  "Mercado / Supermercado",
+  "Móveis / Decoração",
+  "Padaria",
+  "Pet Shop / Veterinária",
+  "Pizzaria",
+  "Posto de Combustível",
+  "Restaurante",
+  "Salão de Beleza",
+  "Serviços Gráficos",
+  "Sorveteria",
+  "Suplementos",
+  "Transporte / Logística",
+  "Outros"
+].sort();

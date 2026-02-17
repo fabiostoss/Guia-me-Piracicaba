@@ -60,6 +60,12 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
           </h3>
         </Link>
 
+        {business.segment && (
+          <p className="text-brand-orange text-[10px] font-black uppercase tracking-[0.2em] mb-3">
+            {business.segment}
+          </p>
+        )}
+
         {business.rating ? (
           <div className="flex items-center gap-1 mb-4">
             <div className="flex items-center text-amber-500">
