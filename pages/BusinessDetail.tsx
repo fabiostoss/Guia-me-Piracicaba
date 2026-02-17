@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Business } from '../types';
 import { ICONS, WHATSAPP_MSG_DEFAULT } from '../constants';
@@ -15,12 +15,30 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ businesses, onIncrement
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const business = businesses.find(b => String(b.id) === String(id));
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
     if (business && onIncrementView) {
       onIncrementView(business.id);
     }
   }, [id]);
+
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    const elements = document.querySelectorAll('.reveal');
+    elements.forEach(el => {
+      observerRef.current?.observe(el);
+    });
+
+    return () => observerRef.current?.disconnect();
+  }, [business]);
 
   if (!business) {
     return (
@@ -77,6 +95,12 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ businesses, onIncrement
                 <span className="bg-brand-orange text-white text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
                   {business.category}
                 </span>
+                {business.rating && (
+                  <span className="bg-amber-400 text-white text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg flex items-center gap-1">
+                    <ICONS.Star size={10} fill="currentColor" />
+                    {business.rating} <span className="opacity-75">({business.reviewsCount})</span>
+                  </span>
+                )}
                 {isOpen ? (
                   <span className="bg-emerald-500 text-white text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
                     Aberto agora
