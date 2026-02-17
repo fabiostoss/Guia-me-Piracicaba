@@ -107,26 +107,46 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ businesses, onIncrement
             </div>
 
             <div className="bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-sm space-y-10">
-              <div className="flex items-start gap-4">
-                <div className="bg-brand-orange/10 p-4 rounded-2xl text-brand-orange shrink-0">
-                  <ICONS.MapPin size={24} />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 reveal delay-100">
+                {/* Location Card */}
+                <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+                  <div className="flex items-center gap-4 mb-4 border-b border-slate-50 pb-4">
+                    <div className="bg-brand-orange/10 p-3 rounded-xl text-brand-orange group-hover:scale-110 transition-transform duration-300">
+                      <ICONS.MapPin size={24} />
+                    </div>
+                    <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Localização</h3>
+                  </div>
+                  <div className="space-y-4">
+                    <p className="text-lg font-bold text-slate-700 leading-snug min-h-[3.5rem]">{business.address}</p>
+                    <a
+                      href={mapsUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white bg-brand-orange hover:bg-brand-orange-dark px-4 py-2 rounded-full transition-colors shadow-lg shadow-brand-orange/20"
+                    >
+                      <ICONS.Map size={12} />
+                      Abrir no Google Maps
+                    </a>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Localização</h4>
-                  <p className="text-xl font-bold text-brand-teal-deep mb-4">{business.address}</p>
-                  <a href={mapsUrl} target="_blank" rel="noreferrer" className="text-brand-teal font-black hover:underline uppercase tracking-widest text-[10px]">Ver no Mapa</a>
-                </div>
-              </div>
 
-              <div className="flex items-start gap-4">
-                <div className="bg-brand-teal/10 p-4 rounded-2xl text-brand-teal shrink-0">
-                  <ICONS.Clock size={24} />
-                </div>
-                <div>
-                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Funcionamento</h4>
-                  <p className="text-slate-600 font-bold text-lg leading-relaxed">
-                    {business.businessHours || 'Consulte os horários no WhatsApp'}
-                  </p>
+                {/* Hours Card */}
+                <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+                  <div className="flex items-center gap-4 mb-4 border-b border-slate-50 pb-4">
+                    <div className="bg-brand-teal/10 p-3 rounded-xl text-brand-teal group-hover:scale-110 transition-transform duration-300">
+                      <ICONS.Clock size={24} />
+                    </div>
+                    <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Funcionamento</h3>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-lg font-bold text-slate-700 leading-relaxed">
+                      {business.businessHours || 'Consulte os horários no WhatsApp'}
+                    </p>
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase tracking-widest border border-emerald-100">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                      Horário de Brasília
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -135,15 +155,21 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ businesses, onIncrement
           <div className="lg:col-span-1">
             <div className="sticky top-28 bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-2xl">
 
-              <div className="space-y-4 mb-10">
+              <div className="space-y-3 mb-8">
                 {business.offersDelivery && (
-                  <div className="flex items-center bg-emerald-50 text-emerald-700 px-5 py-4 rounded-2xl border border-emerald-100 font-black text-[10px] uppercase tracking-widest">
-                    <ICONS.Truck size={18} className="mr-3" /> Faz entregas em Pira
+                  <div className="flex items-center gap-3 bg-emerald-50 text-emerald-700 px-5 py-4 rounded-xl border border-emerald-100/50 shadow-sm">
+                    <div className="bg-white p-2 rounded-lg text-emerald-600 shadow-sm">
+                      <ICONS.Truck size={18} />
+                    </div>
+                    <span className="font-black text-[10px] uppercase tracking-widest">Faz entregas na região</span>
                   </div>
                 )}
                 {business.offersPickup && (
-                  <div className="flex items-center bg-brand-teal/5 text-brand-teal-deep px-5 py-4 rounded-2xl border border-brand-teal/10 font-black text-[10px] uppercase tracking-widest">
-                    <ICONS.Package size={18} className="mr-3" /> Aceita retirada no local
+                  <div className="flex items-center gap-3 bg-brand-teal/5 text-brand-teal-deep px-5 py-4 rounded-xl border border-brand-teal/10 shadow-sm">
+                    <div className="bg-white p-2 rounded-lg text-brand-teal shadow-sm">
+                      <ICONS.Package size={18} />
+                    </div>
+                    <span className="font-black text-[10px] uppercase tracking-widest">Retirada no Balcão</span>
                   </div>
                 )}
               </div>

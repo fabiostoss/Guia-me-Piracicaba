@@ -161,6 +161,7 @@ const CustomerRegistrationModal: React.FC<{
               onChange={setNeighborhood}
               placeholder="Selecione..."
               triggerClassName="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-bold text-xs outline-none focus:border-brand-teal focus:bg-white transition-all appearance-none"
+              dropUp={true}
             />
           </div>
           <button className="w-full bg-brand-teal text-white py-3 rounded-xl font-black uppercase tracking-widest text-[10px] shadow-lg shadow-brand-teal/20 hover:scale-[1.02] active:scale-95 transition-all mt-2">
@@ -174,10 +175,10 @@ const CustomerRegistrationModal: React.FC<{
           </button>
 
           <div className="border-t border-slate-50 pt-3">
-            <a href="/politicas-de-privacidade" target="_blank" className="text-[8px] font-bold text-slate-300 hover:text-brand-teal transition-colors flex items-center justify-center gap-1 group">
+            <Link to="/politica-de-privacidade" className="text-[8px] font-bold text-slate-300 hover:text-brand-teal transition-colors flex items-center justify-center gap-1 group">
               <ICONS.Shield size={10} />
               <span className="group-hover:underline">Políticas de Privacidade</span>
-            </a>
+            </Link>
           </div>
         </div>
       </div>

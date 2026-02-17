@@ -55,7 +55,8 @@ import {
   CheckCircle,
   Tag,
   Crown,
-  Shield
+  Shield,
+  Map
 } from 'lucide-react';
 import { CategoryType } from './types';
 
@@ -109,7 +110,8 @@ export const ICONS = {
   CheckCircle,
   Tag,
   Crown,
-  Shield
+  Shield,
+  Map
 };
 
 export const CATEGORY_ICONS: Record<CategoryType, React.ReactNode> = {

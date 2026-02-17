@@ -9,6 +9,7 @@ interface NeighborhoodSelectorProps {
     className?: string; // Container class
     triggerClassName?: string; // Class for the "select box" look
     dropdownClassName?: string; // Class for the expanded list
+    dropUp?: boolean; // If true, opens upwards
 }
 
 const NeighborhoodSelector: React.FC<NeighborhoodSelectorProps> = ({
@@ -17,7 +18,8 @@ const NeighborhoodSelector: React.FC<NeighborhoodSelectorProps> = ({
     placeholder = "Todos os Bairros",
     className = "",
     triggerClassName = "",
-    dropdownClassName = ""
+    dropdownClassName = "",
+    dropUp = false
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [filter, setFilter] = useState('');
@@ -66,7 +68,7 @@ const NeighborhoodSelector: React.FC<NeighborhoodSelectorProps> = ({
 
             {/* Expanded List */}
             {isOpen && (
-                <div className={`absolute z-[150] top-full mt-2 left-0 w-full bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden animate-fade-in ${dropdownClassName}`}>
+                <div className={`absolute z-[150] left-0 w-full bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden animate-fade-in ${dropUp ? 'bottom-full mb-2' : 'top-full mt-2'} ${dropdownClassName}`}>
                     {/* Search Input INSIDE the list */}
                     <div className="p-3 border-b border-slate-50 bg-slate-50/50">
                         <div className="relative flex items-center">
