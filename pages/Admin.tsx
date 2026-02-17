@@ -249,12 +249,10 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                         <input
                           type="number"
                           className="w-20 bg-transparent font-black text-slate-700 outline-none focus:bg-white focus:ring-2 focus:ring-brand-teal/20 rounded-lg px-2 -ml-2 transition-all"
-                          defaultValue={biz.views || 0}
-                          onBlur={(e) => {
+                          value={biz.views || 0}
+                          onChange={(e) => {
                             const val = parseInt(e.target.value) || 0;
-                            if (val !== biz.views) {
-                              onUpdate({ ...biz, views: val });
-                            }
+                            onUpdate({ ...biz, views: val });
                           }}
                           onKeyDown={(e) => {
                             if (e.key === 'Enter') {
