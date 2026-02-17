@@ -506,7 +506,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                 <tr>
                   <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Identificação da Loja</th>
                   <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Categoria / Bairro</th>
-                  <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">WhatsApp</th>
+
                   <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Acessos</th>
                   <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
                   <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Ação</th>
@@ -569,20 +569,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                           </div>
                         </div>
                       </td>
-                      <td className="px-8 py-6">
-                        <div className="flex flex-col gap-1 group/phone">
-                          <div className="flex items-center gap-2">
-                            <input
-                              placeholder="(19) 9..."
-                              className={`w-32 text-[11px] font-black outline-none bg-transparent border-b border-transparent focus:border-brand-teal transition-all ${draft.phone !== undefined ? 'text-brand-teal' : 'text-slate-500'}`}
-                              value={currentPhone || ''}
-                              onChange={e => setDraftChanges(prev => ({ ...prev, [biz.id]: { ...prev[biz.id], phone: e.target.value } }))}
-                            />
-                            <ICONS.Edit size={10} className="text-slate-200 opacity-0 group-hover/phone:opacity-100 transition-opacity" />
-                          </div>
-                          <span className="text-[8px] font-bold text-slate-300 uppercase tracking-widest">Número</span>
-                        </div>
-                      </td>
+
                       <td className="px-8 py-6">
                         <div className="flex flex-col gap-1 group/views">
                           <div className="flex items-center gap-2">
@@ -640,7 +627,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                 <thead className="bg-slate-50 border-b border-slate-100">
                   <tr>
                     <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Nome do Cliente</th>
-                    <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">WhatsApp</th>
+
                     <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Bairro</th>
                     <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Data</th>
                   </tr>
@@ -649,7 +636,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                   {customers.map(customer => (
                     <tr key={customer.id} className="hover:bg-slate-50/50">
                       <td className="px-10 py-6 font-black text-brand-teal-deep">{customer.name}</td>
-                      <td className="px-10 py-6 text-brand-teal font-bold">{customer.phone}</td>
+
                       <td className="px-10 py-6">
                         <span className="text-[10px] font-black bg-brand-orange/5 text-brand-orange px-3 py-1 rounded-lg uppercase tracking-wider">
                           {customer.neighborhood}
