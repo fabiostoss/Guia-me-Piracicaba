@@ -52,9 +52,12 @@ export const createBusiness = async (business: Business): Promise<Business | nul
 export const updateBusiness = async (business: Business): Promise<Business | null> => {
     const dbBusiness = transformBusinessToDB(business);
 
+    // Remove ID and created_at from update payload to avoid primary key/immutable field errors
+    const { id, created_at, ...updateData } = dbBusiness;
+
     const { data, error } = await supabase
         .from('businesses')
-        .update(dbBusiness)
+        .update(updateData)
         .eq('id', business.id)
         .select()
         .single();

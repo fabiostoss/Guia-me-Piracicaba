@@ -119,7 +119,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
     } else {
       const newBiz = {
         ...bizData,
-        id: Date.now().toString(),
+        id: crypto.randomUUID(),
         code: `PIRA-${(businesses.length + 1).toString().padStart(4, '0')}`,
         createdAt: Date.now(),
         isActive: true,
@@ -159,7 +159,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
         const original = businesses.find(b => String(b.id) === String(id));
         if (original) {
           // Garante que estamos enviando o objeto completo para o onUpdate
-          const updatedBusiness = { ...original, ...changes };
+          const updatedBusiness = { ...original, ...changes } as Business;
           await onUpdate(updatedBusiness);
         }
       }
