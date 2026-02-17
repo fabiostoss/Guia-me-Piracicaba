@@ -32,6 +32,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
   const [activeTab, setActiveTab] = useState<'all' | 'active' | 'inactive'>('all');
   const [draftChanges, setDraftChanges] = useState<Record<string, Partial<Business>>>({});
   const [isSaving, setIsSaving] = useState(false);
+  const [isGeocoding, setIsGeocoding] = useState(false);
 
   const logoInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
@@ -141,21 +142,47 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
     navigate('/admin-login');
   };
 
-  const updateCurrentGps = () => {
-    if (!navigator.geolocation) {
-      alert('Geolocalização não suportada');
+  const updateGpsByAddress = async () => {
+    if (!formData.street || !formData.number) {
+      alert('Por favor, preencha a rua e o número primeiro.');
       return;
     }
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
+
+    setIsGeocoding(true);
+    try {
+      const query = `${formData.street}, ${formData.number}, ${formData.neighborhood || ''}, Piracicaba, SP, Brasil`;
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`);
+      const data = await response.json();
+
+      if (data && data.length > 0) {
         setFormData(prev => ({
           ...prev,
-          latitude: pos.coords.latitude,
-          longitude: pos.coords.longitude
+          latitude: parseFloat(data[0].lat),
+          longitude: parseFloat(data[0].lon)
         }));
-      },
-      () => alert('Erro ao obter localização')
-    );
+      } else {
+        // Tenta uma busca mais genérica se a específica falhar
+        const fallbackQuery = `${formData.street}, Piracicaba, SP, Brasil`;
+        const fallbackResponse = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fallbackQuery)}&limit=1`);
+        const fallbackData = await fallbackResponse.json();
+
+        if (fallbackData && fallbackData.length > 0) {
+          setFormData(prev => ({
+            ...prev,
+            latitude: parseFloat(fallbackData[0].lat),
+            longitude: parseFloat(fallbackData[0].lon)
+          }));
+          alert('Localizamos a rua, mas não o número exato. Coordenadas aproximadas aplicadas.');
+        } else {
+          alert('Não foi possível encontrar o endereço automaticamente. Verifique se o nome da rua está correto.');
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao buscar coordenadas:', error);
+      alert('Erro ao conectar com o serviço de localização.');
+    } finally {
+      setIsGeocoding(false);
+    }
   };
 
   // Abre o modal de edição com clonagem segura para garantir que o formulário receba os dados
@@ -791,10 +818,16 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                     </div>
                     <button
                       type="button"
-                      onClick={updateCurrentGps}
-                      className="flex items-center gap-3 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all border border-emerald-100"
+                      onClick={updateGpsByAddress}
+                      disabled={isGeocoding}
+                      className="flex items-center gap-3 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all border border-emerald-100 disabled:opacity-50"
                     >
-                      <ICONS.MapPin size={14} /> Atualizar para Coordenadas Atuais
+                      {isGeocoding ? (
+                        <div className="w-3 h-3 border-2 border-emerald-600/30 border-t-emerald-600 rounded-full animate-spin"></div>
+                      ) : (
+                        <ICONS.MapPin size={14} />
+                      )}
+                      {isGeocoding ? 'Buscando...' : 'Obter Coordenadas pelo Endereço'}
                     </button>
                   </div>
 
