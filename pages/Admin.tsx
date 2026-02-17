@@ -159,7 +159,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
         const original = businesses.find(b => String(b.id) === String(id));
         if (original) {
           // Garante que estamos enviando o objeto completo para o onUpdate
-          const updatedBusiness = { ...original, ...changes } as Business;
+          const updatedBusiness = Object.assign({}, original, changes) as Business;
           await onUpdate(updatedBusiness);
         }
       }
@@ -208,7 +208,12 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
           </div>
         </div>
         <div className="flex gap-4">
-          <button onClick={handleLogout} className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-brand-orange">Sair</button>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-brand-orange hover:bg-brand-orange/5 transition-all"
+          >
+            <ICONS.X size={14} /> Sair do Painel
+          </button>
           <button onClick={openAddModal} className="bg-brand-orange text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-brand-orange/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
             <ICONS.Plus size={16} /> Novo Comércio
           </button>
