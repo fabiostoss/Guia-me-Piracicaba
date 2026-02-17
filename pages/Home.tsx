@@ -87,12 +87,12 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
                 <div className="bg-white rounded-[2.5rem] overflow-visible p-2 flex flex-col md:flex-row gap-2 border border-slate-200/50 ring-1 ring-slate-100 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15),0_10px_25px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.2),0_15px_35px_-10px_rgba(0,0,0,0.15)] hover:scale-[1.02] transition-all duration-500 ease-out backdrop-blur-sm group">
 
                   {/* Search Input Section */}
-                  <div className="flex-grow relative flex items-center px-6 py-4 md:border-r border-slate-100 group/input">
-                    <ICONS.Search className="text-slate-300 mr-4 group-hover/input:text-brand-teal transition-colors duration-300" size={24} />
+                  <div className="flex-grow relative flex items-center px-6 py-4 md:border-r border-slate-200 group/input">
+                    <ICONS.Search className="text-slate-400 mr-4 group-hover/input:text-brand-teal transition-colors duration-300" size={24} />
                     <input
                       type="text"
                       placeholder="O que você procura?"
-                      className="w-full text-lg font-bold outline-none text-slate-700 bg-transparent placeholder:text-slate-300 focus:placeholder:text-slate-400 transition-all"
+                      className="w-full text-lg font-bold outline-none text-slate-700 bg-transparent placeholder:text-slate-400 focus:placeholder:text-slate-500 transition-all"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
