@@ -296,8 +296,8 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest mt-4 md:mt-6">Descubra Piracicaba</p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
-            {featuredSpots.map((spot, idx) => (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
+            {featuredSpots.slice(0, 4).map((spot, idx) => (
               <div key={spot.id} className={`bg-slate-50 rounded-3xl md:rounded-[2rem] p-4 md:p-6 border border-slate-100 group hover:bg-white hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center reveal stagger-${idx + 1}`}>
                 <div className="bg-brand-teal/10 w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-teal mb-4 md:mb-6 group-hover:bg-brand-teal group-hover:text-white group-hover:scale-110 transition-all duration-500">
                   {getTouristIcon(spot.category, 24)}
@@ -341,8 +341,8 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
-            {latestNews.slice(0, 3).map((item, idx) => (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
+            {latestNews.slice(0, 4).map((item, idx) => (
               <a
                 key={idx}
                 href={item.url}
