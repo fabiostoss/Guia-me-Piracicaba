@@ -34,7 +34,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
   const scroll = (ref: React.RefObject<HTMLDivElement | null>, direction: 'left' | 'right') => {
     if (ref.current) {
       const isMobile = window.innerWidth < 768;
-      const scrollAmount = direction === 'left' ? (isMobile ? -192 : -296) : (isMobile ? 192 : 296);
+      const scrollAmount = direction === 'left' ? (isMobile ? -222 : -336) : (isMobile ? 222 : 336);
       ref.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
@@ -152,7 +152,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
   return (
     <div className="space-y-0 pb-0">
       {/* Hero Section - Animação Inicial */}
-      <section className="relative overflow-hidden bg-white pt-16 pb-12 md:pt-24 md:pb-20 animate-fade-in">
+      <section className="relative overflow-hidden bg-white pt-12 pb-8 md:pt-20 md:pb-12 animate-fade-in">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-brand-teal/5 -skew-x-12 translate-x-1/4 pointer-events-none"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="max-w-4xl space-y-8 text-center md:text-left animate-slide-up">
@@ -231,7 +231,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       </section>
 
       {/* Categories & Business Grid */}
-      <section className="bg-slate-50 pt-10 pb-20">
+      <section className="bg-slate-50 pt-8 pb-12">
         <div className="max-w-7xl mx-auto px-4 -mt-20 relative z-30 mb-20 reveal">
           <div className="bg-white p-6 md:p-8 rounded-[2rem] md:rounded-[3rem] shadow-2xl border border-slate-100 relative overflow-hidden">
             {/* Pagination Controls for Categories */}
@@ -294,7 +294,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
 
           <div ref={shopsRef} className="flex gap-3 md:gap-4 overflow-x-auto pb-6 snap-x no-scrollbar px-2 md:px-0 scroll-smooth">
             {filteredBusinesses.slice(0, 12).map((biz) => (
-              <div key={biz.id} className="w-[180px] md:w-[280px] shrink-0 snap-start">
+              <div key={biz.id} className="w-[210px] md:w-[320px] shrink-0 snap-start">
                 <BusinessCard business={biz} checkAuth={checkAuth} />
               </div>
             ))}
@@ -317,7 +317,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       </section>
 
       {/* Vagas Section (Dark) - Adicionado Botão "Ver Todas" */}
-      <section className="bg-slate-900 py-12 md:py-20 text-white overflow-hidden relative">
+      <section className="bg-slate-900 py-10 md:py-14 text-white overflow-hidden relative">
         <div className="absolute top-0 right-0 w-96 h-96 bg-brand-teal/5 rounded-full blur-3xl"></div>
         <div className="max-w-7xl mx-auto px-4 relative z-10">
           <div className="flex flex-col items-center justify-center mb-10 md:mb-16 gap-6 reveal">
@@ -343,7 +343,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
 
           <div ref={jobsRef} className="flex gap-3 md:gap-4 overflow-x-auto pb-6 snap-x no-scrollbar px-2 md:px-0 scroll-smooth">
             {recentJobs.slice(0, 4).map((job) => (
-              <div key={job.id} className="w-[180px] md:w-[250px] shrink-0 snap-start bg-white/5 backdrop-blur-sm p-4 md:p-5 rounded-2xl md:rounded-3xl border border-white/10 hover:border-brand-teal/50 transition-all group">
+              <div key={job.id} className="w-[210px] md:w-[280px] shrink-0 snap-start bg-white/5 backdrop-blur-sm p-4 md:p-5 rounded-2xl md:rounded-3xl border border-white/10 hover:border-brand-teal/50 transition-all group">
                 <div className="bg-brand-teal/20 w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-teal mb-4 md:mb-8 group-hover:scale-110 transition-transform">
                   <ICONS.Briefcase size={20} />
                 </div>
@@ -371,7 +371,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       </section>
 
       {/* Guia Turístico Section */}
-      <section className="bg-white py-12 md:py-20">
+      <section className="bg-white py-10 md:py-14">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-10 md:mb-16 reveal">
             <h2 className="text-3xl md:text-5xl font-black text-brand-teal-deep tracking-tighter leading-none">Turismo em <span className="text-brand-orange">Pira</span></h2>
@@ -394,7 +394,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
 
           <div ref={tourismRef} className="flex gap-3 md:gap-4 overflow-x-auto pb-6 snap-x no-scrollbar px-2 md:px-0 scroll-smooth">
             {featuredSpots.slice(0, 4).map((spot) => (
-              <div key={spot.id} className="w-[180px] md:w-[250px] shrink-0 snap-start bg-slate-50 rounded-2xl md:rounded-3xl p-4 md:p-5 border border-slate-100 group hover:bg-white hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center">
+              <div key={spot.id} className="w-[210px] md:w-[280px] shrink-0 snap-start bg-slate-50 rounded-2xl md:rounded-3xl p-4 md:p-5 border border-slate-100 group hover:bg-white hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center">
                 <div className="bg-brand-teal/10 w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-teal mb-4 md:mb-6 group-hover:bg-brand-teal group-hover:text-white group-hover:scale-110 transition-all duration-500">
                   {getTouristIcon(spot.category, 20)}
                 </div>
@@ -413,7 +413,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       </section>
 
       {/* Seção de Notícias */}
-      <section className="py-12 md:py-20 bg-slate-50 relative overflow-hidden">
+      <section className="py-10 md:py-14 bg-slate-50 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-col items-center justify-center mb-10 md:mb-16 gap-6 reveal">
@@ -454,7 +454,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
 
           <div ref={newsRef} className="flex gap-3 md:gap-4 overflow-x-auto pb-6 snap-x no-scrollbar px-2 md:px-0 scroll-smooth">
             {latestNews.slice(0, 4).map((item, idx) => (
-              <div key={idx} className="w-[200px] md:w-[280px] shrink-0 snap-start">
+              <div key={idx} className="w-[230px] md:w-[320px] shrink-0 snap-start">
                 <a
                   href={item.url}
                   target="_blank"
