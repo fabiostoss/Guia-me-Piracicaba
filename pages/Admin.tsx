@@ -503,10 +503,11 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
             <table className="w-full text-left">
               <thead className="bg-slate-50 border-b border-slate-100">
                 <tr>
-                  <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Loja</th>
-                  <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Acessos</th>
-                  <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
-                  <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Ação</th>
+                  <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Identificação da Loja</th>
+                  <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Categoria / Bairro</th>
+                  <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Acessos</th>
+                  <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
+                  <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Ação</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
@@ -514,119 +515,82 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                   const draft = draftChanges[biz.id] || {};
                   const isCurrentActive = draft.isActive !== undefined ? draft.isActive : biz.isActive;
                   const currentViews = draft.views !== undefined ? draft.views : (biz.views || 0);
+                  const currentName = draft.name !== undefined ? draft.name : biz.name;
+                  const currentCategory = (draft.category !== undefined ? draft.category : biz.category) as CategoryType;
+                  const currentNeighborhood = draft.neighborhood !== undefined ? draft.neighborhood : biz.neighborhood;
 
                   return (
                     <tr key={biz.id} className="hover:bg-slate-50/50 transition-colors group">
-                      <td className="px-10 py-6">
+                      <td className="px-8 py-6">
                         <div className="flex items-center gap-4">
-                          <div className="relative">
-                            <img src={biz.logoUrl} className="w-12 h-12 rounded-2xl object-cover shadow-sm" />
-                            <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${isCurrentActive ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
-                          </div>
-                          <div>
-                            <p className="font-black text-brand-teal-deep text-sm group-hover:text-brand-teal transition-colors">{biz.name}</p>
-                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                              {biz.code} • {biz.category}
-                              {biz.isOfficial && <span className="bg-brand-orange/10 text-brand-orange px-1.5 py-0.5 rounded text-[7px] border border-brand-orange/20">OFICIAL</span>}
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-10 py-6">
-                        <div className="flex flex-col group/views">
-                          <div className="flex items-center gap-2">
+                          <img src={biz.logoUrl} className="w-10 h-10 rounded-xl object-cover shadow-sm shrink-0" />
+                          <div className="flex flex-col gap-1 min-w-0">
                             <input
-                              type="number"
-                              className={`w-24 border font-black outline-none focus:ring-4 rounded-xl px-3 py-1.5 transition-all text-sm ${draft.views !== undefined
-                                ? 'bg-brand-teal/5 border-brand-teal text-brand-teal focus:ring-brand-teal/10'
-                                : 'bg-slate-50 border-slate-100 text-brand-teal-deep focus:border-brand-teal focus:bg-white focus:ring-brand-teal/10'
-                                }`}
-                              value={currentViews}
-                              onChange={(e) => {
-                                const val = parseInt(e.target.value) || 0;
-                                setDraftChanges(prev => ({
-                                  ...prev,
-                                  [biz.id]: { ...prev[biz.id], views: val }
-                                }));
-                              }}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                  (e.target as HTMLInputElement).blur();
-                                }
-                              }}
+                              className={`font-black text-sm outline-none bg-transparent border-b border-transparent focus:border-brand-teal transition-all ${draft.name !== undefined ? 'text-brand-teal' : 'text-brand-teal-deep'}`}
+                              value={currentName}
+                              onChange={e => setDraftChanges(prev => ({ ...prev, [biz.id]: { ...prev[biz.id], name: e.target.value } }))}
                             />
-                            {draft.views !== undefined && (
-                              <div className="w-2 h-2 rounded-full bg-brand-teal animate-pulse" title="Alteração pendente"></div>
-                            )}
+                            <div className="flex items-center gap-2">
+                              <span className="text-[8px] font-bold text-slate-300 uppercase tracking-widest">{biz.code}</span>
+                              {biz.isOfficial && <span className="bg-brand-orange/10 text-brand-orange px-1.5 py-0.5 rounded text-[7px] font-bold border border-brand-orange/20">OFICIAL</span>}
+                            </div>
                           </div>
-                          <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1 ml-1">Visualizações</span>
                         </div>
                       </td>
-                      <td className="px-10 py-6">
+                      <td className="px-8 py-6">
+                        <div className="flex flex-col gap-2">
+                          <select
+                            className={`text-[10px] font-bold uppercase tracking-widest outline-none bg-transparent border-b border-transparent focus:border-brand-teal cursor-pointer ${draft.category !== undefined ? 'text-brand-teal' : 'text-slate-500'}`}
+                            value={currentCategory}
+                            onChange={e => setDraftChanges(prev => ({ ...prev, [biz.id]: { ...prev[biz.id], category: e.target.value as CategoryType } }))}
+                          >
+                            {Object.values(CategoryType).map(cat => (
+                              <option key={cat} value={cat}>{cat}</option>
+                            ))}
+                          </select>
+                          <select
+                            className={`text-[9px] font-black uppercase tracking-widest outline-none bg-transparent border-b border-transparent focus:border-brand-teal cursor-pointer ${draft.neighborhood !== undefined ? 'text-brand-teal' : 'text-slate-400'}`}
+                            value={currentNeighborhood || ''}
+                            onChange={e => setDraftChanges(prev => ({ ...prev, [biz.id]: { ...prev[biz.id], neighborhood: e.target.value } }))}
+                          >
+                            <option value="">Sem Bairro</option>
+                            {PIRACICABA_NEIGHBORHOODS.map(b => (
+                              <option key={b} value={b}>{b}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </td>
+                      <td className="px-8 py-6">
+                        <div className="flex flex-col gap-1">
+                          <input
+                            type="number"
+                            className={`w-20 font-black outline-none bg-transparent border-b border-transparent focus:border-brand-teal text-sm ${draft.views !== undefined ? 'text-brand-teal' : 'text-brand-teal-deep'}`}
+                            value={currentViews}
+                            onChange={(e) => {
+                              const val = parseInt(e.target.value) || 0;
+                              setDraftChanges(prev => ({ ...prev, [biz.id]: { ...prev[biz.id], views: val } }));
+                            }}
+                          />
+                          <span className="text-[8px] font-bold text-slate-300 uppercase tracking-widest">Acessos</span>
+                        </div>
+                      </td>
+                      <td className="px-8 py-6">
                         <button
                           onClick={() => handleToggleStatus(biz)}
-                          className={`group/toggle flex items-center gap-3 px-4 py-2 rounded-xl border transition-all ${isCurrentActive
-                            ? 'bg-emerald-50 border-emerald-100 text-emerald-600'
-                            : 'bg-slate-50 border-slate-200 text-slate-400'
-                            }`}
-                          title={isCurrentActive ? "Clique para Pausar Anúncio" : "Clique para Ativar Anúncio"}
+                          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all ${isCurrentActive ? 'bg-emerald-50 border-emerald-100 text-emerald-600' : 'bg-slate-50 border-slate-200 text-slate-400'}`}
                         >
-                          <div className={`w-8 h-4 rounded-full relative transition-colors ${isCurrentActive ? 'bg-emerald-500' : 'bg-slate-300'}`}>
-                            <div className={`absolute top-0.5 w-3 h-3 bg-white rounded-full transition-transform ${isCurrentActive ? 'translate-x-4.5' : 'translate-x-0.5'}`}></div>
+                          <div className={`w-6 h-3 rounded-full relative transition-colors ${isCurrentActive ? 'bg-emerald-500' : 'bg-slate-300'}`}>
+                            <div className={`absolute top-0.5 w-2 h-2 bg-white rounded-full transition-transform ${isCurrentActive ? 'translate-x-3' : 'translate-x-0.5'}`}></div>
                           </div>
-                          <span className="text-[10px] font-black uppercase tracking-widest">
-                            {isCurrentActive ? 'Ativo' : 'Pausado'}
-                          </span>
-                          {draft.isActive !== undefined && (
-                            <div className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse"></div>
-                          )}
+                          <span className="text-[9px] font-black uppercase tracking-widest">{isCurrentActive ? 'No Ar' : 'Pausa'}</span>
                         </button>
                       </td>
-                      <td className="px-10 py-6 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          {/* View Live */}
-                          <a
-                            href={`#/business/${biz.id}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-2.5 rounded-xl text-slate-400 hover:text-brand-teal hover:bg-brand-teal/5 transition-all"
-                            title="Ver Página do Comércio"
-                          >
-                            <ICONS.ExternalLink size={18} />
-                          </a>
-
-                          {/* WhatsApp Admin shortcut */}
-                          <a
-                            href={`https://wa.me/${biz.phone.replace(/\D/g, '')}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-2.5 rounded-xl text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 transition-all"
-                            title="Falar com Lojista"
-                          >
-                            <ICONS.MessageCircle size={18} />
-                          </a>
-
-                          {/* Edit */}
-                          <button
-                            onClick={() => openEditModal(biz)}
-                            className="p-2.5 rounded-xl text-slate-400 hover:text-brand-orange hover:bg-brand-orange/5 transition-all"
-                            title="Editar Cadastro"
-                          >
-                            <ICONS.Edit size={18} />
-                          </button>
-
-                          {/* Delete */}
-                          <button
-                            onClick={() => {
-                              if (window.confirm(`Deseja realmente REMOVER ${biz.name}? Esta ação não pode ser desfeita.`)) {
-                                onDelete(biz.id);
-                              }
-                            }}
-                            className="p-2.5 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all"
-                            title="Excluir Comércio"
-                          >
-                            <ICONS.Trash2 size={18} />
-                          </button>
+                      <td className="px-8 py-6 text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <a href={`#/business/${biz.id}`} target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg text-slate-300 hover:text-brand-teal hover:bg-brand-teal/5 transition-all"><ICONS.ExternalLink size={16} /></a>
+                          <a href={`https://wa.me/${biz.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg text-slate-300 hover:text-emerald-500 hover:bg-emerald-50 transition-all"><ICONS.MessageCircle size={16} /></a>
+                          <button onClick={() => openEditModal(biz)} className="p-2 rounded-lg text-slate-300 hover:text-brand-orange hover:bg-brand-orange/5 transition-all"><ICONS.Edit size={16} /></button>
+                          <button onClick={() => window.confirm(`Remover ${biz.name}?`) && onDelete(biz.id)} className="p-2 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 transition-all"><ICONS.Trash2 size={16} /></button>
                         </div>
                       </td>
                     </tr>
