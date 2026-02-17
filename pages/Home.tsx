@@ -32,6 +32,16 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       }
     });
 
+    // Recupera localização do cache se existir para resposta imediata
+    const cachedLocation = localStorage.getItem('user_location');
+    if (cachedLocation) {
+      try {
+        setUserLocation(JSON.parse(cachedLocation));
+      } catch (e) {
+        console.error('Error parsing cached location', e);
+      }
+    }
+
     // Request location automatically on mount
     const requestLocation = () => {
       if (!navigator.geolocation) return;
@@ -71,8 +81,23 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
     return () => observerRef.current?.disconnect();
   }, [searchTerm, selectedCategory]);
 
+  // 1. Primeiro, enriquecer TODOS os negócios com distância, se a localização estiver disponível
+  const businessesWithDistance = useMemo(() => {
+    if (!userLocation) return businesses;
+
+    console.log('Calculando distâncias para', businesses.length, 'lojas...');
+    return businesses.map(b => {
+      if (b.latitude !== undefined && b.latitude !== null && b.longitude !== undefined && b.longitude !== null) {
+        const distance = calculateDistance(userLocation.lat, userLocation.lng, b.latitude, b.longitude);
+        return { ...b, distance };
+      }
+      return b;
+    });
+  }, [businesses, userLocation]);
+
+  // 2. Filtrar os negócios já enriquecidos com distância
   const filteredBusinesses = useMemo(() => {
-    let result = businesses.filter(b => {
+    let result = businessesWithDistance.filter(b => {
       const matchesSearch = b.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         b.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
         b.code?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -84,16 +109,8 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       return matchesSearch && matchesCategory && matchesNeighborhood && isActive;
     });
 
-    // Se a localização estiver disponível, adicionar distância e ordenar
+    // Ordenar por distância se disponível
     if (userLocation) {
-      result = result.map(b => {
-        if (b.latitude && b.longitude) {
-          const distance = calculateDistance(userLocation.lat, userLocation.lng, b.latitude, b.longitude);
-          return { ...b, distance }; // Temporariamente adicionando distância para ordenação
-        }
-        return b;
-      });
-
       result.sort((a, b) => {
         const distA = (a as any).distance ?? 9999;
         const distB = (b as any).distance ?? 9999;
@@ -102,7 +119,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
     }
 
     return result;
-  }, [businesses, searchTerm, selectedCategory, selectedNeighborhood, userLocation]);
+  }, [businessesWithDistance, searchTerm, selectedCategory, selectedNeighborhood, userLocation]);
 
   const featuredSpots = (TOURIST_SPOTS || []).slice(0, 3);
   const recentJobs = (getLatestJobs() || []).slice(0, 4);
@@ -317,7 +334,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       </section>
 
       {/* Seção de Parceiros Oficiais */}
-      {businesses.some(b => b.isOfficial) && (
+      {businessesWithDistance.some(b => b.isOfficial) && (
         <section className="py-32 bg-white relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-4">
             <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-8 reveal">
@@ -333,7 +350,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {businesses
+              {businessesWithDistance
                 .filter(b => b.isOfficial)
                 .slice(0, 8)
                 .map((biz, idx) => (
