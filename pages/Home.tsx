@@ -146,7 +146,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
               Encontre tudo em <span className="text-brand-orange">Piracicaba</span>, resolva no Zap.
             </h1>
             <p className="text-lg md:text-2xl text-slate-500 font-medium max-w-2xl">
-              O guia definitivo que une agilidade e orgulho local. Conexão direta com quem faz a Noiva da Colina crescer.
+              O guia definitivo que une agilidade e orgulho local. Conexão direta com quem faz Piracicaba crescer.
             </p>
 
             <div className="flex flex-wrap gap-4 pt-2">
@@ -310,7 +310,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16 reveal">
             <h2 className="text-4xl md:text-7xl font-black text-brand-teal-deep tracking-tighter leading-none">Turismo em <span className="text-brand-orange">Pira</span></h2>
-            <p className="text-slate-400 font-bold uppercase text-xs tracking-widest mt-6">Descubra os pontos icônicos da Noiva da Colina</p>
+            <p className="text-slate-400 font-bold uppercase text-xs tracking-widest mt-6">Descubra os pontos icônicos de Piracicaba</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

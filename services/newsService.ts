@@ -21,7 +21,7 @@ export const NEWS_MOCK: NewsArticle[] = [
   {
     id: 'pira-news-3',
     title: 'Festival Gastronômico de Piracicaba começa nesta sexta-feira com pratos típicos',
-    summary: 'Evento reúne mais de 30 estabelecimentos locais celebrando a culinária tradicional da região da Noiva da Colina.',
+    summary: 'Evento reúne mais de 30 estabelecimentos locais celebrando a culinária tradicional da região de Piracicaba.',
     date: '2 dias atrás',
     url: 'https://www.piracicaba.com.br/',
     imageUrl: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1000&auto=format&fit=crop'

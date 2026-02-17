@@ -93,7 +93,7 @@ _Enviado via formulário de cadastro_`;
     {
       icon: <ICONS.MapPin size={32} />,
       title: "Foco Regional",
-      desc: "Sua marca posicionada no maior guia comercial exclusivo da Noiva da Colina."
+      desc: "Sua marca posicionada no maior guia comercial exclusivo de Piracicaba."
     },
     {
       icon: <ICONS.Package size={32} />,

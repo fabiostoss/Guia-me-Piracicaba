@@ -61,7 +61,7 @@ const TouristGuide: React.FC = () => {
           <span className="text-brand-orange text-xs font-black uppercase tracking-[0.4em] mb-4 block">Guia de Experiências</span>
           <h1 className="text-5xl md:text-8xl font-black text-white tracking-tighter mb-8 leading-none">VIVA <span className="text-brand-orange">PIRACICABA</span></h1>
           <p className="text-white/60 max-w-2xl mx-auto font-bold text-lg leading-relaxed">
-            Exploração urbana focada no que importa: história, cultura e lazer na Noiva da Colina.
+            Exploração urbana focada no que importa: história, cultura e lazer em Piracicaba.
           </p>
         </div>
       </section>
