@@ -111,7 +111,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
       head: [['Métrica', 'Valor']],
       body: summaryData,
       theme: 'striped',
-      headStyles: { fillStyle: 'F', fillColor: [20, 184, 166] }
+      headStyles: { fillColor: [20, 184, 166] }
     });
 
     // Top Businesses Table
