@@ -616,7 +616,8 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                     <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Identificação da Loja</th>
                     <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Categoria / Bairro</th>
 
-                    <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Acessos</th>
+                    <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Acessos</th>
+                    <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Destaque</th>
                     <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
                     <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Ação</th>
                   </tr>
@@ -630,6 +631,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                     const currentCategory = (draft.category !== undefined ? draft.category : biz.category) as CategoryType;
                     const currentNeighborhood = draft.neighborhood !== undefined ? draft.neighborhood : biz.neighborhood;
                     const currentPhone = draft.phone !== undefined ? draft.phone : biz.phone;
+                    const currentIsOfficial = draft.isOfficial !== undefined ? draft.isOfficial : biz.isOfficial;
 
                     return (
                       <tr key={biz.id} className="hover:bg-slate-50/50 transition-colors group">
@@ -647,7 +649,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                               </div>
                               <div className="flex items-center gap-2">
                                 <span className="text-[8px] font-bold text-slate-300 uppercase tracking-widest">{biz.code}</span>
-                                {biz.isOfficial && <span className="bg-brand-orange/10 text-brand-orange px-1.5 py-0.5 rounded text-[7px] font-bold border border-brand-orange/20">OFICIAL</span>}
+                                {currentIsOfficial && <span className="bg-brand-orange/10 text-brand-orange px-1.5 py-0.5 rounded text-[7px] font-bold border border-brand-orange/20">OFICIAL</span>}
                               </div>
                             </div>
                           </div>
@@ -681,11 +683,11 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                         </td>
 
                         <td className="px-8 py-6">
-                          <div className="flex flex-col gap-1 group/views">
+                          <div className="flex flex-col gap-1 group/views items-center">
                             <div className="flex items-center gap-2">
                               <input
                                 type="number"
-                                className={`w-20 font-black outline-none bg-transparent border-b border-transparent focus:border-brand-teal text-sm ${draft.views !== undefined ? 'text-brand-teal' : 'text-brand-teal-deep'}`}
+                                className={`w-20 font-black outline-none bg-transparent border-b border-transparent focus:border-brand-teal text-sm text-center ${draft.views !== undefined ? 'text-brand-teal' : 'text-brand-teal-deep'}`}
                                 value={currentViews}
                                 onChange={(e) => {
                                   const val = parseInt(e.target.value) || 0;
@@ -694,8 +696,20 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                               />
                               <ICONS.Edit size={10} className="text-slate-200 opacity-0 group-hover/views:opacity-100 transition-opacity" />
                             </div>
-                            <span className="text-[8px] font-bold text-slate-300 uppercase tracking-widest">Acessos</span>
+                            <span className="text-[8px] font-bold text-slate-300 uppercase tracking-widest text-center block">Acessos</span>
                           </div>
+                        </td>
+                        <td className="px-8 py-6 text-center">
+                          <button
+                            onClick={() => setDraftChanges(prev => ({
+                              ...prev,
+                              [biz.id]: { ...prev[biz.id], isOfficial: !currentIsOfficial }
+                            }))}
+                            className={`p-3 rounded-xl transition-all ${currentIsOfficial ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/20 scale-110' : 'bg-slate-50 text-slate-300 hover:bg-slate-100 hover:text-slate-400 border border-slate-100'}`}
+                            title={currentIsOfficial ? "Remover Destaque" : "Tornar Patrocinador"}
+                          >
+                            <ICONS.Crown size={18} className={currentIsOfficial ? "animate-pulse" : ""} />
+                          </button>
                         </td>
                         <td className="px-8 py-6">
                           <button
