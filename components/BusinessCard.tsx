@@ -115,13 +115,15 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
         </div>
 
         <div className="mt-auto pt-6 border-t border-slate-50">
-          <button
-            onClick={handleWhatsAppClick}
-            className="w-full bg-brand-teal hover:bg-brand-teal-dark text-white font-black py-4 rounded-xl flex items-center justify-center transition-all shadow-lg shadow-brand-teal/10 uppercase tracking-widest text-[9px]"
-          >
-            <ICONS.MessageCircle className="w-4 h-4 mr-2" />
-            Falar no WhatsApp
-          </button>
+          {(!business.isOfficial || (business.isOfficial && business.phone.replace(/\D/g, '').length >= 12)) && (
+            <button
+              onClick={handleWhatsAppClick}
+              className="w-full bg-brand-teal hover:bg-brand-teal-dark text-white font-black py-4 rounded-xl flex items-center justify-center transition-all shadow-lg shadow-brand-teal/10 uppercase tracking-widest text-[9px]"
+            >
+              <ICONS.MessageCircle className="w-4 h-4 mr-2" />
+              Falar no WhatsApp
+            </button>
+          )}
         </div>
       </div>
     </div>
