@@ -208,12 +208,7 @@ const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ businesses, onUpd
               </p>
             </div>
 
-            <div className="hidden md:flex pb-12 gap-3">
-              <div className="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-3xl text-center min-w-[100px]">
-                <p className="text-[10px] font-black text-white/50 uppercase tracking-widest mb-1">Visualizações</p>
-                <p className="text-2xl font-black text-white">{business.views || 0}</p>
-              </div>
-            </div>
+            {/* Visualizações removidas a pedido do usuário */}
           </div>
         </div>
 
