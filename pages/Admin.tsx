@@ -25,7 +25,7 @@ const DAYS_NAME = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
 const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, onDelete }) => {
   const navigate = useNavigate();
-  const [adminView, setAdminView] = useState<'dashboard' | 'management' | 'customers'>('dashboard');
+  const [adminView, setAdminView] = useState<'dashboard' | 'management' | 'customers' | 'approvals'>('dashboard');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingBiz, setEditingBiz] = useState<Business | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -392,6 +392,14 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
             <div className="flex flex-wrap gap-2">
               <button onClick={() => setAdminView('dashboard')} className={`text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-xl transition-all ${adminView === 'dashboard' ? 'bg-brand-teal text-white shadow-lg' : 'bg-slate-100 text-slate-400'}`}>Visão Geral</button>
               <button onClick={() => setAdminView('management')} className={`text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-xl transition-all ${adminView === 'management' ? 'bg-brand-teal text-white shadow-lg' : 'bg-slate-100 text-slate-400'}`}>Lojistas</button>
+              <button onClick={() => setAdminView('approvals')} className={`text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-xl transition-all relative ${adminView === 'approvals' ? 'bg-brand-teal text-white shadow-lg' : 'bg-slate-100 text-slate-400'}`}>
+                Aprovar Lojas
+                {businesses.filter(b => b.isActive === false).length > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-brand-orange text-white text-[8px] flex items-center justify-center rounded-full animate-bounce">
+                    {businesses.filter(b => b.isActive === false).length}
+                  </span>
+                )}
+              </button>
               <button onClick={() => setAdminView('customers')} className={`text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-xl transition-all ${adminView === 'customers' ? 'bg-brand-teal text-white shadow-lg' : 'bg-slate-100 text-slate-400'}`}>Clientes</button>
             </div>
           </div>
@@ -709,6 +717,58 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                   })}
                 </tbody>
               </table>
+            </div>
+          </div>
+        )}
+
+        {adminView === 'approvals' && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-10">
+            <div className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-xl overflow-hidden relative">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-brand-teal/5 rounded-full blur-3xl -translate-x-10 translate-y-10"></div>
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12 relative z-10">
+                <div>
+                  <h2 className="text-3xl font-black text-brand-teal-deep tracking-tight mb-2">Solicitações de Cadastro</h2>
+                  <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">Analise e publique novos comércios no guia</p>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                {businesses.filter(b => b.isActive === false).length === 0 ? (
+                  <div className="text-center py-20 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
+                    <ICONS.CheckCircle size={48} className="text-slate-200 mx-auto mb-4" />
+                    <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">Nenhuma solicitação pendente</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 gap-6">
+                    {businesses.filter(b => b.isActive === false).map(biz => (
+                      <div key={biz.id} className="group bg-white border border-slate-100 p-8 rounded-[2.5rem] hover:shadow-2xl hover:border-brand-teal/20 transition-all flex flex-col md:flex-row items-center justify-between gap-8 animate-in slide-in-from-left">
+                        <div className="flex items-center gap-6 flex-grow">
+                          <div className="w-20 h-20 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center overflow-hidden shrink-0 group-hover:scale-105 transition-transform">
+                            {biz.logoUrl ? <img src={biz.logoUrl} className="w-full h-full object-cover" /> : <ICONS.Package className="text-slate-200" size={32} />}
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-3 mb-2">
+                              <h3 className="text-xl font-black text-brand-teal-deep">{biz.name}</h3>
+                              <span className="px-3 py-1 bg-brand-orange/10 text-brand-orange text-[8px] font-black uppercase tracking-widest rounded-lg border border-brand-orange/10">Aguardando Aprovação</span>
+                            </div>
+                            <div className="flex flex-wrap gap-4">
+                              <div className="flex items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest"><ICONS.Tag size={12} className="mr-2 text-brand-teal" /> {biz.category}</div>
+                              <div className="flex items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest"><ICONS.MapPin size={12} className="mr-2 text-brand-orange" /> {biz.neighborhood}</div>
+                              <div className="flex items-center text-[10px] font-bold text-slate-500 uppercase tracking-widest border-b border-brand-teal/20 pb-0.5"><ICONS.MessageCircle size={12} className="mr-2 text-emerald-500" /> {biz.phone}</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3 shrink-0">
+                          <button onClick={() => openEditModal(biz)} className="px-6 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest bg-slate-100 text-slate-400 hover:bg-slate-200 transition-all">Revisar Dados</button>
+                          <button onClick={() => handleToggleStatus(biz)} className="px-8 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 hover:bg-emerald-600 transition-all flex items-center gap-2">
+                            <ICONS.Check size={14} /> Aprovar e Publicar
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}

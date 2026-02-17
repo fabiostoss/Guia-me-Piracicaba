@@ -49,7 +49,11 @@ import {
   Lamp,
   Palmtree,
   Beef,
-  Baby
+  Baby,
+  TrendingUp,
+  Zap,
+  CheckCircle,
+  Tag
 } from 'lucide-react';
 import { CategoryType } from './types';
 
@@ -97,7 +101,11 @@ export const ICONS = {
   Lamp,
   Palmtree,
   Beef,
-  Baby
+  Baby,
+  TrendingUp,
+  Zap,
+  CheckCircle,
+  Tag
 };
 
 export const CATEGORY_ICONS: Record<CategoryType, React.ReactNode> = {

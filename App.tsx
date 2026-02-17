@@ -318,7 +318,7 @@ const App: React.FC = () => {
               <Link to="/noticias" className="text-slate-600 hover:text-brand-teal font-bold transition-colors">Noticias</Link>
               <Link to="/guia-turistico" className="text-slate-600 hover:text-brand-teal font-bold transition-colors">Guia Turístico</Link>
               <Link to="/vagas" className="text-slate-600 hover:text-brand-teal font-bold transition-colors">Vagas</Link>
-              <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="bg-brand-teal text-white px-8 py-3 rounded-2xl font-black text-sm uppercase transition-all hover:bg-brand-teal-dark active:scale-95 shadow-lg shadow-brand-teal/10">Anunciar</a>
+              <Link to="/merchant-register" className="bg-brand-teal text-white px-8 py-3 rounded-2xl font-black text-sm uppercase transition-all hover:bg-brand-teal-dark active:scale-95 shadow-lg shadow-brand-teal/10">Anunciar Minha Loja</Link>
             </div>
 
             {/* Mobile Menu Button */}
@@ -379,14 +379,13 @@ const App: React.FC = () => {
               Vagas de Emprego
             </Link>
             <hr className="border-slate-100 my-2" />
-            <a
-              href={INSTAGRAM_URL}
-              target="_blank"
-              rel="noreferrer"
+            <Link
+              to="/merchant-register"
+              onClick={() => setIsMenuOpen(false)}
               className="w-full bg-brand-teal text-white py-5 rounded-2xl font-black text-center uppercase tracking-[0.2em] text-[10px] shadow-xl shadow-brand-teal/20"
             >
-              Anunciar no Guia
-            </a>
+              Anunciar Minha Loja
+            </Link>
             <div className="text-center pt-2">
               <Link to="/merchant-login" onClick={() => setIsMenuOpen(false)} className="text-[9px] font-black text-slate-400 uppercase tracking-widest hover:text-brand-teal">Painel do Lojista</Link>
             </div>
