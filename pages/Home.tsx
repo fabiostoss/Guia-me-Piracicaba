@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Business, CategoryType, NewsArticle } from '../types';
 import { ICONS, CATEGORY_ICONS, WHATSAPP_ADMIN, PIRACICABA_NEIGHBORHOODS } from '../constants';
 import BusinessCard from '../components/BusinessCard';
-import { getLocalNews } from '../services/newsService';
+import { getLocalNews, NEWS_MOCK } from '../services/newsService';
 import { isBusinessOpen } from '../utils/businessUtils';
 import { TOURIST_SPOTS } from '../services/touristService';
 import { getLatestJobs } from '../services/jobService';
@@ -18,6 +18,16 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(null);
   const [selectedNeighborhood, setSelectedNeighborhood] = useState<string>('');
+  const [latestNews, setLatestNews] = useState<NewsArticle[]>(NEWS_MOCK);
+
+  useEffect(() => {
+    // Tenta atualizar com notícias reais, se falhar, mantém o mock (que já está no estado inicial)
+    getLocalNews().then(news => {
+      if (news && news.length > 0) {
+        setLatestNews(news);
+      }
+    });
+  }, []);
 
   // Intersection Observer para animações
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -237,6 +247,65 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
                   Ver Mais <ICONS.ArrowRight size={14} />
                 </Link>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Seção de Notícias */}
+      <section className="py-32 bg-slate-50 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-8 reveal">
+            <div className="max-w-2xl">
+              <h2 className="text-4xl md:text-6xl font-black text-brand-teal-deep tracking-tighter leading-none mb-6">
+                Notícias da <span className="text-brand-orange">Região</span>
+              </h2>
+              <p className="text-slate-500 font-medium text-lg max-w-xl">
+                Acompanhe o que está acontecendo em Piracicaba e fique por dentro das novidades.
+              </p>
+            </div>
+            <Link
+              to="/noticias"
+              className="group flex items-center gap-3 text-brand-teal font-black text-xs uppercase tracking-widest hover:text-brand-orange transition-colors"
+            >
+              Ver todas as notícias
+              <div className="w-8 h-8 rounded-full bg-brand-teal/10 flex items-center justify-center group-hover:bg-brand-orange/10 group-hover:text-brand-orange transition-colors">
+                <ICONS.ArrowRight size={14} />
+              </div>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {latestNews.slice(0, 3).map((item, idx) => (
+              <a
+                key={idx}
+                href={item.url}
+                target="_blank"
+                rel="noreferrer"
+                className={`group bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 flex flex-col h-full reveal stagger-${idx + 1}`}
+              >
+                <div className="h-48 rounded-2xl overflow-hidden mb-6 relative">
+                  <div className="absolute inset-0 bg-brand-teal/20 group-hover:bg-transparent transition-colors z-10"></div>
+                  <img
+                    src={item.imageUrl}
+                    alt={item.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                  <div className="absolute bottom-3 left-3 z-20 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest text-brand-teal-deep shadow-sm">
+                    {item.date}
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold text-slate-800 mb-4 group-hover:text-brand-teal transition-colors line-clamp-3 leading-tight">
+                  {item.title}
+                </h3>
+                <p className="text-slate-500 text-sm font-medium line-clamp-3 mb-6 flex-1">
+                  {item.summary}
+                </p>
+                <div className="flex items-center text-[10px] font-black text-brand-orange uppercase tracking-widest mt-auto">
+                  Ler na íntegra <ICONS.ExternalLink size={12} className="ml-2" />
+                </div>
+              </a>
             ))}
           </div>
         </div>

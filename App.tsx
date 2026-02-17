@@ -15,6 +15,7 @@ import TouristGuide from './pages/TouristGuide';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfUse from './pages/TermsOfUse';
 import Jobs from './pages/Jobs';
+import News from './pages/News';
 import { Calendar, Clock as ClockIcon } from 'lucide-react';
 import * as db from './services/databaseService';
 
@@ -297,6 +298,7 @@ const App: React.FC = () => {
             </Link>
             <div className="hidden md:flex items-center space-x-12">
               <Link to="/" className="text-slate-600 hover:text-brand-teal font-bold transition-colors">Início</Link>
+              <Link to="/noticias" className="text-slate-600 hover:text-brand-teal font-bold transition-colors">Notícias</Link>
               <Link to="/guia-turistico" className="text-slate-600 hover:text-brand-teal font-bold transition-colors">Guia Turístico</Link>
               <Link to="/vagas" className="text-slate-600 hover:text-brand-teal font-bold transition-colors">Vagas</Link>
               <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="bg-brand-teal text-white px-8 py-3 rounded-2xl font-black text-sm uppercase transition-all hover:bg-brand-teal-dark active:scale-95 shadow-lg shadow-brand-teal/10">Anunciar</a>
@@ -320,6 +322,7 @@ const App: React.FC = () => {
             <Route path="/" element={<Home businesses={businesses} checkAuth={checkCustomerAuth} />} />
             <Route path="/guia-turistico" element={<TouristGuide />} />
             <Route path="/vagas" element={<Jobs />} />
+            <Route path="/noticias" element={<News />} />
             <Route path="/politica-de-privacidade" element={<PrivacyPolicy />} />
             <Route path="/termos-de-uso" element={<TermsOfUse />} />
             <Route path="/business/:id" element={<BusinessDetail businesses={businesses} onIncrementView={incrementView} checkAuth={checkCustomerAuth} />} />
@@ -357,6 +360,7 @@ const App: React.FC = () => {
               <h4 className="font-bold text-brand-orange mb-8 uppercase text-xs tracking-widest">Serviços</h4>
               <ul className="space-y-4 text-sm font-semibold">
                 <li><Link to="/guia-turistico" className="hover:text-brand-orange transition-colors">Turismo Local</Link></li>
+                <li><Link to="/noticias" className="hover:text-brand-orange transition-colors">Notícias Regionais</Link></li>
                 <li><Link to="/vagas" className="hover:text-brand-orange transition-colors">Vagas de Emprego</Link></li>
                 <li><a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="hover:text-brand-orange transition-colors">Anunciar no Instagram</a></li>
               </ul>
