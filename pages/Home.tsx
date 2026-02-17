@@ -34,7 +34,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
   const scroll = (ref: React.RefObject<HTMLDivElement | null>, direction: 'left' | 'right') => {
     if (ref.current) {
       const isMobile = window.innerWidth < 768;
-      const scrollAmount = direction === 'left' ? (isMobile ? -200 : -300) : (isMobile ? 200 : 300);
+      const scrollAmount = direction === 'left' ? (isMobile ? -192 : -296) : (isMobile ? 192 : 296);
       ref.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
@@ -254,11 +254,11 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             </div>
 
             <div ref={categoriesRef} className="flex gap-4 md:gap-8 overflow-x-auto no-scrollbar scroll-smooth">
-              {Object.values(CategoryType).map((category, idx) => (
+              {Object.values(CategoryType).map((category) => (
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
-                  className={`flex flex-col items-center group transition-all shrink-0 reveal stagger-${(idx % 4) + 1}`}
+                  className="flex flex-col items-center group transition-all shrink-0"
                 >
                   <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center transition-all border-2 mb-4 ${selectedCategory === category ? 'bg-brand-teal border-brand-teal text-white shadow-xl scale-110' : 'bg-slate-50 border-transparent text-brand-teal-deep hover:bg-slate-100'}`}>
                     {React.cloneElement(CATEGORY_ICONS[category] as React.ReactElement<any>, { className: "w-6 h-6 md:w-7 md:h-7" })}
@@ -292,9 +292,9 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             </div>
           </div>
 
-          <div ref={shopsRef} className="flex gap-3 md:gap-4 overflow-x-auto pb-6 snap-x snap-mandatory no-scrollbar px-2 md:px-0 scroll-smooth">
-            {filteredBusinesses.slice(0, 12).map((biz, idx) => (
-              <div key={biz.id} className={`w-[180px] md:w-[280px] shrink-0 snap-start reveal stagger-${(idx % 3) + 1}`}>
+          <div ref={shopsRef} className="flex gap-3 md:gap-4 overflow-x-auto pb-6 snap-x no-scrollbar px-2 md:px-0 scroll-smooth">
+            {filteredBusinesses.slice(0, 12).map((biz) => (
+              <div key={biz.id} className="w-[180px] md:w-[280px] shrink-0 snap-start">
                 <BusinessCard business={biz} checkAuth={checkAuth} />
               </div>
             ))}
@@ -341,9 +341,9 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             </div>
           </div>
 
-          <div ref={jobsRef} className="flex gap-3 md:gap-4 overflow-x-auto pb-6 snap-x snap-mandatory no-scrollbar px-2 md:px-0 scroll-smooth">
-            {recentJobs.slice(0, 4).map((job, idx) => (
-              <div key={job.id} className={`w-[180px] md:w-[250px] shrink-0 snap-start bg-white/5 backdrop-blur-sm p-4 md:p-5 rounded-2xl md:rounded-3xl border border-white/10 hover:border-brand-teal/50 transition-all group reveal stagger-${idx + 1}`}>
+          <div ref={jobsRef} className="flex gap-3 md:gap-4 overflow-x-auto pb-6 snap-x no-scrollbar px-2 md:px-0 scroll-smooth">
+            {recentJobs.slice(0, 4).map((job) => (
+              <div key={job.id} className="w-[180px] md:w-[250px] shrink-0 snap-start bg-white/5 backdrop-blur-sm p-4 md:p-5 rounded-2xl md:rounded-3xl border border-white/10 hover:border-brand-teal/50 transition-all group">
                 <div className="bg-brand-teal/20 w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-teal mb-4 md:mb-8 group-hover:scale-110 transition-transform">
                   <ICONS.Briefcase size={20} />
                 </div>
@@ -392,9 +392,9 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             </div>
           </div>
 
-          <div ref={tourismRef} className="flex gap-3 md:gap-4 overflow-x-auto pb-6 snap-x snap-mandatory no-scrollbar px-2 md:px-0 scroll-smooth">
-            {featuredSpots.slice(0, 4).map((spot, idx) => (
-              <div key={spot.id} className={`w-[180px] md:w-[250px] shrink-0 snap-start bg-slate-50 rounded-2xl md:rounded-3xl p-4 md:p-5 border border-slate-100 group hover:bg-white hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center reveal stagger-${idx + 1}`}>
+          <div ref={tourismRef} className="flex gap-3 md:gap-4 overflow-x-auto pb-6 snap-x no-scrollbar px-2 md:px-0 scroll-smooth">
+            {featuredSpots.slice(0, 4).map((spot) => (
+              <div key={spot.id} className="w-[180px] md:w-[250px] shrink-0 snap-start bg-slate-50 rounded-2xl md:rounded-3xl p-4 md:p-5 border border-slate-100 group hover:bg-white hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center">
                 <div className="bg-brand-teal/10 w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-teal mb-4 md:mb-6 group-hover:bg-brand-teal group-hover:text-white group-hover:scale-110 transition-all duration-500">
                   {getTouristIcon(spot.category, 20)}
                 </div>
@@ -452,14 +452,14 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             </div>
           </div>
 
-          <div ref={newsRef} className="flex gap-3 md:gap-4 overflow-x-auto pb-6 snap-x snap-mandatory no-scrollbar px-2 md:px-0 scroll-smooth">
+          <div ref={newsRef} className="flex gap-3 md:gap-4 overflow-x-auto pb-6 snap-x no-scrollbar px-2 md:px-0 scroll-smooth">
             {latestNews.slice(0, 4).map((item, idx) => (
               <div key={idx} className="w-[200px] md:w-[280px] shrink-0 snap-start">
                 <a
                   href={item.url}
                   target="_blank"
                   rel="noreferrer"
-                  className={`group bg-white rounded-2xl md:rounded-3xl p-3 md:p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 flex flex-col h-full reveal stagger-${idx + 1}`}
+                  className="group bg-white rounded-2xl md:rounded-3xl p-3 md:p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 flex flex-col h-full"
                 >
                   <div className="h-32 md:h-44 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-6 relative">
                     <div className="absolute inset-0 bg-brand-teal/20 group-hover:bg-transparent transition-colors z-10"></div>
