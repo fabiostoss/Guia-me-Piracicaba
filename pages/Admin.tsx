@@ -213,6 +213,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
             <div className="flex bg-slate-100 p-1.5 rounded-2xl">
               <button onClick={() => setActiveTab('all')} className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest ${activeTab === 'all' ? 'bg-white text-brand-teal shadow-sm' : 'text-slate-400'}`}>Todos</button>
               <button onClick={() => setActiveTab('active')} className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest ${activeTab === 'active' ? 'bg-white text-brand-teal shadow-sm' : 'text-slate-400'}`}>No Ar</button>
+              <button onClick={() => setActiveTab('inactive')} className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest ${activeTab === 'inactive' ? 'bg-white text-brand-teal shadow-sm' : 'text-slate-400'}`}>Pausados</button>
             </div>
           </div>
 
@@ -245,7 +246,12 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                     </td>
                     <td className="px-10 py-6">
                       <div className="flex flex-col">
-                        <span className="font-black text-slate-700">{biz.views}</span>
+                        <input
+                          type="number"
+                          className="w-20 bg-transparent font-black text-slate-700 outline-none focus:bg-white focus:ring-2 focus:ring-brand-teal/20 rounded-lg px-2 -ml-2 transition-all"
+                          value={biz.views || 0}
+                          onChange={(e) => onUpdate({ ...biz, views: parseInt(e.target.value) || 0 })}
+                        />
                         <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Visualizações</span>
                       </div>
                     </td>
@@ -270,7 +276,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                       <div className="flex items-center justify-end gap-2">
                         {/* View Live */}
                         <a
-                          href={`/business/${biz.username}`}
+                          href={`#/business/${biz.id}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="p-2.5 rounded-xl text-slate-400 hover:text-brand-teal hover:bg-brand-teal/5 transition-all"
