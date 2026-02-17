@@ -38,8 +38,27 @@ export const NEWS_MOCK: NewsArticle[] = [
 
 const RSS_URL = 'https://g1.globo.com/dynamo/sp/piracicaba-regiao/rss2.xml';
 const RSS_JSON_API = 'https://api.rss2json.com/v1/api.json?rss_url=';
+const CACHE_KEY = 'pira_news_cache';
+const CACHE_DURATION = 60 * 60 * 1000; // 1 hora em milissegundos
 
 export const getLocalNews = async (): Promise<NewsArticle[]> => {
+  // 1. Tentar recuperar do cache local primeiro
+  try {
+    const cachedData = localStorage.getItem(CACHE_KEY);
+    if (cachedData) {
+      const { timestamp, articles } = JSON.parse(cachedData);
+      const isFresh = (Date.now() - timestamp) < CACHE_DURATION;
+
+      if (isFresh && Array.isArray(articles) && articles.length > 0) {
+        // console.log('Serving news from cache');
+        return articles;
+      }
+    }
+  } catch (e) {
+    console.warn('Failed to parse news cache', e);
+  }
+
+  // 2. Se não tiver cache ou estiver expirado, buscar da API
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 seconds timeout
 
@@ -52,7 +71,7 @@ export const getLocalNews = async (): Promise<NewsArticle[]> => {
     const data = await response.json();
 
     if (data.status === 'ok' && data.items && Array.isArray(data.items) && data.items.length > 0) {
-      return data.items.map((item: any, index: number) => ({
+      const articles = data.items.map((item: any, index: number) => ({
         id: `g1-${index}`,
         title: item.title,
         summary: item.description ? item.description.replace(/<[^>]*>/g, '').slice(0, 150) + '...' : 'Clique para ler a matéria completa.',
@@ -60,10 +79,34 @@ export const getLocalNews = async (): Promise<NewsArticle[]> => {
         url: item.link,
         imageUrl: item.thumbnail || item.enclosure?.link || 'https://s2.glbimg.com/QF8xL4vJ8j8j8j8j8j8j/top/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2025/x/y/z/default.jpg' // Placeholder if no image
       }));
+
+      // Salvar no cache
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify({
+          timestamp: Date.now(),
+          articles
+        }));
+      } catch (e) {
+        console.warn('Failed to save news to cache', e);
+      }
+
+      return articles;
     }
     throw new Error('RSS empty or failed');
   } catch (error) {
-    console.warn('Error fetching G1 news, falling back to mock:', error);
+    // Se falhar o fetch, tenta usar o cache antigo se existir (melhor que o mock estático)
+    try {
+      const cachedData = localStorage.getItem(CACHE_KEY);
+      if (cachedData) {
+        const { articles } = JSON.parse(cachedData);
+        if (Array.isArray(articles) && articles.length > 0) {
+          // console.log('Serving stale news from cache due to fetch error');
+          return articles;
+        }
+      }
+    } catch (e) { }
+
+    // Fallback final para o mock estático
     return NEWS_MOCK;
   }
 };
