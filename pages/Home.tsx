@@ -33,7 +33,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
 
   const scroll = (ref: React.RefObject<HTMLDivElement | null>, direction: 'left' | 'right') => {
     if (ref.current) {
-      const scrollAmount = direction === 'left' ? -300 : 300;
+      const scrollAmount = direction === 'left' ? -250 : 250;
       ref.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
@@ -151,7 +151,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
   return (
     <div className="space-y-0 pb-0">
       {/* Hero Section - Animação Inicial */}
-      <section className="relative overflow-hidden bg-white pt-16 pb-20 md:pt-24 md:pb-32 animate-fade-in">
+      <section className="relative overflow-hidden bg-white pt-16 pb-12 md:pt-24 md:pb-20 animate-fade-in">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-brand-teal/5 -skew-x-12 translate-x-1/4 pointer-events-none"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="max-w-4xl space-y-8 text-center md:text-left animate-slide-up">
@@ -230,9 +230,9 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       </section>
 
       {/* Categories & Business Grid */}
-      <section className="bg-slate-50 pt-20 pb-32">
-        <div className="max-w-7xl mx-auto px-4 -mt-32 relative z-30 mb-20 reveal">
-          <div className="bg-white p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] shadow-2xl border border-slate-100 relative overflow-hidden">
+      <section className="bg-slate-50 pt-10 pb-20">
+        <div className="max-w-7xl mx-auto px-4 -mt-24 relative z-30 mb-20 reveal">
+          <div className="bg-white p-6 md:p-8 rounded-[2rem] md:rounded-[3rem] shadow-2xl border border-slate-100 relative overflow-hidden">
             {/* Pagination Controls for Categories */}
             <div className="flex items-center justify-between mb-6">
               <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Categorias</span>
@@ -252,15 +252,15 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
               </div>
             </div>
 
-            <div ref={categoriesRef} className="flex gap-4 md:gap-10 overflow-x-auto no-scrollbar scroll-smooth">
+            <div ref={categoriesRef} className="flex gap-4 md:gap-8 overflow-x-auto no-scrollbar scroll-smooth">
               {Object.values(CategoryType).map((category, idx) => (
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
                   className={`flex flex-col items-center group transition-all shrink-0 reveal stagger-${(idx % 4) + 1}`}
                 >
-                  <div className={`w-14 h-14 md:w-20 md:h-20 rounded-2xl flex items-center justify-center transition-all border-2 mb-4 ${selectedCategory === category ? 'bg-brand-teal border-brand-teal text-white shadow-xl scale-110' : 'bg-slate-50 border-transparent text-brand-teal-deep hover:bg-slate-100'}`}>
-                    {React.cloneElement(CATEGORY_ICONS[category] as React.ReactElement<any>, { className: "w-6 h-6 md:w-8 md:h-8" })}
+                  <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center transition-all border-2 mb-4 ${selectedCategory === category ? 'bg-brand-teal border-brand-teal text-white shadow-xl scale-110' : 'bg-slate-50 border-transparent text-brand-teal-deep hover:bg-slate-100'}`}>
+                    {React.cloneElement(CATEGORY_ICONS[category] as React.ReactElement<any>, { className: "w-6 h-6 md:w-7 md:h-7" })}
                   </div>
                   <span className={`text-[8px] md:text-[9px] font-black uppercase tracking-widest text-center ${selectedCategory === category ? 'text-brand-teal' : 'text-slate-400'}`}>{category}</span>
                 </button>
@@ -269,10 +269,10 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 relative">
+        <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between mb-8 px-2 md:px-0">
             <div>
-              <h2 className="text-2xl md:text-4xl font-black text-brand-teal-deep tracking-tight">Comércios Próximos</h2>
+              <h2 className="text-2xl md:text-3xl font-black text-brand-teal-deep tracking-tight">Comércios Próximos</h2>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Ordenados por distância</p>
             </div>
             <div className="flex items-center gap-2">
@@ -291,9 +291,9 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             </div>
           </div>
 
-          <div ref={shopsRef} className="flex gap-4 md:gap-8 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar px-2 md:px-0 scroll-smooth">
+          <div ref={shopsRef} className="flex gap-4 md:gap-6 overflow-x-auto pb-6 snap-x snap-mandatory no-scrollbar px-2 md:px-0 scroll-smooth">
             {filteredBusinesses.slice(0, 12).map((biz, idx) => (
-              <div key={biz.id} className={`w-[280px] md:w-[380px] shrink-0 snap-start reveal stagger-${(idx % 3) + 1}`}>
+              <div key={biz.id} className={`w-[220px] md:w-[320px] shrink-0 snap-start reveal stagger-${(idx % 3) + 1}`}>
                 <BusinessCard business={biz} checkAuth={checkAuth} />
               </div>
             ))}
@@ -316,12 +316,12 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       </section>
 
       {/* Vagas Section (Dark) - Adicionado Botão "Ver Todas" */}
-      <section className="bg-slate-900 py-16 md:py-32 text-white overflow-hidden relative">
+      <section className="bg-slate-900 py-12 md:py-20 text-white overflow-hidden relative">
         <div className="absolute top-0 right-0 w-96 h-96 bg-brand-teal/5 rounded-full blur-3xl"></div>
         <div className="max-w-7xl mx-auto px-4 relative z-10">
           <div className="flex flex-col items-center justify-center mb-10 md:mb-16 gap-6 reveal">
             <div className="text-center">
-              <h2 className="text-3xl md:text-7xl font-black tracking-tighter">Vagas em <span className="text-brand-teal">Pira</span></h2>
+              <h2 className="text-3xl md:text-5xl font-black tracking-tighter">Vagas em <span className="text-brand-teal">Pira</span></h2>
               <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest mt-2 md:mt-4">Oportunidades em Piracicaba</p>
             </div>
             <div className="flex items-center gap-4">
@@ -340,13 +340,13 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             </div>
           </div>
 
-          <div ref={jobsRef} className="flex gap-4 md:gap-6 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar px-2 md:px-0 scroll-smooth">
+          <div ref={jobsRef} className="flex gap-4 md:gap-5 overflow-x-auto pb-6 snap-x snap-mandatory no-scrollbar px-2 md:px-0 scroll-smooth">
             {recentJobs.slice(0, 4).map((job, idx) => (
-              <div key={job.id} className={`w-[260px] md:w-[320px] shrink-0 snap-start bg-white/5 backdrop-blur-sm p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-white/10 hover:border-brand-teal/50 transition-all group reveal stagger-${idx + 1}`}>
+              <div key={job.id} className={`w-[220px] md:w-[280px] shrink-0 snap-start bg-white/5 backdrop-blur-sm p-4 md:p-6 rounded-2xl md:rounded-3xl border border-white/10 hover:border-brand-teal/50 transition-all group reveal stagger-${idx + 1}`}>
                 <div className="bg-brand-teal/20 w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-teal mb-4 md:mb-8 group-hover:scale-110 transition-transform">
                   <ICONS.Briefcase size={20} />
                 </div>
-                <h3 className="text-sm md:text-2xl font-black mb-1 md:mb-2 leading-tight line-clamp-2">{job.role}</h3>
+                <h3 className="text-sm md:text-xl font-black mb-1 md:mb-2 leading-tight line-clamp-2">{job.role}</h3>
                 <p className="text-brand-orange text-[8px] md:text-[10px] font-black uppercase tracking-widest mb-3 md:mb-6 line-clamp-1">{job.company}</p>
                 <Link to="/vagas" className="text-[8px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-brand-teal transition-colors">Detalhes</Link>
               </div>
@@ -361,8 +361,8 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             </div>
           </div>
 
-          <div className="mt-16 text-center reveal">
-            <Link to="/vagas" className="inline-flex items-center gap-4 bg-brand-teal text-white px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-brand-teal/20 hover:bg-brand-teal-dark hover:scale-105 active:scale-95 transition-all">
+          <div className="mt-12 text-center reveal">
+            <Link to="/vagas" className="inline-flex items-center gap-4 bg-brand-teal text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-brand-teal/20 hover:bg-brand-teal-dark hover:scale-105 active:scale-95 transition-all">
               Ver Todas as Vagas <ICONS.ArrowRight size={18} />
             </Link>
           </div>
@@ -370,12 +370,12 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       </section>
 
       {/* Guia Turístico Section */}
-      <section className="bg-white py-16 md:py-32">
+      <section className="bg-white py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-10 md:mb-16 reveal">
-            <h2 className="text-3xl md:text-7xl font-black text-brand-teal-deep tracking-tighter leading-none">Turismo em <span className="text-brand-orange">Pira</span></h2>
+            <h2 className="text-3xl md:text-5xl font-black text-brand-teal-deep tracking-tighter leading-none">Turismo em <span className="text-brand-orange">Pira</span></h2>
             <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest mt-4 md:mt-6">Descubra Piracicaba</p>
-            <div className="flex items-center justify-center gap-4 mt-10">
+            <div className="flex items-center justify-center gap-4 mt-6">
               <button
                 onClick={() => scroll(tourismRef, 'left')}
                 className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-brand-teal hover:bg-brand-teal hover:text-white transition-all shadow-md"
@@ -391,15 +391,15 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             </div>
           </div>
 
-          <div ref={tourismRef} className="flex gap-4 md:gap-8 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar px-2 md:px-0 scroll-smooth">
+          <div ref={tourismRef} className="flex gap-4 md:gap-6 overflow-x-auto pb-6 snap-x snap-mandatory no-scrollbar px-2 md:px-0 scroll-smooth">
             {featuredSpots.slice(0, 4).map((spot, idx) => (
-              <div key={spot.id} className={`w-[260px] md:w-[320px] shrink-0 snap-start bg-slate-50 rounded-3xl md:rounded-[2rem] p-4 md:p-6 border border-slate-100 group hover:bg-white hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center reveal stagger-${idx + 1}`}>
-                <div className="bg-brand-teal/10 w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-teal mb-4 md:mb-6 group-hover:bg-brand-teal group-hover:text-white group-hover:scale-110 transition-all duration-500">
-                  {getTouristIcon(spot.category, 24)}
+              <div key={spot.id} className={`w-[220px] md:w-[280px] shrink-0 snap-start bg-slate-50 rounded-2xl md:rounded-3xl p-4 md:p-5 border border-slate-100 group hover:bg-white hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center reveal stagger-${idx + 1}`}>
+                <div className="bg-brand-teal/10 w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-teal mb-4 md:mb-6 group-hover:bg-brand-teal group-hover:text-white group-hover:scale-110 transition-all duration-500">
+                  {getTouristIcon(spot.category, 20)}
                 </div>
                 <div className="space-y-2 md:space-y-3">
                   <span className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] text-brand-orange">{spot.category}</span>
-                  <h3 className="text-xs md:text-xl font-black text-brand-teal-deep group-hover:text-brand-teal transition-colors leading-tight line-clamp-1">{spot.name.replace(/^\d+\.\s*/, '')}</h3>
+                  <h3 className="text-xs md:text-lg font-black text-brand-teal-deep group-hover:text-brand-teal transition-colors leading-tight line-clamp-1">{spot.name.replace(/^\d+\.\s*/, '')}</h3>
                   <p className="hidden md:block text-slate-500 text-sm font-medium line-clamp-3 leading-relaxed">{spot.description}</p>
                 </div>
                 <Link to="/guia-turistico" className="mt-4 md:mt-6 text-[8px] md:text-[10px] font-black uppercase tracking-widest text-brand-teal-deep hover:text-brand-orange transition-colors flex items-center gap-2">
@@ -411,14 +411,13 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
         </div>
       </section>
 
-
       {/* Seção de Notícias */}
-      <section className="py-16 md:py-32 bg-slate-50 relative overflow-hidden">
+      <section className="py-12 md:py-20 bg-slate-50 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-col items-center justify-center mb-10 md:mb-16 gap-6 reveal">
             <div className="max-w-2xl text-center">
-              <h2 className="text-3xl md:text-6xl font-black text-brand-teal-deep tracking-tighter leading-none mb-4 md:mb-6">
+              <h2 className="text-3xl md:text-5xl font-black text-brand-teal-deep tracking-tighter leading-none mb-4 md:mb-6">
                 Notícias da <span className="text-brand-orange">Região</span>
               </h2>
               <p className="text-slate-500 font-medium text-lg max-w-xl">
@@ -452,16 +451,16 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             </div>
           </div>
 
-          <div ref={newsRef} className="flex gap-4 md:gap-8 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar px-2 md:px-0 scroll-smooth">
+          <div ref={newsRef} className="flex gap-4 md:gap-6 overflow-x-auto pb-6 snap-x snap-mandatory no-scrollbar px-2 md:px-0 scroll-smooth">
             {latestNews.slice(0, 4).map((item, idx) => (
-              <div key={idx} className="w-[280px] md:w-[350px] shrink-0 snap-start">
+              <div key={idx} className="w-[240px] md:w-[300px] shrink-0 snap-start">
                 <a
                   href={item.url}
                   target="_blank"
                   rel="noreferrer"
                   className={`group bg-white rounded-2xl md:rounded-3xl p-3 md:p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 flex flex-col h-full reveal stagger-${idx + 1}`}
                 >
-                  <div className="h-32 md:h-48 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-6 relative">
+                  <div className="h-32 md:h-44 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-6 relative">
                     <div className="absolute inset-0 bg-brand-teal/20 group-hover:bg-transparent transition-colors z-10"></div>
                     <img
                       src={item.imageUrl}
@@ -472,7 +471,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
                       {item.date}
                     </div>
                   </div>
-                  <h3 className="text-[11px] md:text-xl font-bold text-slate-800 mb-2 md:mb-4 group-hover:text-brand-teal transition-colors line-clamp-2 md:line-clamp-3 leading-tight">
+                  <h3 className="text-[11px] md:text-lg font-bold text-slate-800 mb-2 md:mb-4 group-hover:text-brand-teal transition-colors line-clamp-2 md:line-clamp-3 leading-tight">
                     {item.title}
                   </h3>
                   <p className="hidden md:block text-slate-500 text-sm font-medium line-clamp-3 mb-6 flex-1">

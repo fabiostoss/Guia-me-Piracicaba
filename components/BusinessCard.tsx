@@ -27,7 +27,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
 
   return (
     <div className="bg-white rounded-[1.5rem] md:rounded-[2rem] overflow-hidden border border-slate-100 card-hover transition-all duration-500 group flex flex-col h-full shadow-sm hover:shadow-xl">
-      <div className="relative h-40 md:h-56 overflow-hidden">
+      <div className="relative h-32 md:h-40 overflow-hidden">
         <img
           src={business.imageUrl}
           alt={business.name}
@@ -70,7 +70,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
         </div>
       </div>
 
-      <div className="p-3 py-4 md:p-8 flex-grow flex flex-col">
+      <div className="p-3 py-2 md:p-5 flex-grow flex flex-col">
         <div className="flex items-center gap-2 mb-2">
           <Link to={`/business/${business.id}`} className="block">
             <h3 className="text-sm md:text-2xl font-black text-brand-teal-deep group-hover:text-brand-teal transition-colors leading-tight tracking-tight line-clamp-2">
@@ -99,7 +99,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
           {business.description}
         </p>
 
-        <div className="space-y-2 md:space-y-3 mb-6 md:mb-8">
+        <div className="space-y-2 md:space-y-3 mb-4 md:mb-5">
           <a
             href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${business.street}, ${business.number} - ${business.neighborhood}, Piracicaba - SP`)}`}
             target="_blank"
@@ -116,7 +116,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
           </a>
         </div>
 
-        <div className="mt-auto pt-6 border-t border-slate-50">
+        <div className="mt-auto pt-4 border-t border-slate-50">
           {(!business.isOfficial || (business.isOfficial && business.phone.replace(/\D/g, '').length >= 12)) && (
             <button
               onClick={handleWhatsAppClick}
