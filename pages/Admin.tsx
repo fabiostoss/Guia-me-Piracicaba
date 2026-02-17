@@ -771,6 +771,30 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                       ))}
                     </select>
                   </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Latitude (GPS)</label>
+                      <input
+                        type="number"
+                        step="any"
+                        placeholder="Ex: -22.72..."
+                        className="w-full px-6 py-4 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold outline-none focus:border-brand-teal"
+                        value={formData.latitude || ''}
+                        onChange={e => setFormData({ ...formData, latitude: parseFloat(e.target.value) })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Longitude (GPS)</label>
+                      <input
+                        type="number"
+                        step="any"
+                        placeholder="Ex: -47.63..."
+                        className="w-full px-6 py-4 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold outline-none focus:border-brand-teal"
+                        value={formData.longitude || ''}
+                        onChange={e => setFormData({ ...formData, longitude: parseFloat(e.target.value) })}
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div className="space-y-8">

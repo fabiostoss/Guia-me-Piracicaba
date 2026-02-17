@@ -32,38 +32,25 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       }
     });
 
-    // Check if location was already granted/stored
-    const storedLoc = localStorage.getItem('user_location');
-    if (storedLoc) {
-      setUserLocation(JSON.parse(storedLoc));
-    }
+    // Request location automatically on mount
+    const requestLocation = () => {
+      if (!navigator.geolocation) return;
+
+      setIsLocating(true);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const coords = { lat: position.coords.latitude, lng: position.coords.longitude };
+          setUserLocation(coords);
+          localStorage.setItem('user_location', JSON.stringify(coords));
+          setIsLocating(false);
+        },
+        () => setIsLocating(false),
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+      );
+    };
+
+    requestLocation();
   }, []);
-
-  const requestLocation = () => {
-    if (!navigator.geolocation) {
-      alert('Geolocalização não suportada pelo seu navegador.');
-      return;
-    }
-
-    setIsLocating(true);
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const coords = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        };
-        setUserLocation(coords);
-        localStorage.setItem('user_location', JSON.stringify(coords));
-        setIsLocating(false);
-      },
-      (error) => {
-        console.error('Erro ao obter localização:', error);
-        setIsLocating(false);
-        alert('Não foi possível obter sua localização. Verifique as permissões do navegador.');
-      },
-      { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
-    );
-  };
 
   // Intersection Observer para animações
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -146,25 +133,17 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             </p>
 
             <div className="flex flex-wrap gap-4 pt-2">
-              <button
-                onClick={requestLocation}
-                disabled={isLocating}
-                className={`flex items-center gap-2 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${userLocation
-                  ? 'bg-emerald-50 text-emerald-600 border border-emerald-100'
-                  : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
-                  }`}
-              >
-                <ICONS.MapPin size={14} className={isLocating ? 'animate-bounce' : ''} />
-                {isLocating ? 'Obtendo Localização...' : userLocation ? 'Localização Ativa' : 'Ativar Lojas Próximas'}
-              </button>
+              {isLocating && (
+                <div className="flex items-center gap-2 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest bg-slate-100 text-slate-500 animate-pulse">
+                  <ICONS.MapPin size={14} className="animate-bounce" />
+                  Localizando Lojas Próximas...
+                </div>
+              )}
               {userLocation && (
-                <button
-                  onClick={() => { setUserLocation(null); localStorage.removeItem('user_location'); }}
-                  className="p-3 rounded-full bg-slate-100 text-slate-400 hover:text-brand-orange transition-colors"
-                  title="Limpar Localização"
-                >
-                  <ICONS.X size={14} />
-                </button>
+                <div className="flex items-center gap-2 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest bg-emerald-50 text-emerald-600 border border-emerald-100">
+                  <ICONS.MapPin size={14} />
+                  Lojas mais próximas de você
+                </div>
               )}
             </div>
 
