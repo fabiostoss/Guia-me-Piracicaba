@@ -1,0 +1,158 @@
+
+import React, { useEffect } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { Business } from '../types';
+import { ICONS, WHATSAPP_MSG_DEFAULT } from '../constants';
+import { isBusinessOpen } from '../utils/businessUtils';
+
+interface BusinessDetailProps {
+  businesses: Business[];
+  onIncrementView?: (id: string) => void;
+}
+
+const BusinessDetail: React.FC<BusinessDetailProps> = ({ businesses, onIncrementView }) => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const business = businesses.find(b => String(b.id) === String(id));
+
+  useEffect(() => {
+    if (business && onIncrementView) {
+      onIncrementView(business.id);
+    }
+  }, [id]);
+
+  if (!business) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
+        <div className="text-center">
+          <h2 className="text-2xl font-black mb-4">Comércio não encontrado</h2>
+          <button onClick={() => navigate('/')} className="text-brand-teal font-black hover:underline uppercase tracking-widest text-sm">Voltar para início</button>
+        </div>
+      </div>
+    );
+  }
+
+  const isOpen = isBusinessOpen(business.schedule);
+  const whatsappUrl = `https://wa.me/${business.phone}?text=${encodeURIComponent(WHATSAPP_MSG_DEFAULT)}`;
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(business.address)}`;
+
+  return (
+    <div className="pb-24 bg-slate-50 min-h-screen">
+      {/* Header com Imagem de Capa Restaurada */}
+      <div className="relative h-[40vh] md:h-[50vh] overflow-hidden">
+        <img 
+          src={business.imageUrl} 
+          alt="" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-brand-teal-deep/40 backdrop-blur-[2px]"></div>
+        
+        <Link 
+          to="/" 
+          className="absolute top-6 left-6 bg-white/20 hover:bg-white/40 text-white p-3 rounded-2xl transition-all border border-white/10 backdrop-blur-md"
+        >
+          <ICONS.X size={24} />
+        </Link>
+
+        <div className="absolute bottom-0 left-0 w-full p-8 md:p-16 text-white">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end gap-8">
+            <div className="w-32 h-32 md:w-48 md:h-48 rounded-[2.5rem] border-4 border-white bg-white shadow-2xl overflow-hidden shrink-0">
+              <img src={business.logoUrl} alt="" className="w-full h-full object-cover" />
+            </div>
+            <div className="flex-grow pb-4">
+              <div className="flex flex-wrap gap-2 mb-4">
+                <span className="bg-brand-orange text-white text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
+                  {business.category}
+                </span>
+                {isOpen ? (
+                  <span className="bg-emerald-500 text-white text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
+                    Aberto agora
+                  </span>
+                ) : (
+                  <span className="bg-white/20 text-white text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest border border-white/20">
+                    Fechado
+                  </span>
+                )}
+              </div>
+              <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-tight">
+                {business.name}
+              </h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 md:mt-24">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          <div className="lg:col-span-2 space-y-12">
+            <div>
+              <h2 className="text-xs font-black text-brand-orange uppercase tracking-[0.3em] mb-6 border-b border-slate-200 pb-4">Sobre o Estabelecimento</h2>
+              <p className="text-slate-600 text-xl leading-relaxed whitespace-pre-line font-medium">
+                {business.description}
+              </p>
+            </div>
+
+            <div className="bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-sm space-y-10">
+              <div className="flex items-start gap-4">
+                <div className="bg-brand-orange/10 p-4 rounded-2xl text-brand-orange shrink-0">
+                  <ICONS.MapPin size={24} />
+                </div>
+                <div>
+                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Localização</h4>
+                  <p className="text-xl font-bold text-brand-teal-deep mb-4">{business.address}</p>
+                  <a href={mapsUrl} target="_blank" rel="noreferrer" className="text-brand-teal font-black hover:underline uppercase tracking-widest text-[10px]">Ver no Mapa</a>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="bg-brand-teal/10 p-4 rounded-2xl text-brand-teal shrink-0">
+                  <ICONS.Clock size={24} />
+                </div>
+                <div>
+                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Funcionamento</h4>
+                  <p className="text-slate-600 font-bold text-lg leading-relaxed">
+                    {business.businessHours || 'Consulte os horários no WhatsApp'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="lg:col-span-1">
+            <div className="sticky top-28 bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-2xl">
+              <div className="flex items-center gap-2 mb-8">
+                <ICONS.Eye size={16} className="text-brand-orange" />
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{business.views || 0} Visualizações</span>
+              </div>
+              
+              <div className="space-y-4 mb-10">
+                {business.offersDelivery && (
+                  <div className="flex items-center bg-emerald-50 text-emerald-700 px-5 py-4 rounded-2xl border border-emerald-100 font-black text-[10px] uppercase tracking-widest">
+                    <ICONS.Truck size={18} className="mr-3" /> Faz entregas em Pira
+                  </div>
+                )}
+                {business.offersPickup && (
+                  <div className="flex items-center bg-brand-teal/5 text-brand-teal-deep px-5 py-4 rounded-2xl border border-brand-teal/10 font-black text-[10px] uppercase tracking-widest">
+                    <ICONS.Package size={18} className="mr-3" /> Aceita retirada no local
+                  </div>
+                )}
+              </div>
+              
+              <a 
+                href={whatsappUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="w-full bg-brand-teal hover:bg-brand-teal-dark text-white font-black py-6 rounded-2xl flex items-center justify-center transition-all shadow-xl shadow-brand-teal/20 active:scale-95 uppercase tracking-widest text-xs"
+              >
+                <ICONS.MessageCircle className="w-6 h-6 mr-3" />
+                Enviar Mensagem
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default BusinessDetail;

@@ -1,0 +1,7 @@
+{
+  "name": "Guia-me Piracicaba",
+  "description": "Um marketplace moderno focado em Piracicaba-SP, conectando clientes a comerciantes locais via WhatsApp.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

@@ -1,0 +1,92 @@
+
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Business } from '../types';
+import { ICONS, WHATSAPP_MSG_DEFAULT } from '../constants';
+import { isBusinessOpen } from '../utils/businessUtils';
+
+interface BusinessCardProps {
+  business: Business;
+  checkAuth?: (action: () => void) => void;
+}
+
+const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
+  const whatsappUrl = `https://wa.me/${business.phone}?text=${encodeURIComponent(WHATSAPP_MSG_DEFAULT)}`;
+  const isOpen = isBusinessOpen(business.schedule);
+
+  const handleWhatsAppClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (checkAuth) {
+      checkAuth(() => {
+        window.open(whatsappUrl, '_blank');
+      });
+    } else {
+      window.open(whatsappUrl, '_blank');
+    }
+  };
+
+  return (
+    <div className="bg-white rounded-[2rem] overflow-hidden border border-slate-100 card-hover transition-all duration-500 group flex flex-col h-full shadow-sm hover:shadow-xl">
+      <div className="relative h-56 overflow-hidden">
+        <img 
+          src={business.imageUrl} 
+          alt={business.name}
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
+        <div className="absolute top-4 left-4">
+          <span className="text-white text-[9px] font-black uppercase tracking-[0.3em] bg-brand-teal/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20">
+            {business.category}
+          </span>
+        </div>
+        <div className="absolute bottom-4 right-4">
+          {isOpen ? (
+            <span className="bg-emerald-500 text-white text-[9px] font-black px-3 py-1.5 rounded-xl uppercase tracking-widest flex items-center gap-2 shadow-lg">
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+              Aberto
+            </span>
+          ) : (
+            <span className="bg-brand-orange text-white text-[9px] font-black px-3 py-1.5 rounded-xl uppercase tracking-widest shadow-lg">
+              Fechado
+            </span>
+          )}
+        </div>
+      </div>
+
+      <div className="p-8 flex-grow flex flex-col">
+        <Link to={`/business/${business.id}`} className="block mb-4">
+          <h3 className="text-2xl font-black text-brand-teal-deep group-hover:text-brand-teal transition-colors leading-tight tracking-tight">
+            {business.name}
+          </h3>
+        </Link>
+
+        <p className="text-slate-500 text-sm font-medium leading-relaxed mb-6 line-clamp-2">
+          {business.description}
+        </p>
+
+        <div className="space-y-3 mb-8">
+          <div className="flex items-start text-slate-400 text-xs">
+            <ICONS.MapPin className="w-4 h-4 mr-3 flex-shrink-0 text-brand-orange" />
+            <p className="font-bold truncate">{business.address}</p>
+          </div>
+          <div className="flex items-center text-slate-400 text-[10px] font-black uppercase tracking-widest">
+            <ICONS.Eye className="w-4 h-4 mr-3 text-brand-teal" />
+            {business.views || 0} Visualizações
+          </div>
+        </div>
+
+        <div className="mt-auto pt-6 border-t border-slate-50">
+          <button 
+            onClick={handleWhatsAppClick}
+            className="w-full bg-brand-teal hover:bg-brand-teal-dark text-white font-black py-4 rounded-xl flex items-center justify-center transition-all shadow-lg shadow-brand-teal/10 uppercase tracking-widest text-[9px]"
+          >
+            <ICONS.MessageCircle className="w-4 h-4 mr-2" />
+            Falar no WhatsApp
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default BusinessCard;
