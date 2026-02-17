@@ -23,6 +23,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
   const [latestNews, setLatestNews] = useState<NewsArticle[]>(NEWS_MOCK);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [isLocating, setIsLocating] = useState(false);
+  const [locationError, setLocationError] = useState<string | null>(null);
 
   // Refs para controle de scroll
   const categoriesRef = useRef<HTMLDivElement>(null);
@@ -57,25 +58,59 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       }
     }
 
-    // Request location automatically on mount
-    const requestLocation = () => {
-      if (!navigator.geolocation) return;
+    // Request location
+    const requestLocation = (isManual = false) => {
+      if (!navigator.geolocation) {
+        setLocationError('Geolocalização não suportada');
+        return;
+      }
 
       setIsLocating(true);
+      setLocationError(null);
+
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const coords = { lat: position.coords.latitude, lng: position.coords.longitude };
           setUserLocation(coords);
           localStorage.setItem('user_location', JSON.stringify(coords));
           setIsLocating(false);
+          setLocationError(null);
         },
-        () => setIsLocating(false),
-        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+        (error) => {
+          setIsLocating(false);
+          if (isManual) {
+            switch (error.code) {
+              case error.PERMISSION_DENIED:
+                setLocationError('Permissão negada. Ative nas configurações do navegador.');
+                break;
+              case error.POSITION_UNAVAILABLE:
+                setLocationError('Sinal de GPS indisponível.');
+                break;
+              case error.TIMEOUT:
+                setLocationError('Tempo esgotado. Tente novamente em local aberto.');
+                break;
+              default:
+                setLocationError('Não foi possível obter sua localização.');
+            }
+          }
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 30000 }
       );
     };
 
-    requestLocation();
+    if (!cachedLocation) {
+      requestLocation(false);
+    }
+
+    // Export function to be used by the component
+    (window as any).refreshLocation = () => requestLocation(true);
   }, []);
+
+  const handleManualLocation = () => {
+    if (typeof (window as any).refreshLocation === 'function') {
+      (window as any).refreshLocation();
+    }
+  };
 
   // Intersection Observer para animações
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -164,18 +199,30 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
               O guia definitivo que une agilidade e orgulho local. Conexão direta com quem faz Piracicaba crescer.
             </p>
 
-            <div className="flex flex-wrap gap-4 pt-2">
+            <div className="flex flex-wrap gap-4 pt-2 justify-center md:justify-start">
               {isLocating && (
-                <div className="flex items-center gap-2 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest bg-slate-100 text-slate-500 animate-pulse">
-                  <ICONS.MapPin size={14} className="animate-bounce" />
-                  Localizando Lojas Próximas...
+                <div className="flex items-center gap-2 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest bg-slate-100 text-slate-500 animate-pulse border border-slate-200">
+                  <ICONS.MapPin size={14} className="animate-bounce text-brand-teal" />
+                  Buscando sua localização...
                 </div>
               )}
-              {userLocation && (
-                <div className="flex items-center gap-2 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest bg-emerald-50 text-emerald-600 border border-emerald-100">
+              {userLocation && !isLocating && (
+                <div className="flex items-center gap-2 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest bg-emerald-50 text-emerald-600 border border-emerald-100 shadow-sm">
                   <ICONS.MapPin size={14} />
-                  Lojas mais próximas de você
+                  Lojas mais próximas ativadas
+                  <button onClick={() => { setUserLocation(null); localStorage.removeItem('user_location'); }} className="ml-2 hover:text-red-500">
+                    <ICONS.X size={12} />
+                  </button>
                 </div>
+              )}
+              {!userLocation && !isLocating && (
+                <button
+                  onClick={handleManualLocation}
+                  className="flex items-center gap-2 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest bg-brand-teal/10 text-brand-teal border border-brand-teal/20 hover:bg-brand-teal hover:text-white transition-all shadow-sm group"
+                >
+                  <ICONS.MapPin size={14} className="group-hover:animate-bounce" />
+                  {locationError ? locationError : 'Lojas mais próximas? Ativar Localização'}
+                </button>
               )}
             </div>
 
