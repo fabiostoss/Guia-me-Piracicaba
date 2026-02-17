@@ -524,12 +524,15 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                       <td className="px-8 py-6">
                         <div className="flex items-center gap-4">
                           <img src={biz.logoUrl} className="w-10 h-10 rounded-xl object-cover shadow-sm shrink-0" />
-                          <div className="flex flex-col gap-1 min-w-0">
-                            <input
-                              className={`font-black text-sm outline-none bg-transparent border-b border-transparent focus:border-brand-teal transition-all ${draft.name !== undefined ? 'text-brand-teal' : 'text-brand-teal-deep'}`}
-                              value={currentName}
-                              onChange={e => setDraftChanges(prev => ({ ...prev, [biz.id]: { ...prev[biz.id], name: e.target.value } }))}
-                            />
+                          <div className="flex flex-col gap-1 min-w-0 flex-grow group/field">
+                            <div className="flex items-center gap-2">
+                              <input
+                                className={`font-black text-sm outline-none bg-transparent border-b border-transparent focus:border-brand-teal transition-all flex-grow ${draft.name !== undefined ? 'text-brand-teal' : 'text-brand-teal-deep'}`}
+                                value={currentName}
+                                onChange={e => setDraftChanges(prev => ({ ...prev, [biz.id]: { ...prev[biz.id], name: e.target.value } }))}
+                              />
+                              <ICONS.Edit size={10} className="text-slate-200 opacity-0 group-hover/field:opacity-100 transition-opacity" />
+                            </div>
                             <div className="flex items-center gap-2">
                               <span className="text-[8px] font-bold text-slate-300 uppercase tracking-widest">{biz.code}</span>
                               {biz.isOfficial && <span className="bg-brand-orange/10 text-brand-orange px-1.5 py-0.5 rounded text-[7px] font-bold border border-brand-orange/20">OFICIAL</span>}
@@ -539,38 +542,47 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                       </td>
                       <td className="px-8 py-6">
                         <div className="flex flex-col gap-2">
-                          <select
-                            className={`text-[10px] font-bold uppercase tracking-widest outline-none bg-transparent border-b border-transparent focus:border-brand-teal cursor-pointer ${draft.category !== undefined ? 'text-brand-teal' : 'text-slate-500'}`}
-                            value={currentCategory}
-                            onChange={e => setDraftChanges(prev => ({ ...prev, [biz.id]: { ...prev[biz.id], category: e.target.value as CategoryType } }))}
-                          >
-                            {Object.values(CategoryType).map(cat => (
-                              <option key={cat} value={cat}>{cat}</option>
-                            ))}
-                          </select>
-                          <select
-                            className={`text-[9px] font-black uppercase tracking-widest outline-none bg-transparent border-b border-transparent focus:border-brand-teal cursor-pointer ${draft.neighborhood !== undefined ? 'text-brand-teal' : 'text-slate-400'}`}
-                            value={currentNeighborhood || ''}
-                            onChange={e => setDraftChanges(prev => ({ ...prev, [biz.id]: { ...prev[biz.id], neighborhood: e.target.value } }))}
-                          >
-                            <option value="">Sem Bairro</option>
-                            {PIRACICABA_NEIGHBORHOODS.map(b => (
-                              <option key={b} value={b}>{b}</option>
-                            ))}
-                          </select>
+                          <div className="flex items-center gap-2 group/cat">
+                            <select
+                              className={`text-[10px] font-bold uppercase tracking-widest outline-none bg-transparent border-b border-transparent focus:border-brand-teal cursor-pointer flex-grow ${draft.category !== undefined ? 'text-brand-teal' : 'text-slate-500'}`}
+                              value={currentCategory}
+                              onChange={e => setDraftChanges(prev => ({ ...prev, [biz.id]: { ...prev[biz.id], category: e.target.value as CategoryType } }))}
+                            >
+                              {Object.values(CategoryType).map(cat => (
+                                <option key={cat} value={cat}>{cat}</option>
+                              ))}
+                            </select>
+                            <ICONS.Edit size={8} className="text-slate-200 opacity-0 group-hover/cat:opacity-100 transition-opacity" />
+                          </div>
+                          <div className="flex items-center gap-2 group/neigh">
+                            <select
+                              className={`text-[9px] font-black uppercase tracking-widest outline-none bg-transparent border-b border-transparent focus:border-brand-teal cursor-pointer flex-grow ${draft.neighborhood !== undefined ? 'text-brand-teal' : 'text-slate-400'}`}
+                              value={currentNeighborhood || ''}
+                              onChange={e => setDraftChanges(prev => ({ ...prev, [biz.id]: { ...prev[biz.id], neighborhood: e.target.value } }))}
+                            >
+                              <option value="">Sem Bairro</option>
+                              {PIRACICABA_NEIGHBORHOODS.map(b => (
+                                <option key={b} value={b}>{b}</option>
+                              ))}
+                            </select>
+                            <ICONS.Edit size={8} className="text-slate-200 opacity-0 group-hover/neigh:opacity-100 transition-opacity" />
+                          </div>
                         </div>
                       </td>
                       <td className="px-8 py-6">
-                        <div className="flex flex-col gap-1">
-                          <input
-                            type="number"
-                            className={`w-20 font-black outline-none bg-transparent border-b border-transparent focus:border-brand-teal text-sm ${draft.views !== undefined ? 'text-brand-teal' : 'text-brand-teal-deep'}`}
-                            value={currentViews}
-                            onChange={(e) => {
-                              const val = parseInt(e.target.value) || 0;
-                              setDraftChanges(prev => ({ ...prev, [biz.id]: { ...prev[biz.id], views: val } }));
-                            }}
-                          />
+                        <div className="flex flex-col gap-1 group/views">
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="number"
+                              className={`w-20 font-black outline-none bg-transparent border-b border-transparent focus:border-brand-teal text-sm ${draft.views !== undefined ? 'text-brand-teal' : 'text-brand-teal-deep'}`}
+                              value={currentViews}
+                              onChange={(e) => {
+                                const val = parseInt(e.target.value) || 0;
+                                setDraftChanges(prev => ({ ...prev, [biz.id]: { ...prev[biz.id], views: val } }));
+                              }}
+                            />
+                            <ICONS.Edit size={10} className="text-slate-200 opacity-0 group-hover/views:opacity-100 transition-opacity" />
+                          </div>
                           <span className="text-[8px] font-bold text-slate-300 uppercase tracking-widest">Acessos</span>
                         </div>
                       </td>
