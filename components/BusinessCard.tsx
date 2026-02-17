@@ -63,11 +63,21 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
       </div>
 
       <div className="p-8 flex-grow flex flex-col">
-        <Link to={`/business/${business.id}`} className="block mb-2">
-          <h3 className="text-2xl font-black text-brand-teal-deep group-hover:text-brand-teal transition-colors leading-tight tracking-tight">
-            {business.name}
-          </h3>
-        </Link>
+        <div className="flex items-center gap-2 mb-2">
+          <Link to={`/business/${business.id}`} className="block">
+            <h3 className="text-2xl font-black text-brand-teal-deep group-hover:text-brand-teal transition-colors leading-tight tracking-tight">
+              {business.name}
+            </h3>
+          </Link>
+          {business.isOfficial && (
+            <img
+              src="https://img.freepik.com/vetores-premium/icone-de-conta-confirmada-icone-vetorial-do-conceito-de-conta-verificada_654297-327.jpg"
+              className="w-5 h-5 object-contain"
+              alt="Oficial"
+              title="Parceiro Oficial"
+            />
+          )}
+        </div>
 
         {business.segment && (
           <p className="text-brand-orange text-[10px] font-black uppercase tracking-[0.2em] mb-3">
