@@ -471,7 +471,7 @@ const App: React.FC = () => {
           )
         }
 
-        <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="fixed bottom-8 right-8 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 text-white p-5 rounded-full shadow-2xl hover:scale-110 transition-transform z-50 ring-8 ring-white/10 shadow-purple-500/20"><ICONS.Instagram size={32} /></a>
+        <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="fixed bottom-6 right-6 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 text-white p-3.5 rounded-full shadow-2xl hover:scale-110 transition-transform z-50 ring-4 ring-white/10 shadow-purple-500/20"><ICONS.Instagram size={24} /></a>
       </div >
     </Router >
   );
