@@ -87,7 +87,8 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ businesses, onIncrement
                   </span>
                 )}
               </div>
-              <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-tight">
+              <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-tight flex items-center gap-3">
+                {business.isOfficial && <ICONS.Crown size={32} className="text-brand-orange animate-pulse" />}
                 {business.name}
               </h1>
             </div>

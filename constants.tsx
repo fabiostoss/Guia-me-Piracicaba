@@ -53,7 +53,8 @@ import {
   TrendingUp,
   Zap,
   CheckCircle,
-  Tag
+  Tag,
+  Crown
 } from 'lucide-react';
 import { CategoryType } from './types';
 
@@ -105,7 +106,8 @@ export const ICONS = {
   TrendingUp,
   Zap,
   CheckCircle,
-  Tag
+  Tag,
+  Crown
 };
 
 export const CATEGORY_ICONS: Record<CategoryType, React.ReactNode> = {

@@ -73,7 +73,8 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
       <div className="p-3 md:p-4 flex-grow flex flex-col">
         <div className="flex items-center gap-2 mb-1">
           <Link to={`/business/${business.id}`} className="block">
-            <h3 className="text-sm md:text-xl font-black text-brand-teal-deep group-hover:text-brand-teal transition-colors leading-tight tracking-tight line-clamp-1">
+            <h3 className="text-sm md:text-xl font-black text-brand-teal-deep group-hover:text-brand-teal transition-colors leading-tight tracking-tight line-clamp-1 flex items-center gap-1.5">
+              {business.isOfficial && <ICONS.Crown size={16} className="text-brand-orange animate-pulse shrink-0" />}
               {business.name}
             </h3>
           </Link>

@@ -356,7 +356,8 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
                       <div className="p-6">
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex-grow">
-                            <h3 className="text-xl font-black text-brand-teal-deep mb-1 group-hover:text-brand-orange transition-colors">
+                            <h3 className="text-xl font-black text-brand-teal-deep mb-1 group-hover:text-brand-orange transition-colors flex items-center gap-2">
+                              <ICONS.Crown size={20} className="text-brand-orange animate-pulse" />
                               {biz.name}
                             </h3>
                             <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
