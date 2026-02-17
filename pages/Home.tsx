@@ -236,13 +236,32 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-10">
-            {filteredBusinesses.map((biz, idx) => (
-              <div key={biz.id} className={`reveal stagger-${(idx % 3) + 1}`}>
+        <div className="max-w-7xl mx-auto px-4 relative">
+          <div className="flex items-center justify-between mb-8 px-2 md:px-0">
+            <div>
+              <h2 className="text-2xl md:text-4xl font-black text-brand-teal-deep tracking-tight">Comércios Próximos</h2>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Ordenados por distância</p>
+            </div>
+            <div className="flex items-center gap-2 text-brand-orange animate-bounce-horizontal">
+              <span className="text-[10px] font-black uppercase tracking-widest">Arraste</span>
+              <ICONS.ArrowRight size={16} />
+            </div>
+          </div>
+
+          <div className="flex gap-4 md:gap-8 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar px-2 md:px-0">
+            {filteredBusinesses.slice(0, 12).map((biz, idx) => (
+              <div key={biz.id} className={`w-[280px] md:w-[380px] shrink-0 snap-start reveal stagger-${(idx % 3) + 1}`}>
                 <BusinessCard business={biz} checkAuth={checkAuth} />
               </div>
             ))}
+            {filteredBusinesses.length > 12 && (
+              <div className="shrink-0 w-64 flex flex-col items-center justify-center p-8 bg-white rounded-[2rem] border-2 border-dashed border-slate-100 snap-start group hover:border-brand-teal transition-all">
+                <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-brand-teal/10 group-hover:text-brand-teal transition-all mb-4">
+                  <ICONS.Plus size={32} />
+                </div>
+                <p className="text-slate-400 font-black uppercase text-[10px] tracking-widest text-center group-hover:text-brand-teal transition-all">Use a busca para ver mais comércios</p>
+              </div>
+            )}
           </div>
           {filteredBusinesses.length === 0 && (
             <div className="text-center py-20 animate-fade-in">
@@ -257,19 +276,20 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       <section className="bg-slate-900 py-16 md:py-32 text-white overflow-hidden relative">
         <div className="absolute top-0 right-0 w-96 h-96 bg-brand-teal/5 rounded-full blur-3xl"></div>
         <div className="max-w-7xl mx-auto px-4 relative z-10">
-          <div className="flex flex-col justify-center items-center mb-10 md:mb-16 gap-8 reveal">
+          <div className="flex flex-col items-center justify-center mb-10 md:mb-16 gap-4 reveal">
             <div className="text-center">
               <h2 className="text-3xl md:text-7xl font-black tracking-tighter">Vagas em <span className="text-brand-teal">Pira</span></h2>
               <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest mt-2 md:mt-4">Oportunidades em Piracicaba</p>
             </div>
-            <Link to="/vagas" className="hidden md:flex items-center gap-3 text-brand-teal font-black uppercase tracking-widest text-xs hover:text-white transition-colors">
-              Ver todas as vagas <ICONS.ArrowRight size={16} />
-            </Link>
+            <div className="flex items-center gap-2 text-brand-teal animate-bounce-horizontal">
+              <span className="text-[10px] font-black uppercase tracking-widest">Arraste para ver mais</span>
+              <ICONS.ArrowRight size={14} />
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            {recentJobs.map((job, idx) => (
-              <div key={job.id} className={`bg-white/5 backdrop-blur-sm p-5 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-white/10 hover:border-brand-teal/50 transition-all group reveal stagger-${idx + 1}`}>
+          <div className="flex gap-4 md:gap-6 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar px-2 md:px-0">
+            {recentJobs.slice(0, 4).map((job, idx) => (
+              <div key={job.id} className={`w-[260px] md:w-[320px] shrink-0 snap-start bg-white/5 backdrop-blur-sm p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-white/10 hover:border-brand-teal/50 transition-all group reveal stagger-${idx + 1}`}>
                 <div className="bg-brand-teal/20 w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-teal mb-4 md:mb-8 group-hover:scale-110 transition-transform">
                   <ICONS.Briefcase size={20} />
                 </div>
@@ -278,6 +298,14 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
                 <Link to="/vagas" className="text-[8px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-brand-teal transition-colors">Detalhes</Link>
               </div>
             ))}
+            <div className="shrink-0 w-48 flex flex-col items-center justify-center p-8 bg-white/5 rounded-[2rem] border border-dashed border-white/10 snap-start">
+              <Link to="/vagas" className="text-brand-teal font-black text-xs uppercase tracking-widest flex flex-col items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-brand-teal/10 flex items-center justify-center">
+                  <ICONS.ArrowRight size={24} />
+                </div>
+                Ver Todas
+              </Link>
+            </div>
           </div>
 
           <div className="mt-16 text-center reveal">
@@ -294,11 +322,15 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
           <div className="text-center mb-10 md:mb-16 reveal">
             <h2 className="text-3xl md:text-7xl font-black text-brand-teal-deep tracking-tighter leading-none">Turismo em <span className="text-brand-orange">Pira</span></h2>
             <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest mt-4 md:mt-6">Descubra Piracicaba</p>
+            <div className="flex items-center justify-center gap-2 text-brand-orange animate-bounce-horizontal mt-6">
+              <span className="text-[10px] font-black uppercase tracking-widest">Deslize</span>
+              <ICONS.ArrowRight size={16} />
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
+          <div className="flex gap-4 md:gap-8 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar px-2 md:px-0">
             {featuredSpots.slice(0, 4).map((spot, idx) => (
-              <div key={spot.id} className={`bg-slate-50 rounded-3xl md:rounded-[2rem] p-4 md:p-6 border border-slate-100 group hover:bg-white hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center reveal stagger-${idx + 1}`}>
+              <div key={spot.id} className={`w-[260px] md:w-[320px] shrink-0 snap-start bg-slate-50 rounded-3xl md:rounded-[2rem] p-4 md:p-6 border border-slate-100 group hover:bg-white hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center reveal stagger-${idx + 1}`}>
                 <div className="bg-brand-teal/10 w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-teal mb-4 md:mb-6 group-hover:bg-brand-teal group-hover:text-white group-hover:scale-110 transition-all duration-500">
                   {getTouristIcon(spot.category, 24)}
                 </div>
@@ -321,56 +353,63 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       <section className="py-16 md:py-32 bg-slate-50 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex flex-col items-center justify-center mb-10 md:mb-16 gap-8 reveal">
+          <div className="flex flex-col items-center justify-center mb-10 md:mb-16 gap-6 reveal">
             <div className="max-w-2xl text-center">
               <h2 className="text-3xl md:text-6xl font-black text-brand-teal-deep tracking-tighter leading-none mb-4 md:mb-6">
                 Notícias da <span className="text-brand-orange">Região</span>
               </h2>
               <p className="text-slate-500 font-medium text-lg max-w-xl">
-                Acompanhe o que está acontecendo em Piracicaba e fique por dentro das novidades.
+                Acompanhe o que está acontecendo em Piracicaba.
               </p>
             </div>
-            <Link
-              to="/noticias"
-              className="group flex items-center gap-3 text-brand-teal font-black text-xs uppercase tracking-widest hover:text-brand-orange transition-colors"
-            >
-              Ver todas as notícias
-              <div className="w-8 h-8 rounded-full bg-brand-teal/10 flex items-center justify-center group-hover:bg-brand-orange/10 group-hover:text-brand-orange transition-colors">
-                <ICONS.ArrowRight size={14} />
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 text-brand-orange animate-bounce-horizontal mr-4">
+                <span className="text-[10px] font-black uppercase tracking-widest">Veja mais</span>
+                <ICONS.ArrowRight size={16} />
               </div>
-            </Link>
+              <Link
+                to="/noticias"
+                className="group flex items-center gap-3 text-brand-teal font-black text-xs uppercase tracking-widest hover:text-brand-orange transition-colors"
+              >
+                Ver todas
+                <div className="w-8 h-8 rounded-full bg-brand-teal/10 flex items-center justify-center group-hover:bg-brand-orange/10 group-hover:text-brand-orange transition-colors">
+                  <ICONS.ArrowRight size={14} />
+                </div>
+              </Link>
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
+          <div className="flex gap-4 md:gap-8 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar px-2 md:px-0">
             {latestNews.slice(0, 4).map((item, idx) => (
-              <a
-                key={idx}
-                href={item.url}
-                target="_blank"
-                rel="noreferrer"
-                className={`group bg-white rounded-2xl md:rounded-3xl p-3 md:p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 flex flex-col h-full reveal stagger-${idx + 1}`}
-              >
-                <div className="h-32 md:h-48 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-6 relative">
-                  <div className="absolute inset-0 bg-brand-teal/20 group-hover:bg-transparent transition-colors z-10"></div>
-                  <img
-                    src={item.imageUrl}
-                    alt={item.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  <div className="absolute bottom-2 left-2 z-20 bg-white/90 backdrop-blur-md px-2 py-1 rounded-lg text-[7px] md:text-[9px] font-black uppercase tracking-widest text-brand-teal-deep shadow-sm">
-                    {item.date}
+              <div key={idx} className="w-[280px] md:w-[350px] shrink-0 snap-start">
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={`group bg-white rounded-2xl md:rounded-3xl p-3 md:p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 flex flex-col h-full reveal stagger-${idx + 1}`}
+                >
+                  <div className="h-32 md:h-48 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-6 relative">
+                    <div className="absolute inset-0 bg-brand-teal/20 group-hover:bg-transparent transition-colors z-10"></div>
+                    <img
+                      src={item.imageUrl}
+                      alt={item.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute bottom-2 left-2 z-20 bg-white/90 backdrop-blur-md px-2 py-1 rounded-lg text-[7px] md:text-[9px] font-black uppercase tracking-widest text-brand-teal-deep shadow-sm">
+                      {item.date}
+                    </div>
                   </div>
-                </div>
-                <h3 className="text-[11px] md:text-xl font-bold text-slate-800 mb-2 md:mb-4 group-hover:text-brand-teal transition-colors line-clamp-2 md:line-clamp-3 leading-tight">
-                  {item.title}
-                </h3>
-                <p className="hidden md:block text-slate-500 text-sm font-medium line-clamp-3 mb-6 flex-1">
-                  {item.summary}
-                </p>
-                <div className="flex items-center text-[7px] md:text-[10px] font-black text-brand-orange uppercase tracking-widest mt-auto">
-                  Ler tudo <ICONS.ExternalLink size={10} className="ml-1 md:ml-2" />
-                </div>
-              </a>
+                  <h3 className="text-[11px] md:text-xl font-bold text-slate-800 mb-2 md:mb-4 group-hover:text-brand-teal transition-colors line-clamp-2 md:line-clamp-3 leading-tight">
+                    {item.title}
+                  </h3>
+                  <p className="hidden md:block text-slate-500 text-sm font-medium line-clamp-3 mb-6 flex-1">
+                    {item.summary}
+                  </p>
+                  <div className="flex items-center text-[7px] md:text-[10px] font-black text-brand-orange uppercase tracking-widest mt-auto">
+                    Ler tudo <ICONS.ExternalLink size={10} className="ml-1 md:ml-2" />
+                  </div>
+                </a>
+              </div>
             ))}
           </div>
         </div>

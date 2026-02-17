@@ -95,6 +95,14 @@
     .stagger-2 { transition-delay: 0.2s; }
     .stagger-3 { transition-delay: 0.3s; }
     .stagger-4 { transition-delay: 0.4s; }
+
+    @keyframes bounceHorizontal {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(5px); }
+    }
+    .animate-bounce-horizontal {
+      animation: bounceHorizontal 1.5s infinite;
+    }
   </style>
 <script type="importmap">
 {
