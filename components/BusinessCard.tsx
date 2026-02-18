@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Business } from '../types';
-import { ICONS, WHATSAPP_MSG_DEFAULT } from '../constants';
+import { ICONS } from '../constants';
 import { isBusinessOpen } from '../utils/businessUtils';
 import { formatDistance } from '../utils/geoUtils';
 
@@ -10,20 +10,8 @@ interface BusinessCardProps {
   checkAuth?: (action: () => void) => void;
 }
 
-const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
-  const whatsappUrl = `https://wa.me/${business.phone}?text=${encodeURIComponent(WHATSAPP_MSG_DEFAULT)}`;
+const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
   const isOpen = isBusinessOpen(business.schedule);
-
-  const handleWhatsAppClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (checkAuth) {
-      checkAuth(() => {
-        window.open(whatsappUrl, '_blank');
-      });
-    } else {
-      window.open(whatsappUrl, '_blank');
-    }
-  };
 
   return (
     <div className="bg-white rounded-[1.5rem] md:rounded-[2rem] overflow-hidden border border-slate-100 card-hover transition-all duration-500 group flex flex-col h-full shadow-sm hover:shadow-xl">
@@ -111,15 +99,13 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, checkAuth }) => {
         </div>
 
         <div className="mt-auto pt-3 border-t border-slate-50">
-          {(!business.isOfficial || (business.isOfficial && business.phone.replace(/\D/g, '').length >= 12)) && (
-            <button
-              onClick={handleWhatsAppClick}
-              className="w-full bg-brand-teal hover:bg-brand-teal-dark text-white font-black py-3 rounded-xl flex items-center justify-center transition-all shadow-lg shadow-brand-teal/10 uppercase tracking-widest text-[10px]"
-            >
-              <ICONS.MessageCircle className="w-4 h-4 mr-2" />
-              WhatsApp
-            </button>
-          )}
+          <Link
+            to={`/business/${business.id}`}
+            className="w-full bg-gradient-to-r from-brand-teal to-brand-teal-dark text-white py-3 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:shadow-lg hover:scale-105 transition-all group/btn"
+          >
+            <ICONS.MessageCircle size={16} className="group-hover/btn:animate-bounce" />
+            Ver Detalhes
+          </Link>
         </div>
       </div>
     </div>
