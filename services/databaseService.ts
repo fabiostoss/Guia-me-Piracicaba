@@ -1,3 +1,4 @@
+// Version: 1.0.1 - Fix sync sponsors
 import { supabase } from './supabaseClient';
 import { Business, Customer } from '../types';
 
