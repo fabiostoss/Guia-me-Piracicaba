@@ -21,6 +21,7 @@ import SeedOfficial from './pages/SeedOfficial';
 import { Calendar, Clock as ClockIcon } from 'lucide-react';
 import * as db from './services/databaseService';
 import { UIProvider, useUI } from './components/CustomUI';
+import PromoBanner from './components/PromoBanner';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -409,6 +410,8 @@ const App: React.FC = () => {
               </div>
             </div>
           </nav>
+
+          <PromoBanner />
 
           <main className="flex-grow">
             <Routes>

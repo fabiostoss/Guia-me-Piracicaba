@@ -7,9 +7,9 @@ import BusinessCard from '../components/BusinessCard';
 import { getLocalNews, NEWS_MOCK } from '../services/newsService';
 import { isBusinessOpen } from '../utils/businessUtils';
 import { TOURIST_SPOTS } from '../services/touristService';
+import NeighborhoodSelector from '../components/NeighborhoodSelector';
 import { getLatestJobs } from '../services/jobService';
 import { calculateDistance, formatDistance } from '../utils/geoUtils';
-import NeighborhoodSelector from '../components/NeighborhoodSelector';
 
 interface HomeProps {
   businesses: Business[];
@@ -299,190 +299,191 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
           </div>
         </div>
       </section>
-
       {/* Patrocinadores Section */}
-      {businesses.filter(b => b.isSponsor && b.isActive).length > 0 && (
-        <section className="bg-gradient-to-br from-brand-orange/5 via-white to-brand-teal/5 py-12 md:py-16 relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-brand-orange/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-brand-teal/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+      {
+        businesses.filter(b => b.isSponsor && b.isActive).length > 0 && (
+          <section className="bg-gradient-to-br from-brand-orange/5 via-white to-brand-teal/5 py-12 md:py-16 relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-96 h-96 bg-brand-orange/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+            <div className="absolute bottom-0 right-0 w-96 h-96 bg-brand-teal/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
 
-          <div className="max-w-7xl mx-auto px-4 relative z-10">
-            <div className="text-center mb-10 reveal">
-              <div className="inline-flex items-center gap-2 px-6 py-3 bg-brand-orange/10 rounded-full border border-brand-orange/20 mb-4">
-                <ICONS.Star className="text-brand-orange animate-pulse" size={20} />
-                <span className="text-brand-orange text-xs font-black uppercase tracking-[0.3em]">Parceiros Patrocinadores</span>
+            <div className="max-w-7xl mx-auto px-4 relative z-10">
+              <div className="text-center mb-10 reveal">
+                <div className="inline-flex items-center gap-2 px-6 py-3 bg-brand-orange/10 rounded-full border border-brand-orange/20 mb-4">
+                  <ICONS.Star className="text-brand-orange animate-pulse" size={20} />
+                  <span className="text-brand-orange text-xs font-black uppercase tracking-[0.3em]">Parceiros Patrocinadores</span>
+                </div>
+                <h2 className="text-3xl md:text-5xl font-black text-brand-teal-deep tracking-tight mb-3">
+                  Empresas em <span className="text-brand-orange">Destaque</span>
+                </h2>
+                <p className="text-slate-500 font-medium text-lg max-w-2xl mx-auto">
+                  Conheça os parceiros que impulsionam o Guia-me Piracicaba
+                </p>
               </div>
-              <h2 className="text-3xl md:text-5xl font-black text-brand-teal-deep tracking-tight mb-3">
-                Empresas em <span className="text-brand-orange">Destaque</span>
-              </h2>
-              <p className="text-slate-500 font-medium text-lg max-w-2xl mx-auto">
-                Conheça os parceiros que impulsionam o Guia-me Piracicaba
-              </p>
-            </div>
 
-            <div
-              className="relative overflow-hidden -mx-4 px-4 pt-4 pb-8 group/carousel"
-              onMouseEnter={() => setIsPaused(true)}
-              onMouseLeave={() => setIsPaused(false)}
-            >
               <div
-                className={`flex transition-transform duration-700 ease-in-out gap-6 ${sponsorBusinesses.length <= visibleSponsors ? 'justify-center' : ''}`}
-                style={{
-                  transform: `translateX(-${currentSponsorIndex * (100 / visibleSponsors)}%)`,
-                  width: '100%'
-                }}
+                className="relative overflow-hidden -mx-4 px-4 pt-4 pb-8 group/carousel"
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
               >
-                {/* 
+                <div
+                  className={`flex transition-transform duration-700 ease-in-out gap-6 ${sponsorBusinesses.length <= visibleSponsors ? 'justify-center' : ''}`}
+                  style={{
+                    transform: `translateX(-${currentSponsorIndex * (100 / visibleSponsors)}%)`,
+                    width: '100%'
+                  }}
+                >
+                  {/* 
                   Repetimos itens apenas se houver necessidade de rolagem (mais itens que o visível)
                 */}
-                {(sponsorBusinesses.length > visibleSponsors
-                  ? sponsorBusinesses.concat(sponsorBusinesses.slice(0, visibleSponsors))
-                  : sponsorBusinesses
-                ).map((biz, idx) => {
-                  const isOpen = isBusinessOpen(biz.schedule);
-                  const distance = userLocation
-                    ? (biz.latitude && biz.longitude ? calculateDistance(userLocation.lat, userLocation.lng, biz.latitude, biz.longitude) : undefined)
-                    : undefined;
+                  {(sponsorBusinesses.length > visibleSponsors
+                    ? sponsorBusinesses.concat(sponsorBusinesses.slice(0, visibleSponsors))
+                    : sponsorBusinesses
+                  ).map((biz, idx) => {
+                    const isOpen = isBusinessOpen(biz.schedule);
+                    const distance = userLocation
+                      ? (biz.latitude && biz.longitude ? calculateDistance(userLocation.lat, userLocation.lng, biz.latitude, biz.longitude) : undefined)
+                      : undefined;
 
-                  return (
-                    <div
-                      key={`${biz.id}-${idx}`}
-                      className="min-w-full md:min-w-[calc(50%-12px)] lg:min-w-[calc(25%-18px)] group relative shrink-0"
-                    >
-                      {/* Badge Patrocinador */}
-                      <div className="absolute -top-2 -left-2 z-20 bg-brand-orange text-white px-3 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest shadow-lg shadow-brand-orange/30 flex items-center gap-1.5 animate-bounce-subtle">
-                        <ICONS.Star size={10} className="animate-pulse" />
-                        Patrocinador
-                      </div>
-
-                      {/* Card Compacto */}
-                      <div className="bg-white rounded-[1.5rem] overflow-hidden border-2 border-brand-orange/10 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 hover:border-brand-orange/30 flex flex-col h-full">
-                        {/* Image Compacta */}
-                        <div className="relative h-32 overflow-hidden bg-gradient-to-br from-brand-teal/10 to-brand-orange/10">
-                          <img
-                            src={biz.imageUrl}
-                            alt={biz.name}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-
-                          {/* Logo overlay menor */}
-                          <div className="absolute bottom-3 left-3 w-12 h-12 rounded-xl overflow-hidden border-2 border-white shadow-lg z-10">
-                            <img src={biz.logoUrl} alt={biz.name} className="w-full h-full object-cover" />
-                          </div>
-
-                          {/* Distance Badge menor */}
-                          {distance !== undefined && (
-                            <div className="absolute top-2 right-2 z-10">
-                              <span className="text-white text-[8px] font-black uppercase tracking-widest bg-black/40 backdrop-blur-md px-2 py-1 rounded-lg border border-white/10 flex items-center gap-1.5">
-                                <ICONS.MapPin size={8} className="text-brand-orange" />
-                                {formatDistance(distance)}
-                              </span>
-                            </div>
-                          )}
-
-                          {/* Open Status Badge menor */}
-                          <div className="absolute bottom-3 right-3 z-10">
-                            {isOpen ? (
-                              <span className="bg-emerald-500 text-white text-[8px] font-black px-2 py-1 rounded-lg uppercase tracking-widest flex items-center gap-1 shadow-lg">
-                                <span className="w-1 h-1 rounded-full bg-white animate-pulse"></span>
-                                Aberto
-                              </span>
-                            ) : (
-                              <span className="bg-brand-orange text-white text-[8px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-lg">
-                                Fechado
-                              </span>
-                            )}
-                          </div>
+                    return (
+                      <div
+                        key={`${biz.id}-${idx}`}
+                        className="min-w-full md:min-w-[calc(50%-12px)] lg:min-w-[calc(25%-18px)] group relative shrink-0"
+                      >
+                        {/* Badge Patrocinador */}
+                        <div className="absolute -top-2 -left-2 z-20 bg-brand-orange text-white px-3 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest shadow-lg shadow-brand-orange/30 flex items-center gap-1.5 animate-bounce-subtle">
+                          <ICONS.Star size={10} className="animate-pulse" />
+                          Patrocinador
                         </div>
 
-                        {/* Content Compacto */}
-                        <div className="p-4 flex-grow flex flex-col">
-                          <Link to={`/business/${biz.id}`} className="block mb-1">
-                            <h3 className="text-sm font-black text-brand-teal-deep group-hover:text-brand-orange transition-colors flex items-center gap-1.5 line-clamp-1">
-                              <ICONS.Crown size={14} className="text-brand-orange shrink-0" />
-                              {biz.name}
-                            </h3>
-                          </Link>
+                        {/* Card Compacto */}
+                        <div className="bg-white rounded-[1.5rem] overflow-hidden border-2 border-brand-orange/10 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 hover:border-brand-orange/30 flex flex-col h-full">
+                          {/* Image Compacta */}
+                          <div className="relative h-32 overflow-hidden bg-gradient-to-br from-brand-teal/10 to-brand-orange/10">
+                            <img
+                              src={biz.imageUrl}
+                              alt={biz.name}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
 
-                          <div className="flex items-center gap-2 mb-3">
-                            <div className="flex items-center gap-1 text-[8px] font-bold text-slate-400 uppercase tracking-widest">
-                              <ICONS.Tag size={10} className="text-brand-teal" />
-                              {biz.category}
+                            {/* Logo overlay menor */}
+                            <div className="absolute bottom-3 left-3 w-12 h-12 rounded-xl overflow-hidden border-2 border-white shadow-lg z-10">
+                              <img src={biz.logoUrl} alt={biz.name} className="w-full h-full object-cover" />
                             </div>
-                            {biz.rating && (
-                              <div className="flex items-center gap-0.5 text-amber-500">
-                                <ICONS.Star size={8} fill="currentColor" />
-                                <span className="text-slate-700 font-black text-[9px]">{biz.rating}</span>
+
+                            {/* Distance Badge menor */}
+                            {distance !== undefined && (
+                              <div className="absolute top-2 right-2 z-10">
+                                <span className="text-white text-[8px] font-black uppercase tracking-widest bg-black/40 backdrop-blur-md px-2 py-1 rounded-lg border border-white/10 flex items-center gap-1.5">
+                                  <ICONS.MapPin size={8} className="text-brand-orange" />
+                                  {formatDistance(distance)}
+                                </span>
                               </div>
                             )}
+
+                            {/* Open Status Badge menor */}
+                            <div className="absolute bottom-3 right-3 z-10">
+                              {isOpen ? (
+                                <span className="bg-emerald-500 text-white text-[8px] font-black px-2 py-1 rounded-lg uppercase tracking-widest flex items-center gap-1 shadow-lg">
+                                  <span className="w-1 h-1 rounded-full bg-white animate-pulse"></span>
+                                  Aberto
+                                </span>
+                              ) : (
+                                <span className="bg-brand-orange text-white text-[8px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-lg">
+                                  Fechado
+                                </span>
+                              )}
+                            </div>
                           </div>
 
-                          {/* Address mais discreto */}
-                          <div className="flex items-start gap-1.5 text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-4">
-                            <ICONS.MapPin size={10} className="text-brand-orange shrink-0" />
-                            <span className="line-clamp-1">{biz.neighborhood}</span>
-                          </div>
-
-                          <div className="mt-auto space-y-2">
-                            {/* CTA Button mais compacto */}
-                            <Link
-                              to={`/business/${biz.id}`}
-                              className="w-full bg-gradient-to-r from-brand-teal to-brand-teal-dark text-white py-2 rounded-lg font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-2 hover:shadow-lg transition-all"
-                            >
-                              Ver Detalhes
+                          {/* Content Compacto */}
+                          <div className="p-4 flex-grow flex flex-col">
+                            <Link to={`/business/${biz.id}`} className="block mb-1">
+                              <h3 className="text-sm font-black text-brand-teal-deep group-hover:text-brand-orange transition-colors flex items-center gap-1.5 line-clamp-1">
+                                <ICONS.Crown size={14} className="text-brand-orange shrink-0" />
+                                {biz.name}
+                              </h3>
                             </Link>
+
+                            <div className="flex items-center gap-2 mb-3">
+                              <div className="flex items-center gap-1 text-[8px] font-bold text-slate-400 uppercase tracking-widest">
+                                <ICONS.Tag size={10} className="text-brand-teal" />
+                                {biz.category}
+                              </div>
+                              {biz.rating && (
+                                <div className="flex items-center gap-0.5 text-amber-500">
+                                  <ICONS.Star size={8} fill="currentColor" />
+                                  <span className="text-slate-700 font-black text-[9px]">{biz.rating}</span>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Address mais discreto */}
+                            <div className="flex items-start gap-1.5 text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-4">
+                              <ICONS.MapPin size={10} className="text-brand-orange shrink-0" />
+                              <span className="line-clamp-1">{biz.neighborhood}</span>
+                            </div>
+
+                            <div className="mt-auto space-y-2">
+                              {/* CTA Button mais compacto */}
+                              <Link
+                                to={`/business/${biz.id}`}
+                                className="w-full bg-gradient-to-r from-brand-teal to-brand-teal-dark text-white py-2 rounded-lg font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-2 hover:shadow-lg transition-all"
+                              >
+                                Ver Detalhes
+                              </Link>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
+
+                {/* Botões de Navegação Lateral */}
+                {sponsorBusinesses.length > visibleSponsors && (
+                  <>
+                    <button
+                      onClick={() => setCurrentSponsorIndex(prev => prev === 0 ? sponsorBusinesses.length - 1 : prev - 1)}
+                      className="absolute left-0 top-1/2 -translate-y-1/2 z-30 bg-white/90 backdrop-blur-md p-4 rounded-full shadow-xl border border-slate-100 text-brand-teal opacity-0 group-hover/carousel:opacity-100 transition-all -translate-x-4 group-hover/carousel:translate-x-6 hover:bg-brand-orange hover:text-white"
+                    >
+                      <ICONS.ChevronLeft size={24} />
+                    </button>
+                    <button
+                      onClick={() => setCurrentSponsorIndex(prev => (prev + 1) % sponsorBusinesses.length)}
+                      className="absolute right-0 top-1/2 -translate-y-1/2 z-30 bg-white/90 backdrop-blur-md p-4 rounded-full shadow-xl border border-slate-100 text-brand-teal opacity-0 group-hover/carousel:opacity-100 transition-all translate-x-4 group-hover/carousel:-translate-x-6 hover:bg-brand-orange hover:text-white"
+                    >
+                      <ICONS.ChevronRight size={24} />
+                    </button>
+                  </>
+                )}
+
+                {/* Indicadores de página */}
+                {sponsorBusinesses.length > visibleSponsors && (
+                  <div className="flex justify-center gap-2 mt-6">
+                    {sponsorBusinesses.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setCurrentSponsorIndex(idx)}
+                        className={`w-2 h-2 rounded-full transition-all ${currentSponsorIndex === idx ? 'bg-brand-orange w-6' : 'bg-slate-300 hover:bg-slate-400'}`}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
 
-              {/* Botões de Navegação Lateral */}
-              {sponsorBusinesses.length > visibleSponsors && (
-                <>
-                  <button
-                    onClick={() => setCurrentSponsorIndex(prev => prev === 0 ? sponsorBusinesses.length - 1 : prev - 1)}
-                    className="absolute left-0 top-1/2 -translate-y-1/2 z-30 bg-white/90 backdrop-blur-md p-4 rounded-full shadow-xl border border-slate-100 text-brand-teal opacity-0 group-hover/carousel:opacity-100 transition-all -translate-x-4 group-hover/carousel:translate-x-6 hover:bg-brand-orange hover:text-white"
-                  >
-                    <ICONS.ChevronLeft size={24} />
+              {/* Ver Todos os Patrocinadores */}
+              {businesses.filter(b => b.isSponsor && b.isActive).length > 6 && (
+                <div className="text-center mt-10">
+                  <button className="px-8 py-4 bg-white text-brand-orange border-2 border-brand-orange rounded-full font-black text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-white transition-all shadow-lg hover:shadow-xl">
+                    Ver Todos os Patrocinadores
                   </button>
-                  <button
-                    onClick={() => setCurrentSponsorIndex(prev => (prev + 1) % sponsorBusinesses.length)}
-                    className="absolute right-0 top-1/2 -translate-y-1/2 z-30 bg-white/90 backdrop-blur-md p-4 rounded-full shadow-xl border border-slate-100 text-brand-teal opacity-0 group-hover/carousel:opacity-100 transition-all translate-x-4 group-hover/carousel:-translate-x-6 hover:bg-brand-orange hover:text-white"
-                  >
-                    <ICONS.ChevronRight size={24} />
-                  </button>
-                </>
-              )}
-
-              {/* Indicadores de página */}
-              {sponsorBusinesses.length > visibleSponsors && (
-                <div className="flex justify-center gap-2 mt-6">
-                  {sponsorBusinesses.map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setCurrentSponsorIndex(idx)}
-                      className={`w-2 h-2 rounded-full transition-all ${currentSponsorIndex === idx ? 'bg-brand-orange w-6' : 'bg-slate-300 hover:bg-slate-400'}`}
-                    />
-                  ))}
                 </div>
               )}
             </div>
-
-            {/* Ver Todos os Patrocinadores */}
-            {businesses.filter(b => b.isSponsor && b.isActive).length > 6 && (
-              <div className="text-center mt-10">
-                <button className="px-8 py-4 bg-white text-brand-orange border-2 border-brand-orange rounded-full font-black text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-white transition-all shadow-lg hover:shadow-xl">
-                  Ver Todos os Patrocinadores
-                </button>
-              </div>
-            )}
-          </div>
-        </section>
-      )}
+          </section>
+        )
+      }
 
       {/* Categories & Business Grid */}
       <section className="bg-slate-50 pt-6 pb-6">
