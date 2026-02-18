@@ -328,9 +328,12 @@ const App: React.FC = () => {
           <WeatherBar />
           <nav className="bg-white sticky top-0 z-50 shadow-md border-b border-slate-100">
             <div className="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center">
-              <Link to="/" className="flex items-center space-x-2.5">
-                <div className="bg-brand-teal p-2.5 rounded-xl shadow-lg shadow-brand-teal/20"><ICONS.Package className="text-white w-6 h-6" /></div>
-                <div><span className="text-2xl font-black text-brand-teal-deep tracking-tight block">Guia-me</span><span className="text-xs font-bold text-brand-orange tracking-[0.2em] uppercase">Piracicaba</span></div>
+              <Link to="/" className="flex items-center group overflow-visible">
+                <img
+                  src="/logo.png"
+                  alt="Guia-me Piracicaba"
+                  className="w-24 md:w-32 h-auto max-h-16 object-contain transition-transform group-hover:scale-105"
+                />
               </Link>
               <div className="hidden md:flex items-center space-x-12">
                 <Link to="/" className="text-slate-600 hover:text-brand-teal font-bold transition-colors">Início</Link>
@@ -447,9 +450,10 @@ const App: React.FC = () => {
           <footer className="bg-brand-teal-deep py-10 text-white mt-10">
             <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left">
               <div className="md:col-span-1 space-y-4">
-                <div className="flex items-center justify-center md:justify-start space-x-2">
-                  <div className="bg-brand-orange p-1 rounded-lg"><ICONS.Package className="text-white w-4 h-4" /></div>
-                  <span className="text-lg font-black">Guia-me Piracicaba</span>
+                <div className="flex items-center justify-center md:justify-start">
+                  <div className="bg-white p-3 rounded-2xl shadow-lg border border-white/10 shrink-0">
+                    <img src="/logo.png" alt="Logo" className="w-32 h-auto" />
+                  </div>
                 </div>
                 <p className="text-white/60 text-xs font-medium">Conectando Piracicaba. O guia definitivo para comércios locais.</p>
               </div>

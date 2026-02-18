@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Business, CategoryType, WeekSchedule } from '../types';
 import { ICONS, PIRACICABA_NEIGHBORHOODS, BUSINESS_SPECIALTIES } from '../constants';
 import NeighborhoodSelector from '../components/NeighborhoodSelector';
+import PromoBanner from '../components/PromoBanner';
 import { getDefaultSchedule, formatScheduleSummary } from '../utils/businessUtils';
 import * as db from '../services/databaseService';
 import { useUI } from '../components/CustomUI';
@@ -540,6 +541,15 @@ const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ businesses, onUpd
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
       `}</style>
+
+      {/* Promo Banner integrado para lojistas */}
+      <div className="mt-20 border-t border-slate-100 pt-10">
+        <div className="text-center mb-8">
+          <h4 className="text-[10px] font-black text-brand-teal uppercase tracking-[0.3em]">Potencialize seu Comércio</h4>
+          <p className="text-slate-400 text-[11px] font-bold mt-2">Veja as oportunidades exclusivas do Guia-me</p>
+        </div>
+        <PromoBanner />
+      </div>
     </div>
   );
 };
