@@ -23,6 +23,8 @@ const AdminLogin: React.FC = () => {
   const EMAILJS_TEMPLATE_ID = 'template_q3t253f';
   const EMAILJS_PUBLIC_KEY = 'KJd-u4DO4X_TOjre4';
 
+  const EMAILJS_SUCCESS_TEMPLATE_ID = 'template_apcx9t3';
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username || !password) {
@@ -108,17 +110,17 @@ const AdminLogin: React.FC = () => {
     try {
       const success = await db.verifyAndResetAdminPassword(username, resetCodeInput, newPassword);
       if (success) {
-        // Enviar e-mail de confirmação com as novas credenciais
+        // Enviar e-mail de confirmação com as novas credenciais usando o NOVO MODELO
         const confirmParams = {
           to_email: email,
-          // Reutilizando o mesmo parâmetro para informar a nova senha no campo de código do template
-          code_part2: `SUCESSO! Sua senha foi alterada.\n\nUsuário: ${username}\nNova Senha: ${newPassword}`,
+          user_name: username,
+          new_password: newPassword,
         };
 
         try {
           await emailjs.send(
             EMAILJS_SERVICE_ID,
-            EMAILJS_TEMPLATE_ID,
+            EMAILJS_SUCCESS_TEMPLATE_ID,
             confirmParams,
             EMAILJS_PUBLIC_KEY
           );
