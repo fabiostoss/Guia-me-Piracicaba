@@ -515,14 +515,6 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
               </div>
             ))}
 
-            {filteredBusinesses.length > 8 && (
-              <div className="w-full h-full min-h-[300px] flex flex-col items-center justify-center p-8 bg-white rounded-[2rem] border-2 border-dashed border-slate-100 group hover:border-brand-teal transition-all animate-fade-in-up" style={{ animationDelay: '900ms' }}>
-                <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-brand-teal/10 group-hover:text-brand-teal transition-all mb-4">
-                  <ICONS.Plus size={32} />
-                </div>
-                <p className="text-slate-400 font-black uppercase text-[10px] tracking-widest text-center group-hover:text-brand-teal transition-all">Use a busca para ver mais</p>
-              </div>
-            )}
           </div>
 
           {filteredBusinesses.length === 0 && (
