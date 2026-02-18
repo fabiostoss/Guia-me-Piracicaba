@@ -4,7 +4,7 @@ import { TouristSpot, TouristEvent } from '../types';
 export const TOURIST_SPOTS: TouristSpot[] = [
   {
     id: 'spot-1',
-    name: '1. Parque da Rua do Porto',
+    name: 'Parque da Rua do Porto',
     description: 'Possui bares, restaurantes, artesanatos e muita história da cidade, à beira do famoso rio de Piracicaba. O coração gastronômico e cultural de Pira.',
     category: 'Gastronomia',
     imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Rio_Piracicaba_e_Engenho_Central.jpg/1200px-Rio_Piracicaba_e_Engenho_Central.jpg',
@@ -12,7 +12,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-2',
-    name: '2. Aquário Municipal de Piracicaba',
+    name: 'Aquário Municipal de Piracicaba',
     description: 'Muito bem mantido, muitas espécies de peixes e bela vista do Rio. Os tanques permitem ver de perto os gigantes dourados e pintados.',
     category: 'Lazer',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Aquario-Municipal.jpg',
@@ -20,7 +20,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-3',
-    name: '3. Alto Do Mirante',
+    name: 'Alto Do Mirante',
     description: 'Toda a vista dos mirantes da cidade e de dentro do parque é incrível, permitindo contemplar o Rio Piracicaba de cima.',
     category: 'Lazer',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Mirante-1.jpg',
@@ -28,7 +28,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-4',
-    name: '4. Museu da Água',
+    name: 'Museu da Água',
     description: 'Localizado às margens do Rio, onde funcionou a primeira estação de captação da cidade. Arquitetura histórica e educativa.',
     category: 'História',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Museu-da-Agua.jpg',
@@ -36,7 +36,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-5',
-    name: '5. Capela de Nossa Senhora dos Prazeres',
+    name: 'Capela de Nossa Senhora dos Prazeres',
     description: 'Localizada no Largo dos Pescadores, sua fachada histórica é um dos marcos mais antigos e icônicos da fé piracicabana.',
     category: 'Cultura',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Capela-Nossa-Senhora-dos-Prazeres.jpg',
@@ -44,7 +44,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-6',
-    name: '6. Campus da ESALQ (USP)',
+    name: 'Campus da ESALQ (USP)',
     description: 'O campus da ESALQ é um verdadeiro parque aberto. Qualquer pessoa pode acessar e desfrutar das belas paisagens, museu e arquitetura.',
     category: 'Cultura',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/ESALQ.jpg',
@@ -52,7 +52,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-7',
-    name: '7. Zoológico Municipal de Piracicaba',
+    name: 'Zoológico Municipal de Piracicaba',
     description: 'Passeio gratuito e ideal para famílias. Conta com diversos animais e um parquinho excelente para crianças.',
     category: 'Parque',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Zoologico.jpg',
@@ -60,7 +60,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-8',
-    name: '8. Capela Monte Alegre',
+    name: 'Capela Monte Alegre',
     description: 'Decorada pelo pintor Alfredo Volpi, é uma das igrejas mais belas e preservadas da região, em um bairro charmoso.',
     category: 'História',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Capela-Monte-Alegre.jpg',
@@ -68,7 +68,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-9',
-    name: '9. Centro Cultural Martha Watts',
+    name: 'Centro Cultural Martha Watts',
     description: 'Local de pesquisa e arte no coração da cidade. Preserva a história da educação em Piracicaba.',
     category: 'Cultura',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Martha-Watts.jpg',
@@ -76,7 +76,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-10',
-    name: '10. Igreja Senhor Bom Jesus do Monte',
+    name: 'Igreja Senhor Bom Jesus do Monte',
     description: 'A famosa igreja do Largo Bom Jesus, no bairro Alto. Arquitetura imponente que domina a praça central.',
     category: 'Cultura',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Igreja-Bom-Jesus.jpg',
@@ -84,7 +84,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-11',
-    name: '11. Dama Bier (Fábrica e Bar)',
+    name: 'Dama Bier (Fábrica e Bar)',
     description: 'Cervejaria artesanal local. Oferece visitas aos tonéis e um bar de degustação com atendimento excepcional.',
     category: 'Gastronomia',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Cervejaria.jpg',
@@ -92,7 +92,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-12',
-    name: '12. Cachaça Piracicabana',
+    name: 'Cachaça Piracicabana',
     description: 'Tradição secular em destilados. O licor de cachaça e a clássica pinga piracicabana são imperdíveis.',
     category: 'Gastronomia',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Cachaca.jpg',
@@ -100,7 +100,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-13',
-    name: '13. Bairro Santa Olímpia',
+    name: 'Bairro Santa Olímpia',
     description: 'Um pedaço do Tirol em Piracicaba. Colônia trentina com culinária típica e festas tradicionais.',
     category: 'Cultura',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Santa-Olimpia.jpg',
@@ -108,7 +108,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-14',
-    name: '14. Pinacoteca Municipal Miguel Dutra',
+    name: 'Pinacoteca Municipal Miguel Dutra',
     description: 'Acervo artístico permanente e exposições temporárias. Localizada próxima ao rio, oferece arte e belas vistas.',
     category: 'Cultura',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Pinacoteca.jpg',
@@ -116,7 +116,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-15',
-    name: '15. Museu Prudente de Moraes',
+    name: 'Museu Prudente de Moraes',
     description: 'Residência do primeiro presidente civil do Brasil. Um mergulho na história política e social do país.',
     category: 'História',
     imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Museu_Prudente_de_Moraes_-_Piracicaba.jpg/1200px-Museu_Prudente_de_Moraes_-_Piracicaba.jpg',
@@ -124,7 +124,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-16',
-    name: '16. Vinícola Alma Da Videira',
+    name: 'Vinícola Alma Da Videira',
     description: 'Localizada no bairro de Santana, oferece degustação de vinhos artesanais em um ambiente familiar e acolhedor.',
     category: 'Gastronomia',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Vinicola.jpg',
@@ -132,7 +132,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-17',
-    name: '17. Teatro SESC - Piracicaba',
+    name: 'Teatro SESC - Piracicaba',
     description: 'Auditório moderno e confortável. Programação cultural intensa com shows, peças e oficinas.',
     category: 'Cultura',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/SESC.jpg',
@@ -140,7 +140,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-18',
-    name: '18. ECPA (Esporte Clube Piracicabano de Automobilismo)',
+    name: 'ECPA (Esporte Clube Piracicabano de Automobilismo)',
     description: 'Adrenalina garantida em pistas de kart e autódromo profissional. Local de grandes eventos automobilísticos.',
     category: 'Lazer',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/ECPA.jpg',
@@ -148,7 +148,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-19',
-    name: '19. Tanquã - Minipantanal Paulista',
+    name: 'Tanquã - Minipantanal Paulista',
     description: 'Paraíso para observadores de aves e amantes da natureza. Passeios de barco revelam a biodiversidade local.',
     category: 'Lazer',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Tanqua.jpg',
@@ -156,7 +156,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-20',
-    name: '20. Teatro do Engenho Erotides de Campos',
+    name: 'Teatro do Engenho Erotides de Campos',
     description: 'Um palácio de artes dentro de um antigo engenho. Arquitetura industrial preservada à beira do Rio.',
     category: 'Cultura',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Teatro-do-Engenho.jpg',
@@ -164,7 +164,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-21',
-    name: '21. Igreja Sagrado Coração de Jesus (Igreja dos Frades)',
+    name: 'Igreja Sagrado Coração de Jesus (Igreja dos Frades)',
     description: 'Conhecida pela sua tradição e beleza interior. Um ponto de paz e reflexão frequentado há gerações.',
     category: 'Cultura',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Igreja-dos-Frades.jpg',
@@ -172,7 +172,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-22',
-    name: '22. Estádio Barão de Serra Negra',
+    name: 'Estádio Barão de Serra Negra',
     description: 'A casa do XV de Piracicaba. Palco de emoções do futebol paulista e símbolo do orgulho caipira.',
     category: 'Lazer',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Estadio.jpg',
@@ -180,7 +180,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-23',
-    name: '23. Praça José Bonifácio',
+    name: 'Praça José Bonifácio',
     description: 'O coração pulsante do centro de Piracicaba. Charmosa, arborizada e repleta de vida cotidiana.',
     category: 'Parque',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Praca-Jose-Bonifacio.jpg',
@@ -188,7 +188,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-24',
-    name: '24. Teatro São José',
+    name: 'Teatro São José',
     description: 'Teatro histórico que foi um marco cultural na cidade. Estilo clássico e ambiente acolhedor.',
     category: 'Cultura',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Teatro-Sao-Jose.jpg',
@@ -196,7 +196,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-25',
-    name: '25. Ponte Pênsil',
+    name: 'Ponte Pênsil',
     description: 'Ligação icônica entre as margens do rio. Travessia obrigatória para quem quer sentir a energia das águas.',
     category: 'Cultura',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Ponte-Pensil.jpg',
@@ -204,7 +204,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-26',
-    name: '26. Salão Internacional de Humor de Piracicaba',
+    name: 'Salão Internacional de Humor de Piracicaba',
     description: 'Um dos eventos mais importantes do mundo na área. Acervo permanente de caricaturas e cartuns.',
     category: 'Cultura',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Salao-do-Humor.jpg',
@@ -212,7 +212,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-27',
-    name: '27. Teatro Unimep',
+    name: 'Teatro Unimep',
     description: 'Espaço acadêmico e cultural com excelente acústica. Recebe grandes espetáculos nacionais.',
     category: 'Cultura',
     imageUrl: 'https://unimep.edu.br/wp-content/uploads/2021/05/teatro-unimep-scaled.jpg',
@@ -220,7 +220,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-28',
-    name: '28. Engenho Central',
+    name: 'Engenho Central',
     description: 'O maior complexo cultural da cidade. Espaço para lazer, museus e grandes festas populares.',
     category: 'História',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Engenho-Central.jpg',
@@ -228,7 +228,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-29',
-    name: '29. Vale das Águas Thermas Parque',
+    name: 'Vale das Águas Thermas Parque',
     description: 'Diversão aquática para toda a família com piscinas termais e toboáguas emocionantes.',
     category: 'Lazer',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Vale-das-Aguas.jpg',
@@ -236,7 +236,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
   },
   {
     id: 'spot-30',
-    name: '30. Biblioteca Municipal Ricardo Ferraz de Arruda P.',
+    name: 'Biblioteca Municipal Ricardo Ferraz de Arruda P.',
     description: 'Prédio moderno e acolhedor, ideal para leitura, pesquisa e eventos culturais literários.',
     category: 'Cultura',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Biblioteca-Municipal.jpg',
