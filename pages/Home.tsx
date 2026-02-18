@@ -499,42 +499,32 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
         </div>
 
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between mb-4 px-2 md:px-0">
-            <div>
-              <h2 className="text-xl md:text-2xl font-black text-brand-teal-deep tracking-tight">Comércios Próximos</h2>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Ordenados por distância</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => scroll(shopsRef, 'left')}
-                className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-brand-teal hover:bg-brand-teal hover:text-white transition-all border border-slate-200 shadow-lg"
-              >
-                <ICONS.ChevronLeft size={20} />
-              </button>
-              <button
-                onClick={() => scroll(shopsRef, 'right')}
-                className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-brand-teal hover:bg-brand-teal hover:text-white transition-all border border-slate-200 shadow-lg"
-              >
-                <ICONS.ChevronRight size={20} />
-              </button>
-            </div>
+          <div className="mb-6">
+            <h2 className="text-xl md:text-2xl font-black text-brand-teal-deep tracking-tight">Comércios Próximos</h2>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Ordenados por distância</p>
           </div>
 
-          <div ref={shopsRef} className="flex gap-3 md:gap-4 overflow-x-auto pb-6 snap-x no-scrollbar px-2 md:px-0 scroll-smooth">
-            {filteredBusinesses.slice(0, 12).map((biz) => (
-              <div key={biz.id} className="w-[210px] md:w-[320px] shrink-0 snap-start">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 pb-6 reveal">
+            {filteredBusinesses.slice(0, 8).map((biz, index) => (
+              <div
+                key={biz.id}
+                className="w-full animate-fade-in-up"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
                 <BusinessCard business={biz} checkAuth={checkAuth} />
               </div>
             ))}
-            {filteredBusinesses.length > 12 && (
-              <div className="shrink-0 w-64 flex flex-col items-center justify-center p-8 bg-white rounded-[2rem] border-2 border-dashed border-slate-100 snap-start group hover:border-brand-teal transition-all">
+
+            {filteredBusinesses.length > 8 && (
+              <div className="w-full h-full min-h-[300px] flex flex-col items-center justify-center p-8 bg-white rounded-[2rem] border-2 border-dashed border-slate-100 group hover:border-brand-teal transition-all animate-fade-in-up" style={{ animationDelay: '900ms' }}>
                 <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-brand-teal/10 group-hover:text-brand-teal transition-all mb-4">
                   <ICONS.Plus size={32} />
                 </div>
-                <p className="text-slate-400 font-black uppercase text-[10px] tracking-widest text-center group-hover:text-brand-teal transition-all">Use a busca para ver mais comércios</p>
+                <p className="text-slate-400 font-black uppercase text-[10px] tracking-widest text-center group-hover:text-brand-teal transition-all">Use a busca para ver mais</p>
               </div>
             )}
           </div>
+
           {filteredBusinesses.length === 0 && (
             <div className="text-center py-20 animate-fade-in">
               <ICONS.Search size={60} className="mx-auto text-slate-200 mb-6" />
@@ -542,10 +532,10 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             </div>
           )}
         </div>
-      </section >
+      </section>
 
       {/* Vagas Section (Dark) - Adicionado Botão "Ver Todas" */}
-      < section className="bg-slate-900 py-6 md:py-8 text-white overflow-hidden relative" >
+      <section className="bg-slate-900 py-6 md:py-8 text-white overflow-hidden relative">
         <div className="absolute top-0 right-0 w-96 h-96 bg-brand-teal/5 rounded-full blur-3xl"></div>
         <div className="max-w-7xl mx-auto px-4 relative z-10">
           <div className="flex flex-col items-center justify-center mb-4 md:mb-6 gap-2 reveal">
