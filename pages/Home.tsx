@@ -28,6 +28,41 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
   const [isLocating, setIsLocating] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
   const [isNearestActive, setIsNearestActive] = useState(false);
+  const [currentSponsorIndex, setCurrentSponsorIndex] = useState(0);
+  const [visibleSponsors, setVisibleSponsors] = useState(3);
+  const [isPaused, setIsPaused] = useState(false);
+
+  const sponsorBusinesses = useMemo(() =>
+    businesses.filter(b => b.isSponsor && b.isActive),
+    [businesses]
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) setVisibleSponsors(1);
+      else if (window.innerWidth < 1024) setVisibleSponsors(2);
+      else setVisibleSponsors(3);
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (sponsorBusinesses.length <= visibleSponsors || isPaused) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setCurrentSponsorIndex(prev => {
+        const next = prev + 1;
+        return next >= sponsorBusinesses.length ? 0 : next;
+      });
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [sponsorBusinesses.length, visibleSponsors, isPaused]);
 
   // Refs para controle de scroll
   const categoriesRef = useRef<HTMLDivElement>(null);
@@ -285,18 +320,32 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 reveal">
-              {businesses
-                .filter(b => b.isSponsor && b.isActive)
-                .slice(0, 6)
-                .map((biz) => {
+            <div
+              className="relative overflow-hidden -mx-4 px-4 pb-8 group/carousel"
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+            >
+              <div
+                className="flex transition-transform duration-700 ease-in-out gap-6"
+                style={{
+                  transform: `translateX(-${currentSponsorIndex * (100 / visibleSponsors)}%)`,
+                  width: '100%'
+                }}
+              >
+                {/* 
+                  Repetimos alguns itens para garantir que o espaço final não fique vazio ao mover
+                */}
+                {sponsorBusinesses.concat(sponsorBusinesses.slice(0, visibleSponsors)).map((biz, idx) => {
                   const isOpen = isBusinessOpen(biz.schedule);
                   const distance = userLocation
                     ? (biz.latitude && biz.longitude ? calculateDistance(userLocation.lat, userLocation.lng, biz.latitude, biz.longitude) : undefined)
                     : undefined;
 
                   return (
-                    <div key={biz.id} className="group relative">
+                    <div
+                      key={`${biz.id}-${idx}`}
+                      className="min-w-full md:min-w-[calc(50%-12px)] lg:min-w-[calc(33.333%-16px)] group relative shrink-0"
+                    >
                       {/* Badge Patrocinador */}
                       <div className="absolute -top-3 -left-3 z-20 bg-brand-orange text-white px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg shadow-brand-orange/30 flex items-center gap-1.5 animate-bounce-subtle">
                         <ICONS.Star size={12} className="animate-pulse" />
@@ -410,6 +459,38 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
                     </div>
                   );
                 })}
+              </div>
+
+              {/* Botões de Navegação Lateral */}
+              {sponsorBusinesses.length > visibleSponsors && (
+                <>
+                  <button
+                    onClick={() => setCurrentSponsorIndex(prev => prev === 0 ? sponsorBusinesses.length - 1 : prev - 1)}
+                    className="absolute left-0 top-1/2 -translate-y-1/2 z-30 bg-white/90 backdrop-blur-md p-4 rounded-full shadow-xl border border-slate-100 text-brand-teal opacity-0 group-hover/carousel:opacity-100 transition-all -translate-x-4 group-hover/carousel:translate-x-6 hover:bg-brand-orange hover:text-white"
+                  >
+                    <ICONS.ChevronLeft size={24} />
+                  </button>
+                  <button
+                    onClick={() => setCurrentSponsorIndex(prev => (prev + 1) % sponsorBusinesses.length)}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 z-30 bg-white/90 backdrop-blur-md p-4 rounded-full shadow-xl border border-slate-100 text-brand-teal opacity-0 group-hover/carousel:opacity-100 transition-all translate-x-4 group-hover/carousel:-translate-x-6 hover:bg-brand-orange hover:text-white"
+                  >
+                    <ICONS.ChevronRight size={24} />
+                  </button>
+                </>
+              )}
+
+              {/* Indicadores de página */}
+              {sponsorBusinesses.length > 3 && (
+                <div className="flex justify-center gap-2 mt-6">
+                  {sponsorBusinesses.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrentSponsorIndex(idx)}
+                      className={`w-2 h-2 rounded-full transition-all ${currentSponsorIndex === idx ? 'bg-brand-orange w-6' : 'bg-slate-300 hover:bg-slate-400'}`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Ver Todos os Patrocinadores */}
