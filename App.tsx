@@ -441,18 +441,18 @@ const App: React.FC = () => {
             </Routes>
           </main>
 
-          <footer className="bg-brand-teal-deep py-20 text-white mt-20">
-            <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12 text-center md:text-left">
-              <div className="md:col-span-1 space-y-6">
-                <div className="flex items-center justify-center md:justify-start space-x-2.5">
-                  <div className="bg-brand-orange p-1.5 rounded-lg"><ICONS.Package className="text-white w-5 h-5" /></div>
-                  <span className="text-xl font-black">Guia-me Piracicaba</span>
+          <footer className="bg-brand-teal-deep py-10 text-white mt-10">
+            <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left">
+              <div className="md:col-span-1 space-y-4">
+                <div className="flex items-center justify-center md:justify-start space-x-2">
+                  <div className="bg-brand-orange p-1 rounded-lg"><ICONS.Package className="text-white w-4 h-4" /></div>
+                  <span className="text-lg font-black">Guia-me Piracicaba</span>
                 </div>
-                <p className="text-white/60 text-sm font-medium">Conectando Piracicaba. O guia definitivo para encontrar os melhores comércios locais.</p>
+                <p className="text-white/60 text-xs font-medium">Conectando Piracicaba. O guia definitivo para comércios locais.</p>
               </div>
               <div>
-                <h4 className="font-bold text-brand-orange mb-8 uppercase text-xs tracking-widest">Serviços</h4>
-                <ul className="space-y-4 text-sm font-semibold">
+                <h4 className="font-bold text-brand-orange mb-4 uppercase text-[10px] tracking-widest">Serviços</h4>
+                <ul className="space-y-2 text-[11px] font-semibold">
                   <li><Link to="/guia-turistico" className="hover:text-brand-orange transition-colors">Turismo Local</Link></li>
                   <li><Link to="/noticias" className="hover:text-brand-orange transition-colors">Notícias Regionais</Link></li>
                   <li><Link to="/vagas" className="hover:text-brand-orange transition-colors">Vagas de Emprego</Link></li>
@@ -460,23 +460,23 @@ const App: React.FC = () => {
                 </ul>
               </div>
               <div>
-                <h4 className="font-bold text-brand-orange mb-8 uppercase text-xs tracking-widest">Acesso</h4>
-                <ul className="space-y-4 text-sm font-semibold">
+                <h4 className="font-bold text-brand-orange mb-4 uppercase text-[10px] tracking-widest">Acesso</h4>
+                <ul className="space-y-2 text-[11px] font-semibold">
                   <li><Link to="/merchant-login" className="hover:text-brand-orange transition-colors">Login Lojista</Link></li>
                   <li><Link to="/admin" className="hover:text-brand-orange transition-colors">Painel Admin</Link></li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-bold text-brand-orange mb-8 uppercase text-xs tracking-widest">Jurídico</h4>
-                <ul className="space-y-4 text-sm font-semibold">
+                <h4 className="font-bold text-brand-orange mb-4 uppercase text-[10px] tracking-widest">Jurídico</h4>
+                <ul className="space-y-2 text-[11px] font-semibold">
                   <li><Link to="/politica-de-privacidade" className="hover:text-brand-orange transition-colors">Privacidade</Link></li>
                   <li><Link to="/termos-de-uso" className="hover:text-brand-orange transition-colors">Termos de Uso</Link></li>
                 </ul>
               </div>
             </div>
-            <div className="max-w-7xl mx-auto px-4 mt-20 pt-8 border-t border-white/10 text-center text-white/40 text-[10px] font-black uppercase tracking-[0.3em]">
+            <div className="max-w-7xl mx-auto px-4 mt-10 pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-white/40 text-[9px] font-black uppercase tracking-[0.2em]">
               <p>© 2025 Guia-me Piracicaba - Todos os direitos reservados</p>
-              <p className="mt-4 opacity-40 text-[8px] font-bold">Ver: {APP_VERSION}</p>
+              <p className="opacity-50">v{APP_VERSION}</p>
             </div>
           </footer>
 
