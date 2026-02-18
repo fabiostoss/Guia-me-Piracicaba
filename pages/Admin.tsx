@@ -6,6 +6,7 @@ import { ICONS, PIRACICABA_NEIGHBORHOODS, BUSINESS_SPECIALTIES } from '../consta
 import NeighborhoodSelector from '../components/NeighborhoodSelector';
 import { isBusinessOpen, getDefaultSchedule, formatScheduleSummary } from '../utils/businessUtils';
 import * as db from '../services/databaseService';
+import { useUI } from '../components/CustomUI';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   Cell, PieChart, Pie, Legend, LineChart, Line
@@ -25,6 +26,7 @@ const DAYS_NAME = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
 const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, onDelete }) => {
   const navigate = useNavigate();
+  const { showNotification, showConfirm } = useUI();
   const [adminView, setAdminView] = useState<'dashboard' | 'management' | 'customers' | 'approvals'>('dashboard');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingBiz, setEditingBiz] = useState<Business | null>(null);
@@ -177,7 +179,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
           latitude: parseFloat(data[0].lat),
           longitude: parseFloat(data[0].lon)
         }));
-        alert('Coordenadas encontradas com sucesso!');
+        showNotification('Coordenadas encontradas com sucesso!', 'success');
       } else {
         const responseFall = await fetch(`https://nominatim.openstreetmap.org/search?format=json&postalcode=${cep}&country=Brazil&limit=1`, {
           headers: { 'User-Agent': 'Guia-me-Piracicaba/1.0' }
@@ -189,14 +191,14 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
             latitude: parseFloat(dataFall[0].lat),
             longitude: parseFloat(dataFall[0].lon)
           }));
-          alert('Coordenadas encontradas com sucesso!');
+          showNotification('Coordenadas encontradas com sucesso!', 'success');
         } else {
-          alert('Não foi possível encontrar as coordenadas para este CEP. Verifique se o CEP está correto ou tente buscar pelo endereço completo.');
+          showNotification('Não foi possível encontrar as coordenadas para este CEP. Verifique se o CEP está correto ou tente buscar pelo endereço completo.', 'error');
         }
       }
     } catch (error) {
       console.error('Erro ao buscar coordenadas:', error);
-      alert('Não foi possível conectar ao serviço de mapas. Tente novamente em alguns segundos ou use a busca por endereço completo.');
+      showNotification('Não foi possível conectar ao serviço de mapas. Tente novamente em alguns segundos ou use a busca por endereço completo.', 'error');
     } finally {
       setIsGeocoding(false);
     }
@@ -204,7 +206,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
 
   const updateGpsByAddress = async () => {
     if (!formData.street || !formData.number) {
-      alert('Por favor, preencha a rua e o número primeiro.');
+      showNotification('Por favor, preencha a rua e o número primeiro.', 'warning');
       return;
     }
 
@@ -236,17 +238,17 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
           }));
           found = true;
           if (query.includes(formData.name) && !query.includes(formData.street)) {
-            alert('Localizamos pelo nome do estabelecimento!');
+            showNotification('Localizamos pelo nome do estabelecimento!', 'success');
           }
         }
       }
 
       if (!found) {
-        alert('Não foi possível encontrar automaticamente. Você pode digitar as coordenadas manuais ou pesquisar no Google Maps e colar os números aqui.');
+        showNotification('Não foi possível encontrar automaticamente. Você pode digitar as coordenadas manuais ou pesquisar no Google Maps e colar os números aqui.', 'info');
       }
     } catch (error) {
       console.error('Erro ao buscar coordenadas:', error);
-      alert('Erro ao conectar com o serviço de localização.');
+      showNotification('Erro ao conectar com o serviço de localização.', 'error');
     } finally {
       setIsGeocoding(false);
     }
@@ -294,13 +296,13 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
     // Validação de abreviações
     const street = (formData.street || '').trim();
     if (street.match(/^(R\.|Av\.|Rod\.|Pç\.|Lgo\.)\s/i) || street.match(/\s(R\.|Av\.|Rod\.|Pç\.|Lgo\.)\s/i)) {
-      alert('Por favor, não use abreviações como "R." ou "Av.". Escreva o nome por extenso (Rua, Avenida, etc).');
+      showNotification('Por favor, não use abreviações como "R." ou "Av.". Escreva o nome por extenso (Rua, Avenida, etc).', 'warning');
       return;
     }
 
     // Validação de CEP
     if (!formData.cep || !formData.cep.match(/^\d{5}-\d{3}$/)) {
-      alert('Por favor, insira um CEP válido no formato 00000-000.');
+      showNotification('Por favor, insira um CEP válido no formato 00000-000.', 'warning');
       return;
     }
 
@@ -361,10 +363,10 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
       }
 
       setDraftChanges({});
-      alert('Sincronização concluída! Todas as alterações estão salvas no servidor.');
+      showNotification('Sincronização concluída! Todas as alterações estão salvas no servidor.', 'success');
     } catch (error) {
       console.error('Erro crítico na sincronização:', error);
-      alert('Erro ao sincronizar. Algumas alterações podem não ter sido salvas.');
+      showNotification('Erro ao sincronizar. Algumas alterações podem não ter sido salvas.', 'error');
     } finally {
       setIsSaving(false);
     }
@@ -734,7 +736,13 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                           <div className="flex items-center justify-end gap-1">
                             <a href={`#/business/${biz.id}`} target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg text-slate-300 hover:text-brand-teal hover:bg-brand-teal/5 transition-all"><ICONS.ExternalLink size={16} /></a>
                             <button onClick={() => openEditModal(biz)} className="p-2 rounded-lg text-slate-300 hover:text-brand-orange hover:bg-brand-orange/5 transition-all"><ICONS.Edit size={16} /></button>
-                            <button onClick={() => window.confirm(`Remover ${biz.name}?`) && onDelete(biz.id)} className="p-2 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 transition-all"><ICONS.Trash2 size={16} /></button>
+                            <button onClick={() => showConfirm({
+                              title: 'Remover Empresa',
+                              message: `Tem certeza que deseja remover ${biz.name}? Esta ação não pode ser desfeita.`,
+                              type: 'danger',
+                              confirmLabel: 'Remover',
+                              onConfirm: () => onDelete(biz.id)
+                            })} className="p-2 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 transition-all"><ICONS.Trash2 size={16} /></button>
                           </div>
                         </td>
                       </tr>

@@ -6,6 +6,7 @@ import { ICONS, PIRACICABA_NEIGHBORHOODS, BUSINESS_SPECIALTIES } from '../consta
 import NeighborhoodSelector from '../components/NeighborhoodSelector';
 import { getDefaultSchedule, formatScheduleSummary } from '../utils/businessUtils';
 import * as db from '../services/databaseService';
+import { useUI } from '../components/CustomUI';
 
 interface MerchantDashboardProps {
   businesses: Business[];
@@ -16,6 +17,7 @@ const DAYS_NAME = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
 const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ businesses, onUpdate }) => {
   const navigate = useNavigate();
+  const { showNotification } = useUI();
   const [business, setBusiness] = useState<Business | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState<Partial<Business>>({});
@@ -129,12 +131,12 @@ const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ businesses, onUpd
             longitude: parseFloat(dataFall[0].lon)
           }));
         } else {
-          alert('Não foi possível encontrar as coordenadas para este CEP. Verifique se o CEP está correto.');
+          showNotification('Não foi possível encontrar as coordenadas para este CEP. Verifique se o CEP está correto.', 'error');
         }
       }
     } catch (error) {
       console.error('Erro ao buscar coordenadas:', error);
-      alert('Erro na conexão com o serviço de mapas.');
+      showNotification('Erro na conexão com o serviço de mapas.', 'error');
     } finally {
       setIsGeocoding(false);
     }
@@ -146,13 +148,13 @@ const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ businesses, onUpd
     // Validação de abreviações
     const street = (formData.street || '').trim();
     if (street.match(/^(R\.|Av\.|Rod\.|Pç\.|Lgo\.)\s/i) || street.match(/\s(R\.|Av\.|Rod\.|Pç\.|Lgo\.)\s/i)) {
-      alert('Por favor, não use abreviações como "R." ou "Av.". Escreva o nome por extenso (Rua, Avenida, etc).');
+      showNotification('Por favor, não use abreviações como "R." ou "Av.". Escreva o nome por extenso (Rua, Avenida, etc).', 'warning');
       return;
     }
 
     // Validação de CEP
     if (!formData.cep || !formData.cep.match(/^\d{5}-\d{3}$/)) {
-      alert('Por favor, insira um CEP válido no formato 00000-000.');
+      showNotification('Por favor, insira um CEP válido no formato 00000-000.', 'warning');
       return;
     }
 
@@ -170,7 +172,7 @@ const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ businesses, onUpd
       onUpdate(updatedBiz);
       setBusiness(updatedBiz);
       setIsModalOpen(false);
-      alert('Informações atualizadas com sucesso!');
+      showNotification('Informações atualizadas com sucesso!', 'success');
     }
   };
 

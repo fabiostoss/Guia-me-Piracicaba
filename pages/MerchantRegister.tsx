@@ -6,9 +6,11 @@ import { ICONS, WHATSAPP_ADMIN, BUSINESS_SPECIALTIES } from '../constants';
 import NeighborhoodSelector from '../components/NeighborhoodSelector';
 import { createBusiness } from '../services/databaseService';
 import { getDefaultSchedule, formatScheduleSummary } from '../utils/businessUtils';
+import { useUI } from '../components/CustomUI';
 
 const MerchantRegister: React.FC = () => {
   const navigate = useNavigate();
+  const { showNotification } = useUI();
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   const [formData, setFormData] = useState({
@@ -139,7 +141,7 @@ const MerchantRegister: React.FC = () => {
     e.preventDefault();
 
     if (formData.isSponsor === null) {
-      alert('Por favor, responda se deseja ser um Patrocinador para continuar.');
+      showNotification('Por favor, responda se deseja ser um Patrocinador para continuar.', 'warning');
       const element = document.getElementById('sponsor-section');
       element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
@@ -207,11 +209,12 @@ _Solicitação enviada via formulário de adesão_`;
         window.open(whatsappUrl, '_blank');
       }
 
-      alert('Obrigado! Seu cadastro foi recebido e está aguardando aprovação dos administradores. Entraremos em contato em breve.');
+
+      showNotification('Obrigado! Seu cadastro foi recebido e está aguardando aprovação.', 'success');
       navigate('/');
     } catch (error) {
       console.error('Erro ao cadastrar:', error);
-      alert('Ocorreu um erro ao enviar seu cadastro. Tente novamente.');
+      showNotification('Ocorreu um erro ao enviar seu cadastro. Tente novamente.', 'error');
     } finally {
       setIsSubmitting(false);
     }

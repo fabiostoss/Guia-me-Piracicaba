@@ -20,6 +20,7 @@ import News from './pages/News';
 import SeedOfficial from './pages/SeedOfficial';
 import { Calendar, Clock as ClockIcon } from 'lucide-react';
 import * as db from './services/databaseService';
+import { UIProvider, useUI } from './components/CustomUI';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -96,10 +97,12 @@ const CustomerRegistrationModal: React.FC<{
   const [phone, setPhone] = useState('+55');
   const [neighborhood, setNeighborhood] = useState('');
 
+  const { showNotification } = useUI();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (name.length < 3) return alert('Por favor, informe seu nome completo.');
-    if (!neighborhood) return alert('Por favor, selecione seu bairro.');
+    if (name.length < 3) return showNotification('Por favor, informe seu nome completo.', 'warning');
+    if (!neighborhood) return showNotification('Por favor, selecione seu bairro.', 'warning');
 
     const newCustomer: Customer = {
       id: crypto.randomUUID(),
@@ -111,6 +114,7 @@ const CustomerRegistrationModal: React.FC<{
 
     const created = await db.createCustomer(newCustomer);
     if (created) {
+      showNotification('Seja bem-vindo ao Guia!', 'success');
       onRegister(created);
     }
   };
@@ -316,176 +320,178 @@ const App: React.FC = () => {
   }
 
   return (
-    <Router>
-      <ScrollToTop />
-      <div className="flex flex-col min-h-screen bg-slate-50">
-        <WeatherBar />
-        <nav className="bg-white sticky top-0 z-50 shadow-md border-b border-slate-100">
-          <div className="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center">
-            <Link to="/" className="flex items-center space-x-2.5">
-              <div className="bg-brand-teal p-2.5 rounded-xl shadow-lg shadow-brand-teal/20"><ICONS.Package className="text-white w-6 h-6" /></div>
-              <div><span className="text-2xl font-black text-brand-teal-deep tracking-tight block">Guia-me</span><span className="text-xs font-bold text-brand-orange tracking-[0.2em] uppercase">Piracicaba</span></div>
-            </Link>
-            <div className="hidden md:flex items-center space-x-12">
-              <Link to="/" className="text-slate-600 hover:text-brand-teal font-bold transition-colors">Início</Link>
-              <Link to="/noticias" className="text-slate-600 hover:text-brand-teal font-bold transition-colors">Noticias</Link>
-              <Link to="/guia-turistico" className="text-slate-600 hover:text-brand-teal font-bold transition-colors">Guia Turístico</Link>
-              <Link to="/vagas" className="text-slate-600 hover:text-brand-teal font-bold transition-colors">Vagas</Link>
-              <Link to="/merchant-register" className="bg-brand-teal text-white px-8 py-3 rounded-2xl font-black text-sm uppercase transition-all hover:bg-brand-teal-dark active:scale-95 shadow-lg shadow-brand-teal/10">Anunciar Minha Loja</Link>
-            </div>
+    <UIProvider>
+      <Router>
+        <ScrollToTop />
+        <div className="flex flex-col min-h-screen bg-slate-50">
+          <WeatherBar />
+          <nav className="bg-white sticky top-0 z-50 shadow-md border-b border-slate-100">
+            <div className="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center">
+              <Link to="/" className="flex items-center space-x-2.5">
+                <div className="bg-brand-teal p-2.5 rounded-xl shadow-lg shadow-brand-teal/20"><ICONS.Package className="text-white w-6 h-6" /></div>
+                <div><span className="text-2xl font-black text-brand-teal-deep tracking-tight block">Guia-me</span><span className="text-xs font-bold text-brand-orange tracking-[0.2em] uppercase">Piracicaba</span></div>
+              </Link>
+              <div className="hidden md:flex items-center space-x-12">
+                <Link to="/" className="text-slate-600 hover:text-brand-teal font-bold transition-colors">Início</Link>
+                <Link to="/noticias" className="text-slate-600 hover:text-brand-teal font-bold transition-colors">Noticias</Link>
+                <Link to="/guia-turistico" className="text-slate-600 hover:text-brand-teal font-bold transition-colors">Guia Turístico</Link>
+                <Link to="/vagas" className="text-slate-600 hover:text-brand-teal font-bold transition-colors">Vagas</Link>
+                <Link to="/merchant-register" className="bg-brand-teal text-white px-8 py-3 rounded-2xl font-black text-sm uppercase transition-all hover:bg-brand-teal-dark active:scale-95 shadow-lg shadow-brand-teal/10">Anunciar Minha Loja</Link>
+              </div>
 
-            {/* Mobile Menu Button */}
-            <div className="md:hidden flex items-center gap-4">
+              {/* Mobile Menu Button */}
+              <div className="md:hidden flex items-center gap-4">
+                {currentCustomer && (
+                  <div className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-100">
+                    <div className="w-6 h-6 rounded-full bg-brand-orange flex items-center justify-center text-white text-[8px] font-black">
+                      {currentCustomer.name.charAt(0)}
+                    </div>
+                  </div>
+                )}
+                <button
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className="p-3 bg-slate-50 rounded-xl text-brand-teal-deep hover:bg-brand-teal/10 transition-colors"
+                  aria-label="Menu"
+                >
+                  {isMenuOpen ? <ICONS.X size={24} /> : <ICONS.Menu size={24} />}
+                </button>
+              </div>
+
               {currentCustomer && (
-                <div className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-100">
-                  <div className="w-6 h-6 rounded-full bg-brand-orange flex items-center justify-center text-white text-[8px] font-black">
+                <div className="hidden md:flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-xl border border-slate-100">
+                  <div className="w-8 h-8 rounded-full bg-brand-orange flex items-center justify-center text-white text-[10px] font-black">
                     {currentCustomer.name.charAt(0)}
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-black text-brand-teal-deep uppercase leading-none">{currentCustomer.name.split(' ')[0]}</span>
+                    <span className="text-[8px] font-bold text-slate-400 uppercase tracking-wider">{currentCustomer.neighborhood}</span>
                   </div>
                 </div>
               )}
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="p-3 bg-slate-50 rounded-xl text-brand-teal-deep hover:bg-brand-teal/10 transition-colors"
-                aria-label="Menu"
-              >
-                {isMenuOpen ? <ICONS.X size={24} /> : <ICONS.Menu size={24} />}
-              </button>
             </div>
 
-            {currentCustomer && (
-              <div className="hidden md:flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-xl border border-slate-100">
-                <div className="w-8 h-8 rounded-full bg-brand-orange flex items-center justify-center text-white text-[10px] font-black">
-                  {currentCustomer.name.charAt(0)}
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-[10px] font-black text-brand-teal-deep uppercase leading-none">{currentCustomer.name.split(' ')[0]}</span>
-                  <span className="text-[8px] font-bold text-slate-400 uppercase tracking-wider">{currentCustomer.neighborhood}</span>
-                </div>
-              </div>
+            {/* Mobile Side Menu (Overlay) */}
+            {isMenuOpen && (
+              <div
+                className="md:hidden fixed inset-0 z-40 bg-brand-teal-deep/20 backdrop-blur-sm animate-fade-in"
+                onClick={() => setIsMenuOpen(false)}
+              />
             )}
-          </div>
 
-          {/* Mobile Side Menu (Overlay) */}
-          {isMenuOpen && (
-            <div
-              className="md:hidden fixed inset-0 z-40 bg-brand-teal-deep/20 backdrop-blur-sm animate-fade-in"
-              onClick={() => setIsMenuOpen(false)}
-            />
-          )}
-
-          {/* Mobile Menu Transitions */}
-          <div className={`md:hidden fixed top-24 left-4 right-4 z-50 bg-white rounded-[2.5rem] shadow-2xl border border-slate-100 p-8 flex flex-col gap-6 transition-all duration-300 transform ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10 pointer-events-none'}`}>
-            <Link to="/" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 text-brand-teal-deep font-black uppercase text-xs tracking-widest hover:bg-brand-teal/10 transition-all">
-              <div className="p-2 bg-white rounded-xl shadow-sm"><ICONS.HomeIcon size={18} className="text-brand-teal" /></div>
-              Início
-            </Link>
-            <Link to="/noticias" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 text-brand-teal-deep font-black uppercase text-xs tracking-widest hover:bg-brand-teal/10 transition-all">
-              <div className="p-2 bg-white rounded-xl shadow-sm"><ICONS.Newspaper size={18} className="text-brand-teal" /></div>
-              Noticias
-            </Link>
-            <Link to="/guia-turistico" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 text-brand-teal-deep font-black uppercase text-xs tracking-widest hover:bg-brand-teal/10 transition-all">
-              <div className="p-2 bg-white rounded-xl shadow-sm"><ICONS.MapPin size={18} className="text-brand-teal" /></div>
-              Guia Turístico
-            </Link>
-            <Link to="/vagas" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 text-brand-teal-deep font-black uppercase text-xs tracking-widest hover:bg-brand-teal/10 transition-all">
-              <div className="p-2 bg-white rounded-xl shadow-sm"><ICONS.Briefcase size={18} className="text-brand-teal" /></div>
-              Vagas de Emprego
-            </Link>
-            <hr className="border-slate-100 my-2" />
-            <Link
-              to="/merchant-register"
-              onClick={() => setIsMenuOpen(false)}
-              className="w-full bg-brand-teal text-white py-5 rounded-2xl font-black text-center uppercase tracking-[0.2em] text-[10px] shadow-xl shadow-brand-teal/20"
-            >
-              Anunciar Minha Loja
-            </Link>
-            <div className="text-center pt-2">
-              <Link to="/merchant-login" onClick={() => setIsMenuOpen(false)} className="text-[9px] font-black text-slate-400 uppercase tracking-widest hover:text-brand-teal">Painel do Lojista</Link>
-            </div>
-          </div>
-        </nav>
-
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home businesses={businesses} checkAuth={checkCustomerAuth} />} />
-            <Route path="/guia-turistico" element={<TouristGuide />} />
-            <Route path="/vagas" element={<Jobs />} />
-            <Route path="/noticias" element={<News />} />
-            <Route path="/seed-official" element={<SeedOfficial />} />
-            <Route path="/politica-de-privacidade" element={<PrivacyPolicy />} />
-            <Route path="/termos-de-uso" element={<TermsOfUse />} />
-            <Route path="/business/:id" element={<BusinessDetail businesses={businesses} onIncrementView={incrementView} checkAuth={checkCustomerAuth} />} />
-            <Route path="/merchant-login" element={<MerchantLogin businesses={businesses} />} />
-            <Route path="/merchant-register" element={<MerchantRegister />} />
-            <Route path="/merchant-dashboard" element={<MerchantDashboard businesses={businesses} onUpdate={updateBusiness} />} />
-            <Route path="/admin-login" element={<AdminLogin />} />
-            <Route
-              path="/admin"
-              element={
-                <ProtectedAdminRoute>
-                  <Admin
-                    businesses={businesses}
-                    customers={customers}
-                    onAdd={addBusiness}
-                    onUpdate={updateBusiness}
-                    onDelete={deleteBusiness}
-                  />
-                </ProtectedAdminRoute>
-              }
-            />
-          </Routes>
-        </main>
-
-        <footer className="bg-brand-teal-deep py-20 text-white mt-20">
-          <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12 text-center md:text-left">
-            <div className="md:col-span-1 space-y-6">
-              <div className="flex items-center justify-center md:justify-start space-x-2.5">
-                <div className="bg-brand-orange p-1.5 rounded-lg"><ICONS.Package className="text-white w-5 h-5" /></div>
-                <span className="text-xl font-black">Guia-me Piracicaba</span>
+            {/* Mobile Menu Transitions */}
+            <div className={`md:hidden fixed top-24 left-4 right-4 z-50 bg-white rounded-[2.5rem] shadow-2xl border border-slate-100 p-8 flex flex-col gap-6 transition-all duration-300 transform ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10 pointer-events-none'}`}>
+              <Link to="/" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 text-brand-teal-deep font-black uppercase text-xs tracking-widest hover:bg-brand-teal/10 transition-all">
+                <div className="p-2 bg-white rounded-xl shadow-sm"><ICONS.HomeIcon size={18} className="text-brand-teal" /></div>
+                Início
+              </Link>
+              <Link to="/noticias" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 text-brand-teal-deep font-black uppercase text-xs tracking-widest hover:bg-brand-teal/10 transition-all">
+                <div className="p-2 bg-white rounded-xl shadow-sm"><ICONS.Newspaper size={18} className="text-brand-teal" /></div>
+                Noticias
+              </Link>
+              <Link to="/guia-turistico" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 text-brand-teal-deep font-black uppercase text-xs tracking-widest hover:bg-brand-teal/10 transition-all">
+                <div className="p-2 bg-white rounded-xl shadow-sm"><ICONS.MapPin size={18} className="text-brand-teal" /></div>
+                Guia Turístico
+              </Link>
+              <Link to="/vagas" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 text-brand-teal-deep font-black uppercase text-xs tracking-widest hover:bg-brand-teal/10 transition-all">
+                <div className="p-2 bg-white rounded-xl shadow-sm"><ICONS.Briefcase size={18} className="text-brand-teal" /></div>
+                Vagas de Emprego
+              </Link>
+              <hr className="border-slate-100 my-2" />
+              <Link
+                to="/merchant-register"
+                onClick={() => setIsMenuOpen(false)}
+                className="w-full bg-brand-teal text-white py-5 rounded-2xl font-black text-center uppercase tracking-[0.2em] text-[10px] shadow-xl shadow-brand-teal/20"
+              >
+                Anunciar Minha Loja
+              </Link>
+              <div className="text-center pt-2">
+                <Link to="/merchant-login" onClick={() => setIsMenuOpen(false)} className="text-[9px] font-black text-slate-400 uppercase tracking-widest hover:text-brand-teal">Painel do Lojista</Link>
               </div>
-              <p className="text-white/60 text-sm font-medium">Conectando Piracicaba. O guia definitivo para encontrar os melhores comércios locais.</p>
             </div>
-            <div>
-              <h4 className="font-bold text-brand-orange mb-8 uppercase text-xs tracking-widest">Serviços</h4>
-              <ul className="space-y-4 text-sm font-semibold">
-                <li><Link to="/guia-turistico" className="hover:text-brand-orange transition-colors">Turismo Local</Link></li>
-                <li><Link to="/noticias" className="hover:text-brand-orange transition-colors">Notícias Regionais</Link></li>
-                <li><Link to="/vagas" className="hover:text-brand-orange transition-colors">Vagas de Emprego</Link></li>
-                <li><a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="hover:text-brand-orange transition-colors">Anunciar no Instagram</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold text-brand-orange mb-8 uppercase text-xs tracking-widest">Acesso</h4>
-              <ul className="space-y-4 text-sm font-semibold">
-                <li><Link to="/merchant-login" className="hover:text-brand-orange transition-colors">Login Lojista</Link></li>
-                <li><Link to="/admin" className="hover:text-brand-orange transition-colors">Painel Admin</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold text-brand-orange mb-8 uppercase text-xs tracking-widest">Jurídico</h4>
-              <ul className="space-y-4 text-sm font-semibold">
-                <li><Link to="/politica-de-privacidade" className="hover:text-brand-orange transition-colors">Privacidade</Link></li>
-                <li><Link to="/termos-de-uso" className="hover:text-brand-orange transition-colors">Termos de Uso</Link></li>
-              </ul>
-            </div>
-          </div>
-          <div className="max-w-7xl mx-auto px-4 mt-20 pt-8 border-t border-white/10 text-center text-white/40 text-[10px] font-black uppercase tracking-[0.3em]">
-            © 2025 Guia-me Piracicaba - Todos os direitos reservados
-          </div>
-        </footer>
+          </nav>
 
-        {
-          customerModalOpen && (
-            <CustomerRegistrationModal
-              onRegister={handleRegisterCustomer}
-              onClose={() => setCustomerModalOpen(false)}
-            />
-          )
-        }
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Home businesses={businesses} checkAuth={checkCustomerAuth} />} />
+              <Route path="/guia-turistico" element={<TouristGuide />} />
+              <Route path="/vagas" element={<Jobs />} />
+              <Route path="/noticias" element={<News />} />
+              <Route path="/seed-official" element={<SeedOfficial />} />
+              <Route path="/politica-de-privacidade" element={<PrivacyPolicy />} />
+              <Route path="/termos-de-uso" element={<TermsOfUse />} />
+              <Route path="/business/:id" element={<BusinessDetail businesses={businesses} onIncrementView={incrementView} checkAuth={checkCustomerAuth} />} />
+              <Route path="/merchant-login" element={<MerchantLogin businesses={businesses} />} />
+              <Route path="/merchant-register" element={<MerchantRegister />} />
+              <Route path="/merchant-dashboard" element={<MerchantDashboard businesses={businesses} onUpdate={updateBusiness} />} />
+              <Route path="/admin-login" element={<AdminLogin />} />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedAdminRoute>
+                    <Admin
+                      businesses={businesses}
+                      customers={customers}
+                      onAdd={addBusiness}
+                      onUpdate={updateBusiness}
+                      onDelete={deleteBusiness}
+                    />
+                  </ProtectedAdminRoute>
+                }
+              />
+            </Routes>
+          </main>
 
-        <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="fixed bottom-6 right-6 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 text-white p-3.5 rounded-full shadow-2xl hover:scale-110 transition-transform z-50 ring-4 ring-white/10 shadow-purple-500/20"><ICONS.Instagram size={24} /></a>
-      </div >
-    </Router >
+          <footer className="bg-brand-teal-deep py-20 text-white mt-20">
+            <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12 text-center md:text-left">
+              <div className="md:col-span-1 space-y-6">
+                <div className="flex items-center justify-center md:justify-start space-x-2.5">
+                  <div className="bg-brand-orange p-1.5 rounded-lg"><ICONS.Package className="text-white w-5 h-5" /></div>
+                  <span className="text-xl font-black">Guia-me Piracicaba</span>
+                </div>
+                <p className="text-white/60 text-sm font-medium">Conectando Piracicaba. O guia definitivo para encontrar os melhores comércios locais.</p>
+              </div>
+              <div>
+                <h4 className="font-bold text-brand-orange mb-8 uppercase text-xs tracking-widest">Serviços</h4>
+                <ul className="space-y-4 text-sm font-semibold">
+                  <li><Link to="/guia-turistico" className="hover:text-brand-orange transition-colors">Turismo Local</Link></li>
+                  <li><Link to="/noticias" className="hover:text-brand-orange transition-colors">Notícias Regionais</Link></li>
+                  <li><Link to="/vagas" className="hover:text-brand-orange transition-colors">Vagas de Emprego</Link></li>
+                  <li><a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="hover:text-brand-orange transition-colors">Anunciar no Instagram</a></li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-bold text-brand-orange mb-8 uppercase text-xs tracking-widest">Acesso</h4>
+                <ul className="space-y-4 text-sm font-semibold">
+                  <li><Link to="/merchant-login" className="hover:text-brand-orange transition-colors">Login Lojista</Link></li>
+                  <li><Link to="/admin" className="hover:text-brand-orange transition-colors">Painel Admin</Link></li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-bold text-brand-orange mb-8 uppercase text-xs tracking-widest">Jurídico</h4>
+                <ul className="space-y-4 text-sm font-semibold">
+                  <li><Link to="/politica-de-privacidade" className="hover:text-brand-orange transition-colors">Privacidade</Link></li>
+                  <li><Link to="/termos-de-uso" className="hover:text-brand-orange transition-colors">Termos de Uso</Link></li>
+                </ul>
+              </div>
+            </div>
+            <div className="max-w-7xl mx-auto px-4 mt-20 pt-8 border-t border-white/10 text-center text-white/40 text-[10px] font-black uppercase tracking-[0.3em]">
+              © 2025 Guia-me Piracicaba - Todos os direitos reservados
+            </div>
+          </footer>
+
+          {
+            customerModalOpen && (
+              <CustomerRegistrationModal
+                onRegister={handleRegisterCustomer}
+                onClose={() => setCustomerModalOpen(false)}
+              />
+            )
+          }
+
+          <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="fixed bottom-6 right-6 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 text-white p-3.5 rounded-full shadow-2xl hover:scale-110 transition-transform z-50 ring-4 ring-white/10 shadow-purple-500/20"><ICONS.Instagram size={24} /></a>
+        </div >
+      </Router >
+    </UIProvider>
   );
 };
 
