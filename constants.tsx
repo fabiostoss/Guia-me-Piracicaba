@@ -158,6 +158,8 @@ export const CATEGORY_ICONS: Record<CategoryType, React.ReactNode> = {
   [CategoryType.PATROCINADORES]: <Crown className="w-6 h-6" />,
 };
 
+export const APP_VERSION = "v3.8.4";
+
 export const PIRACICABA_NEIGHBORHOODS: string[] = [
   "Centro", "Cidade Alta", "Alto", "São Dimas", "Nova Piracicaba", "Alemães", "Vila Rezende", "Vila Independência", "Vila Monteiro", "Vila Boyes", "Clube de Campo", "Morumbi",
   "Vila Sônia", "Santa Terezinha", "Parque Piracicaba (Balbo)", "Jardim São Matheus", "Jardim Conceição", "Jardim Itapuã", "Jardim Primavera", "Jardim Brasília", "Jardim Ipanema", "Jardim Oriente", "Jardim Santa Rosa", "Jardim Caxambu", "Jardim São Francisco", "Jardim São Luiz", "Jardim Piracicaba", "Jardim Alvorada", "Jardim Abaeté", "Jardim Planalto", "Jardim Algodoal", "Jardim Gilda", "Jardim Itamaracá", "Jardim Vitória", "Jardim Bartira",

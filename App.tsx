@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { HashRouter as Router, Routes, Route, Link, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { Business, CategoryType, Customer } from './types';
 import { INITIAL_BUSINESSES } from './data/mockData';
-import { ICONS, CATEGORY_ICONS, WHATSAPP_ADMIN, PIRACICABA_NEIGHBORHOODS, INSTAGRAM_URL } from './constants';
+import { ICONS, CATEGORY_ICONS, WHATSAPP_ADMIN, PIRACICABA_NEIGHBORHOODS, INSTAGRAM_URL, APP_VERSION } from './constants';
 import NeighborhoodSelector from './components/NeighborhoodSelector';
 import Home from './pages/Home';
 import BusinessDetail from './pages/BusinessDetail';
@@ -475,7 +475,8 @@ const App: React.FC = () => {
               </div>
             </div>
             <div className="max-w-7xl mx-auto px-4 mt-20 pt-8 border-t border-white/10 text-center text-white/40 text-[10px] font-black uppercase tracking-[0.3em]">
-              © 2025 Guia-me Piracicaba - Todos os direitos reservados
+              <p>© 2025 Guia-me Piracicaba - Todos os direitos reservados</p>
+              <p className="mt-4 opacity-40 text-[8px] font-bold">Ver: {APP_VERSION}</p>
             </div>
           </footer>
 
