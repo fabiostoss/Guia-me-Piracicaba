@@ -27,6 +27,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [isLocating, setIsLocating] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
+  const [isNearestActive, setIsNearestActive] = useState(false);
 
   // Refs para controle de scroll
   const categoriesRef = useRef<HTMLDivElement>(null);
@@ -109,6 +110,12 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
     (window as any).refreshLocation = () => requestLocation(true);
   }, []);
 
+  useEffect(() => {
+    if (userLocation) {
+      setIsNearestActive(true);
+    }
+  }, [userLocation]);
+
   const handleManualLocation = () => {
     if (typeof (window as any).refreshLocation === 'function') {
       (window as any).refreshLocation();
@@ -165,8 +172,8 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       return matchesSearch && matchesCategory && matchesNeighborhood && matches24h && matchesDelivery && matchesPickup && isActive;
     });
 
-    // Ordenar por distância se disponível
-    if (userLocation) {
+    // Ordenar por distância se disponível e ativo
+    if (userLocation && isNearestActive) {
       result.sort((a, b) => {
         const distA = (a as any).distance ?? 9999;
         const distB = (b as any).distance ?? 9999;
@@ -440,6 +447,24 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
 
             {/* Quick Filters - Integrated with Categories */}
             <div className="flex flex-wrap items-center justify-center gap-3 mb-8 border-b border-slate-50 pb-8">
+              <button
+                onClick={() => {
+                  if (isNearestActive) {
+                    setIsNearestActive(false);
+                  } else {
+                    if (userLocation) {
+                      setIsNearestActive(true);
+                    } else {
+                      handleManualLocation();
+                    }
+                  }
+                }}
+                className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${isNearestActive ? 'bg-emerald-50 text-emerald-600 border border-emerald-100 shadow-lg shadow-emerald-500/20' : 'bg-slate-50 text-slate-400 border border-slate-100 hover:bg-slate-100'}`}
+              >
+                <ICONS.MapPin size={14} className={isNearestActive ? 'animate-bounce' : ''} />
+                {isNearestActive ? 'Lojas mais próximas ativadas' : 'Lojas mais próximas'}
+                {isNearestActive && <ICONS.X size={12} className="ml-1" />}
+              </button>
               <button
                 onClick={() => setIs24hOnly(!is24hOnly)}
                 className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${is24hOnly ? 'bg-brand-teal text-white shadow-lg shadow-brand-teal/20' : 'bg-slate-50 text-slate-400 border border-slate-100 hover:bg-slate-100'}`}
