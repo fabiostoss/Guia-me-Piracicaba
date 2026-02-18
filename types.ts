@@ -121,3 +121,12 @@ export interface JobVacancy {
   postedAt: string;
   location: string;
 }
+
+export interface Admin {
+  id: string;
+  username: string;
+  phone: string;
+  password?: string;
+  resetCode?: string;
+  resetCodeExpiresAt?: string;
+}

@@ -210,6 +210,71 @@ export const clearAdminSession = async (): Promise<boolean> => {
     return true;
 };
 
+export const validateAdminLogin = async (username: string, password: string): Promise<boolean> => {
+    const { data, error } = await supabase
+        .from('admins')
+        .select('*')
+        .eq('username', username)
+        .eq('password', password)
+        .single();
+
+    if (error || !data) {
+        return false;
+    }
+
+    return true;
+};
+
+export const generateAdminResetCode = async (username: string): Promise<{ success: boolean; phone?: string; code?: string }> => {
+    const { data: admin, error: fetchError } = await supabase
+        .from('admins')
+        .select('phone')
+        .eq('username', username)
+        .single();
+
+    if (fetchError || !admin) return { success: false };
+
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutos
+
+    const { error: updateError } = await supabase
+        .from('admins')
+        .update({
+            reset_code: code,
+            reset_code_expires_at: expiresAt
+        })
+        .eq('username', username);
+
+    if (updateError) return { success: false };
+
+    return { success: true, phone: admin.phone, code };
+};
+
+export const verifyAndResetAdminPassword = async (username: string, code: string, newPassword: string): Promise<boolean> => {
+    const { data: admin, error: fetchError } = await supabase
+        .from('admins')
+        .select('*')
+        .eq('username', username)
+        .eq('reset_code', code)
+        .single();
+
+    if (fetchError || !admin) return false;
+
+    // Verificar expiração
+    if (new Date(admin.reset_code_expires_at) < new Date()) return false;
+
+    const { error: updateError } = await supabase
+        .from('admins')
+        .update({
+            password: newPassword,
+            reset_code: null,
+            reset_code_expires_at: null
+        })
+        .eq('username', username);
+
+    return !updateError;
+};
+
 // ==================== MERCHANT SESSIONS ====================
 
 export const getMerchantSession = async (): Promise<string | null> => {
