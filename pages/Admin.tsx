@@ -632,6 +632,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                     const currentNeighborhood = draft.neighborhood !== undefined ? draft.neighborhood : biz.neighborhood;
                     const currentPhone = draft.phone !== undefined ? draft.phone : biz.phone;
                     const currentIsOfficial = draft.isOfficial !== undefined ? draft.isOfficial : biz.isOfficial;
+                    const currentIsSponsor = draft.isSponsor !== undefined ? draft.isSponsor : biz.isSponsor;
 
                     return (
                       <tr key={biz.id} className="hover:bg-slate-50/50 transition-colors group">
@@ -649,7 +650,8 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                               </div>
                               <div className="flex items-center gap-2">
                                 <span className="text-[8px] font-bold text-slate-300 uppercase tracking-widest">{biz.code}</span>
-                                {currentIsOfficial && <span className="bg-brand-orange/10 text-brand-orange px-1.5 py-0.5 rounded text-[7px] font-bold border border-brand-orange/20">OFICIAL</span>}
+                                {currentIsOfficial && <span className="bg-brand-teal/10 text-brand-teal px-1.5 py-0.5 rounded text-[7px] font-bold border border-brand-teal/20">OFICIAL</span>}
+                                {currentIsSponsor && <span className="bg-brand-orange/10 text-brand-orange px-1.5 py-0.5 rounded text-[7px] font-bold border border-brand-orange/20">PATROCINADOR</span>}
                               </div>
                             </div>
                           </div>
@@ -703,12 +705,12 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                           <button
                             onClick={() => setDraftChanges(prev => ({
                               ...prev,
-                              [biz.id]: { ...prev[biz.id], isOfficial: !currentIsOfficial }
+                              [biz.id]: { ...prev[biz.id], isSponsor: !currentIsSponsor }
                             }))}
-                            className={`p-3 rounded-xl transition-all ${currentIsOfficial ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/20 scale-110' : 'bg-slate-50 text-slate-300 hover:bg-slate-100 hover:text-slate-400 border border-slate-100'}`}
-                            title={currentIsOfficial ? "Remover Destaque" : "Tornar Patrocinador"}
+                            className={`p-3 rounded-xl transition-all ${currentIsSponsor ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/20 scale-110' : 'bg-slate-50 text-slate-300 hover:bg-slate-100 hover:text-slate-400 border border-slate-100'}`}
+                            title={currentIsSponsor ? "Remover Patrocínio" : "Tornar Patrocinador"}
                           >
-                            <ICONS.Crown size={18} className={currentIsOfficial ? "animate-pulse" : ""} />
+                            <ICONS.Crown size={18} className={currentIsSponsor ? "animate-pulse" : ""} />
                           </button>
                         </td>
                         <td className="px-8 py-6">
@@ -883,12 +885,6 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                             .map(cat => <option key={cat} value={cat}>{cat}</option>)}
                         </select>
                       </div>
-                      <div className="space-y-4 pt-6">
-                        <label className="flex items-center cursor-pointer p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-slate-100 transition-colors">
-                          <input type="checkbox" className="w-6 h-6 rounded border-slate-200 text-brand-orange mr-4" checked={formData.isOfficial || false} onChange={e => setFormData({ ...formData, isOfficial: e.target.checked })} />
-                          <span className="text-[11px] font-black uppercase tracking-widest text-brand-orange">Parceiro Patrocinador</span>
-                        </label>
-                      </div>
 
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 shadow-inner">
@@ -1053,7 +1049,14 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                             <input type="checkbox" className="w-6 h-6 rounded border-slate-200 text-brand-teal mr-4" checked={formData.isOfficial} onChange={e => setFormData({ ...formData, isOfficial: e.target.checked })} />
                             <div className="flex flex-col">
                               <span className="text-[11px] font-black uppercase tracking-widest text-brand-teal">Selo Oficial</span>
-                              <span className="text-[8px] font-bold text-slate-400 mt-1 uppercase">Apenas Administradores</span>
+                              <span className="text-[8px] font-bold text-slate-400 mt-1 uppercase">Loja Verificada (Selo Azul)</span>
+                            </div>
+                          </label>
+                          <label className="flex items-center cursor-pointer p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-slate-100 transition-colors">
+                            <input type="checkbox" className="w-6 h-6 rounded border-slate-200 text-brand-orange mr-4" checked={formData.isSponsor} onChange={e => setFormData({ ...formData, isSponsor: e.target.checked })} />
+                            <div className="flex flex-col">
+                              <span className="text-[11px] font-black uppercase tracking-widest text-brand-orange">Parceiro Patrocinador</span>
+                              <span className="text-[8px] font-bold text-slate-400 mt-1 uppercase">Destaque Premium (Coroa Laranja)</span>
                             </div>
                           </label>
                         </div>
@@ -1068,7 +1071,8 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                 </div>
               </div>
             </div>
-          )}
+          )
+        }
 
         <style>{`
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
@@ -1081,8 +1085,8 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
           animation: bounce-subtle 2s infinite ease-in-out;
         }
       `}</style>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
 
