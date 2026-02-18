@@ -56,7 +56,11 @@ import {
   Tag,
   Crown,
   Shield,
-  Map
+  Map,
+  Coffee,
+  Beer,
+  Landmark,
+  Mountain
 } from 'lucide-react';
 import { CategoryType } from './types';
 
@@ -111,7 +115,11 @@ export const ICONS = {
   Tag,
   Crown,
   Shield,
-  Map
+  Map,
+  Coffee,
+  Beer,
+  Landmark,
+  Mountain
 };
 
 export const CATEGORY_ICONS: Record<CategoryType, React.ReactNode> = {

@@ -187,6 +187,45 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
   const featuredSpots = (TOURIST_SPOTS || []).slice(0, 3);
   const recentJobs = (getLatestJobs() || []).slice(0, 4);
 
+  const touristRoutes = [
+    {
+      id: 1,
+      name: "Rota Gastronômica",
+      description: "Sabores da Rua do Porto e culinária típica caipira.",
+      icon: <ICONS.Coffee size={24} />,
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Rio_Piracicaba_e_Engenho_Central.jpg/1200px-Rio_Piracicaba_e_Engenho_Central.jpg",
+      color: "bg-orange-50 text-orange-500",
+      query: "Restaurantes"
+    },
+    {
+      id: 2,
+      name: "Roteiro Histórico",
+      description: "Engenho Central, Museus e a arquitetura do século XIX.",
+      icon: <ICONS.Landmark size={24} />,
+      image: "https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Engenho-Central.jpg",
+      color: "bg-amber-50 text-amber-600",
+      query: "História"
+    },
+    {
+      id: 3,
+      name: "Natureza & Lazer",
+      description: "Tanquã, Horto Florestal e parques com paisagens incríveis.",
+      icon: <ICONS.Mountain size={24} />,
+      image: "https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Tanqua.jpg",
+      color: "bg-emerald-50 text-emerald-600",
+      query: "Parque"
+    },
+    {
+      id: 4,
+      name: "Rota Cervejeira",
+      description: "Deguste as melhores cervejas artesanais produzidas em Pira.",
+      icon: <ICONS.Beer size={24} />,
+      image: "https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Cervejaria.jpg",
+      color: "bg-yellow-50 text-yellow-600",
+      query: "Lazer"
+    }
+  ];
+
   const getTouristIcon = (category: string, size: number = 24) => {
     switch (category) {
       case 'Parque': return <ICONS.MapPin size={size} />;
@@ -580,47 +619,54 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
         </div>
       </section >
 
-      {/* Guia Turístico Section */}
-      < section className="bg-white py-6 md:py-8" >
+      {/* Guia Turístico Section - Rotas */}
+      <section className="bg-white py-6 md:py-8">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-4 md:mb-6 reveal">
-            <h2 className="text-2xl md:text-3xl font-black text-brand-teal-deep tracking-tighter leading-none">Turismo em <span className="text-brand-orange">Pira</span></h2>
-            <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest mt-4 md:mt-6">Descubra Piracicaba</p>
-            <div className="flex items-center justify-center gap-4 mt-6">
-              <button
-                onClick={() => scroll(tourismRef, 'left')}
-                className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-brand-teal hover:bg-brand-teal hover:text-white transition-all shadow-md"
-              >
-                <ICONS.ChevronLeft size={24} />
-              </button>
-              <button
-                onClick={() => scroll(tourismRef, 'right')}
-                className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-brand-teal hover:bg-brand-teal hover:text-white transition-all shadow-md"
-              >
-                <ICONS.ChevronRight size={24} />
-              </button>
-            </div>
+          <div className="text-center mb-6 reveal">
+            <h2 className="text-2xl md:text-3xl font-black text-brand-teal-deep tracking-tighter leading-none mb-2">Turismo em <span className="text-brand-orange">Pira</span></h2>
+            <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">Descubra Nossos Roteiros</p>
           </div>
 
-          <div ref={tourismRef} className="flex gap-3 md:gap-4 overflow-x-auto pb-6 snap-x no-scrollbar px-2 md:px-0 scroll-smooth">
-            {featuredSpots.slice(0, 6).map((spot) => (
-              <div key={spot.id} className="w-[210px] md:w-[320px] shrink-0 snap-start bg-slate-50 rounded-2xl md:rounded-3xl p-3 md:p-4 border border-slate-100 group hover:bg-white hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center">
-                <div className="bg-brand-teal/10 w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-teal mb-3 md:mb-4 group-hover:bg-brand-teal group-hover:text-white group-hover:scale-110 transition-all duration-500">
-                  {getTouristIcon(spot.category, 18)}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 reveal">
+            {touristRoutes.map((route) => (
+              <Link
+                to={`/guia-turistico?categoria=${route.query}`}
+                key={route.id}
+                className="group relative h-64 md:h-80 rounded-[2rem] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 block isolate"
+              >
+                {/* Background Image with Zoom Effect */}
+                <div className="absolute inset-0">
+                  <img
+                    src={route.image}
+                    alt={route.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
                 </div>
-                <div className="space-y-1 md:space-y-2">
-                  <span className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] text-brand-orange">{spot.category}</span>
-                  <h3 className="text-xs md:text-lg font-black text-brand-teal-deep group-hover:text-brand-teal transition-colors leading-tight line-clamp-1">{spot.name.replace(/^\d+\.\s*/, '')}</h3>
-                  <p className="hidden md:block text-slate-500 text-sm font-medium line-clamp-3 leading-relaxed">{spot.description}</p>
+
+                {/* Content */}
+                <div className="relative h-full flex flex-col justify-end p-6 z-10">
+                  <div className={`w-10 h-10 md:w-12 md:h-12 rounded-2xl ${route.color} backdrop-blur-md flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                    {route.icon}
+                  </div>
+
+                  <h3 className="text-white text-lg md:text-2xl font-black leading-tight mb-2 group-hover:text-brand-orange transition-colors">
+                    {route.name}
+                  </h3>
+
+                  <p className="text-white/70 text-xs md:text-sm font-medium line-clamp-2 md:line-clamp-3 mb-4 group-hover:text-white/90 transition-colors">
+                    {route.description}
+                  </p>
+
+                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-brand-teal group-hover:text-white transition-colors mt-auto">
+                    Explorar Rota <ICONS.ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                  </div>
                 </div>
-                <Link to="/guia-turistico" className="mt-4 md:mt-6 text-[8px] md:text-[10px] font-black uppercase tracking-widest text-brand-teal-deep hover:text-brand-orange transition-colors flex items-center gap-2">
-                  Ver Mais <ICONS.ArrowRight size={12} />
-                </Link>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
-      </section >
+      </section>
 
       {/* Seção de Notícias */}
       < section className="py-6 md:py-8 bg-slate-50 relative overflow-hidden" >
