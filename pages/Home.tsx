@@ -162,7 +162,16 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
         b.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
         b.code?.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const matchesCategory = selectedCategory ? b.category === selectedCategory : true;
+      // Filtro especial para categorias OFICIAIS e PATROCINADORES
+      let matchesCategory = true;
+      if (selectedCategory === CategoryType.OFICIAIS) {
+        matchesCategory = b.isOfficial === true;
+      } else if (selectedCategory === CategoryType.PATROCINADORES) {
+        matchesCategory = b.isSponsor === true;
+      } else if (selectedCategory) {
+        matchesCategory = b.category === selectedCategory;
+      }
+
       const matchesNeighborhood = selectedNeighborhood ? b.neighborhood === selectedNeighborhood : true;
       const matches24h = is24hOnly ? b.is24h === true : true;
       const matchesDelivery = isDeliveryOnly ? b.offersDelivery === true : true;
@@ -257,7 +266,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       </section>
 
       {/* Patrocinadores Section */}
-      {businesses.filter(b => b.isOfficial && b.isActive).length > 0 && (
+      {businesses.filter(b => b.isSponsor && b.isActive).length > 0 && (
         <section className="bg-gradient-to-br from-brand-orange/5 via-white to-brand-teal/5 py-12 md:py-16 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-96 h-96 bg-brand-orange/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-brand-teal/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
@@ -278,7 +287,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 reveal">
               {businesses
-                .filter(b => b.isOfficial && b.isActive)
+                .filter(b => b.isSponsor && b.isActive)
                 .slice(0, 6)
                 .map((biz) => {
                   const isOpen = isBusinessOpen(biz.schedule);
@@ -404,7 +413,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             </div>
 
             {/* Ver Todos os Patrocinadores */}
-            {businesses.filter(b => b.isOfficial && b.isActive).length > 6 && (
+            {businesses.filter(b => b.isSponsor && b.isActive).length > 6 && (
               <div className="text-center mt-10">
                 <button className="px-8 py-4 bg-white text-brand-orange border-2 border-brand-orange rounded-full font-black text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-white transition-all shadow-lg hover:shadow-xl">
                   Ver Todos os Patrocinadores

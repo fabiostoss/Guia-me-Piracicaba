@@ -19,7 +19,8 @@ export enum CategoryType {
   EDUCACAO = 'Educação',
   CONSTRUCAO = 'Construção',
   EVENTOS = 'Eventos',
-  OFICIAIS = 'Oficiais'
+  OFICIAIS = 'Oficiais',
+  PATROCINADORES = 'Patrocinadores'
 }
 
 export interface DaySchedule {
@@ -50,6 +51,7 @@ export interface Business {
   isOpen?: boolean;
   isActive: boolean;
   isOfficial?: boolean;
+  isSponsor?: boolean;
   latitude?: number;
   longitude?: number;
   rating?: number;
