@@ -55,6 +55,8 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
     offersDelivery: true,
     offersPickup: true,
     isActive: true,
+    isOfficial: false,
+    isSponsor: false,
     views: 0
   };
 
@@ -257,7 +259,9 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
     setFormData({
       ...bizToEdit,
       street: bizToEdit.street || bizToEdit.address.split(',')[0] || '',
-      number: bizToEdit.number || bizToEdit.address.split(',')[1]?.split('-')[0]?.trim() || ''
+      number: bizToEdit.number || bizToEdit.address.split(',')[1]?.split('-')[0]?.trim() || '',
+      isOfficial: bizToEdit.isOfficial || false,
+      isSponsor: bizToEdit.isSponsor || false
     });
     setIsModalOpen(true);
   };
