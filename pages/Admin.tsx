@@ -254,14 +254,14 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
 
   // Abre o modal de edição com clonagem segura para garantir que o formulário receba os dados
   const openEditModal = (biz: Business) => {
-    const bizToEdit = JSON.parse(JSON.stringify(biz)) as Business;
+    const bizToEdit = { ...biz };
     setEditingBiz(bizToEdit);
     setFormData({
       ...bizToEdit,
       street: bizToEdit.street || bizToEdit.address.split(',')[0] || '',
       number: bizToEdit.number || bizToEdit.address.split(',')[1]?.split('-')[0]?.trim() || '',
-      isOfficial: bizToEdit.isOfficial || false,
-      isSponsor: bizToEdit.isSponsor || false
+      isOfficial: !!bizToEdit.isOfficial,
+      isSponsor: !!bizToEdit.isSponsor
     });
     setIsModalOpen(true);
   };
@@ -309,6 +309,8 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
 
     const bizData = {
       ...formData,
+      isOfficial: !!formData.isOfficial,
+      isSponsor: !!formData.isSponsor,
       address: fullAddress,
       schedule: finalSchedule,
       businessHours: formatScheduleSummary(finalSchedule),
@@ -353,7 +355,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
         const original = businesses.find(b => String(b.id) === String(id));
         if (original) {
           // Garante que estamos enviando o objeto completo para o onUpdate
-          const updatedBusiness = Object.assign({}, original, changes) as Business;
+          const updatedBusiness = { ...original, ...changes } as Business;
           await onUpdate(updatedBusiness);
         }
       }
