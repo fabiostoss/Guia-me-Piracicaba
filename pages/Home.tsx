@@ -212,32 +212,6 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
               O guia definitivo que une agilidade e orgulho local. Conexão direta com quem faz Piracicaba crescer.
             </p>
 
-            <div className="flex flex-wrap gap-4 pt-2 justify-center md:justify-start">
-              {isLocating && (
-                <div className="flex items-center gap-2 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest bg-slate-100 text-slate-500 animate-pulse border border-slate-200">
-                  <ICONS.MapPin size={14} className="animate-bounce text-brand-teal" />
-                  Buscando sua localização...
-                </div>
-              )}
-              {userLocation && !isLocating && (
-                <div className="flex items-center gap-2 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest bg-emerald-50 text-emerald-600 border border-emerald-100 shadow-sm">
-                  <ICONS.MapPin size={14} />
-                  Lojas mais próximas ativadas
-                  <button onClick={() => { setUserLocation(null); localStorage.removeItem('user_location'); }} className="ml-2 hover:text-red-500">
-                    <ICONS.X size={12} />
-                  </button>
-                </div>
-              )}
-              {!userLocation && !isLocating && (
-                <button
-                  onClick={handleManualLocation}
-                  className="flex items-center gap-2 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest bg-brand-teal/10 text-brand-teal border border-brand-teal/20 hover:bg-brand-teal hover:text-white transition-all shadow-sm group"
-                >
-                  <ICONS.MapPin size={14} className="group-hover:animate-bounce" />
-                  {locationError ? locationError : 'Lojas mais próximas? Ativar Localização'}
-                </button>
-              )}
-            </div>
 
           </div>
         </div>
