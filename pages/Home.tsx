@@ -193,16 +193,16 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       name: "Rota Gastronômica",
       description: "Sabores da Rua do Porto e culinária típica caipira.",
       icon: <ICONS.Coffee size={24} />,
-      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Rio_Piracicaba_e_Engenho_Central.jpg/1200px-Rio_Piracicaba_e_Engenho_Central.jpg",
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Rua_do_Porto_Piracicaba.jpg/800px-Rua_do_Porto_Piracicaba.jpg",
       color: "bg-orange-50 text-orange-500",
-      query: "Restaurantes"
+      query: "Gastronomia"
     },
     {
       id: 2,
       name: "Roteiro Histórico",
       description: "Engenho Central, Museus e a arquitetura do século XIX.",
       icon: <ICONS.Landmark size={24} />,
-      image: "https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Engenho-Central.jpg",
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Engenho_Central_de_Piracicaba.jpg/800px-Engenho_Central_de_Piracicaba.jpg",
       color: "bg-amber-50 text-amber-600",
       query: "História"
     },
@@ -211,18 +211,18 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       name: "Natureza & Lazer",
       description: "Tanquã, Horto Florestal e parques com paisagens incríveis.",
       icon: <ICONS.Mountain size={24} />,
-      image: "https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Tanqua.jpg",
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Rio_Piracicaba_e_Engenho_Central.jpg/1200px-Rio_Piracicaba_e_Engenho_Central.jpg",
       color: "bg-emerald-50 text-emerald-600",
-      query: "Parque"
+      query: "Lazer"
     },
     {
       id: 4,
       name: "Rota Cervejeira",
       description: "Deguste as melhores cervejas artesanais produzidas em Pira.",
       icon: <ICONS.Beer size={24} />,
-      image: "https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Cervejaria.jpg",
+      image: "https://images.unsplash.com/photo-1571506538622-d3cf4eec01ae?q=80&w=1000&auto=format&fit=crop",
       color: "bg-yellow-50 text-yellow-600",
-      query: "Lazer"
+      query: "Gastronomia"
     }
   ];
 

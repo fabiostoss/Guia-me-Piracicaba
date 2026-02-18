@@ -1,11 +1,18 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { ICONS } from '../constants';
 import { TOURIST_SPOTS, fetchLiveEventsFromWeb } from '../services/touristService';
 import { TouristSpot, TouristEvent } from '../types';
 
 const TouristGuide: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const categoryFilter = searchParams.get('categoria');
   const [spots] = useState<TouristSpot[]>(TOURIST_SPOTS);
+
+  const filteredSpots = useMemo(() => {
+    if (!categoryFilter) return spots;
+    return spots.filter(spot => spot.category === categoryFilter);
+  }, [spots, categoryFilter]);
 
 
   return (
@@ -24,7 +31,7 @@ const TouristGuide: React.FC = () => {
 
       <section className="max-w-7xl mx-auto px-4 mt-24">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {spots.map((spot, index) => (
+          {filteredSpots.map((spot, index) => (
             <div key={spot.id} className="bg-white rounded-3xl p-6 border border-slate-200 group hover:shadow-2xl transition-all duration-500 flex flex-col h-full animate-in fade-in zoom-in">
               <div className="flex justify-between items-start mb-6">
                 <div className="text-4xl font-black text-slate-200 group-hover:text-brand-teal/20 transition-colors">

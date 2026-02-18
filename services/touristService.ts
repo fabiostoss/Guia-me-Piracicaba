@@ -6,7 +6,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
     id: 'spot-1',
     name: '1. Parque da Rua do Porto',
     description: 'Possui bares, restaurantes, artesanatos e muita história da cidade, à beira do famoso rio de Piracicaba. O coração gastronômico e cultural de Pira.',
-    category: 'Parque',
+    category: 'Gastronomia',
     imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Rio_Piracicaba_e_Engenho_Central.jpg/1200px-Rio_Piracicaba_e_Engenho_Central.jpg',
     address: 'Rua do Porto, Centro, Piracicaba - SP'
   },
@@ -86,7 +86,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
     id: 'spot-11',
     name: '11. Dama Bier (Fábrica e Bar)',
     description: 'Cervejaria artesanal local. Oferece visitas aos tonéis e um bar de degustação com atendimento excepcional.',
-    category: 'Lazer',
+    category: 'Gastronomia',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Cervejaria.jpg',
     address: 'Av. Rio das Pedras, 104, Piracicaba - SP'
   },
@@ -94,7 +94,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
     id: 'spot-12',
     name: '12. Cachaça Piracicabana',
     description: 'Tradição secular em destilados. O licor de cachaça e a clássica pinga piracicabana são imperdíveis.',
-    category: 'Lazer',
+    category: 'Gastronomia',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Cachaca.jpg',
     address: 'Av. Alidor Pecorari, 1500, Piracicaba - SP'
   },
@@ -126,7 +126,7 @@ export const TOURIST_SPOTS: TouristSpot[] = [
     id: 'spot-16',
     name: '16. Vinícola Alma Da Videira',
     description: 'Localizada no bairro de Santana, oferece degustação de vinhos artesanais em um ambiente familiar e acolhedor.',
-    category: 'Lazer',
+    category: 'Gastronomia',
     imageUrl: 'https://piracicaba.sp.gov.br/wp-content/uploads/2023/05/Vinicola.jpg',
     address: 'Rua Pinheiros, s/n, Santana, Piracicaba - SP'
   },

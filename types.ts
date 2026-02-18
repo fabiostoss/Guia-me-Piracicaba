@@ -93,7 +93,7 @@ export interface TouristSpot {
   id: string;
   name: string;
   description: string;
-  category: 'Parque' | 'Cultura' | 'História' | 'Lazer';
+  category: 'Parque' | 'Cultura' | 'História' | 'Lazer' | 'Gastronomia';
   imageUrl: string;
   address: string;
 }
