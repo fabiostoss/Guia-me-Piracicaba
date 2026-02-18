@@ -326,16 +326,19 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
               onMouseLeave={() => setIsPaused(false)}
             >
               <div
-                className="flex transition-transform duration-700 ease-in-out gap-6"
+                className={`flex transition-transform duration-700 ease-in-out gap-6 ${sponsorBusinesses.length <= visibleSponsors ? 'justify-center' : ''}`}
                 style={{
                   transform: `translateX(-${currentSponsorIndex * (100 / visibleSponsors)}%)`,
                   width: '100%'
                 }}
               >
                 {/* 
-                  Repetimos alguns itens para garantir que o espaço final não fique vazio ao mover
+                  Repetimos itens apenas se houver necessidade de rolagem (mais itens que o visível)
                 */}
-                {sponsorBusinesses.concat(sponsorBusinesses.slice(0, visibleSponsors)).map((biz, idx) => {
+                {(sponsorBusinesses.length > visibleSponsors
+                  ? sponsorBusinesses.concat(sponsorBusinesses.slice(0, visibleSponsors))
+                  : sponsorBusinesses
+                ).map((biz, idx) => {
                   const isOpen = isBusinessOpen(biz.schedule);
                   const distance = userLocation
                     ? (biz.latitude && biz.longitude ? calculateDistance(userLocation.lat, userLocation.lng, biz.latitude, biz.longitude) : undefined)
