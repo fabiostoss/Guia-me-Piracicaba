@@ -22,7 +22,16 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
-        {business.isOfficial && (
+        {business.isSponsor && (
+          <div className="absolute top-3 left-3 z-10">
+            <span className="bg-brand-orange text-white text-[8px] font-black px-2 py-1 rounded-full uppercase tracking-widest shadow-lg flex items-center gap-1">
+              <ICONS.Star size={10} className="animate-pulse" />
+              Patrocinador
+            </span>
+          </div>
+        )}
+
+        {business.isOfficial && !business.isSponsor && (
           <div className="absolute top-3 left-3 z-10">
             <div className="bg-white/90 backdrop-blur-md p-1 rounded-full shadow-lg border border-white/20">
               <img
@@ -62,7 +71,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
         <div className="flex items-center gap-2 mb-1">
           <Link to={`/business/${business.id}`} className="block">
             <h3 className="text-sm md:text-xl font-black text-brand-teal-deep group-hover:text-brand-teal transition-colors leading-tight tracking-tight line-clamp-1 flex items-center gap-1.5">
-              {business.isOfficial && <ICONS.Crown size={16} className="text-brand-orange animate-pulse shrink-0" />}
+              {business.isSponsor && <ICONS.Crown size={16} className="text-brand-orange animate-pulse shrink-0" />}
               {business.name}
             </h3>
           </Link>

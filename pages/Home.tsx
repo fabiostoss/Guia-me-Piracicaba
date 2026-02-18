@@ -298,7 +298,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
                   return (
                     <div key={biz.id} className="group relative">
                       {/* Badge Patrocinador */}
-                      <div className="absolute -top-3 -right-3 z-20 bg-brand-orange text-white px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg shadow-brand-orange/30 flex items-center gap-1.5 animate-bounce-subtle">
+                      <div className="absolute -top-3 -left-3 z-20 bg-brand-orange text-white px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg shadow-brand-orange/30 flex items-center gap-1.5 animate-bounce-subtle">
                         <ICONS.Star size={12} className="animate-pulse" />
                         Patrocinador
                       </div>
