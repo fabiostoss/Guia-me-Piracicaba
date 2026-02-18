@@ -1,4 +1,4 @@
-// Version: 1.0.1 - Fix sync sponsors
+// Version: 1.0.2 - Admin Security and Email Support
 import { supabase } from './supabaseClient';
 import { Business, Customer } from '../types';
 
@@ -53,7 +53,6 @@ export const createBusiness = async (business: Business): Promise<Business | nul
 export const updateBusiness = async (business: Business): Promise<Business | null> => {
     const dbBusiness = transformBusinessToDB(business);
 
-    // Remove ID and created_at from update payload to avoid primary key/immutable field errors
     const { id, created_at, ...updateData } = dbBusiness;
 
     const { data, error } = await supabase
@@ -89,7 +88,6 @@ export const incrementBusinessViews = async (id: string): Promise<void> => {
     const { error } = await supabase.rpc('increment_views', { business_id: id });
 
     if (error) {
-        // Fallback: manual increment
         const { data: business } = await supabase
             .from('businesses')
             .select('views')
@@ -161,10 +159,14 @@ export const getCustomerById = async (id: string): Promise<Customer | null> => {
 // ==================== ADMIN SESSIONS ====================
 
 export const checkAdminSession = async (): Promise<boolean> => {
+    const token = localStorage.getItem('pira_admin_token');
+    if (!token) return false;
+
     const { data, error } = await supabase
         .from('admin_sessions')
         .select('*')
         .eq('is_logged', true)
+        .eq('session_token', token)
         .order('updated_at', { ascending: false })
         .limit(1)
         .single();
@@ -176,24 +178,21 @@ export const checkAdminSession = async (): Promise<boolean> => {
     return true;
 };
 
-export const createAdminSession = async (): Promise<boolean> => {
-    // First, clear all existing sessions
-    await supabase
+export const createAdminSession = async (): Promise<string | null> => {
+    const token = crypto.randomUUID();
+    const { data, error } = await supabase
         .from('admin_sessions')
-        .update({ is_logged: false })
-        .eq('is_logged', true);
-
-    // Create new session
-    const { error } = await supabase
-        .from('admin_sessions')
-        .insert([{ is_logged: true }]);
+        .insert([{ is_logged: true, session_token: token }])
+        .select()
+        .single();
 
     if (error) {
         console.error('Error creating admin session:', error);
-        return false;
+        return null;
     }
 
-    return true;
+    localStorage.setItem('pira_admin_token', token);
+    return token;
 };
 
 export const clearAdminSession = async (): Promise<boolean> => {
@@ -225,29 +224,45 @@ export const validateAdminLogin = async (username: string, password: string): Pr
     return true;
 };
 
-export const generateAdminResetCode = async (username: string): Promise<{ success: boolean; phone?: string; code?: string }> => {
+export const generateAdminResetCode = async (username: string): Promise<{
+    success: boolean;
+    email?: string;
+    phone?: string;
+    screenPart?: string;
+    whatsappPartEncoded?: string
+}> => {
     const { data: admin, error: fetchError } = await supabase
         .from('admins')
-        .select('phone')
+        .select('phone, email')
         .eq('username', username)
         .single();
 
     if (fetchError || !admin) return { success: false };
 
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutos
+    const fullCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const screenPart = fullCode.substring(0, 3);
+    const whatsappPart = fullCode.substring(3, 6);
+    const whatsappPartEncoded = btoa(whatsappPart);
+
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
     const { error: updateError } = await supabase
         .from('admins')
         .update({
-            reset_code: code,
+            reset_code: fullCode,
             reset_code_expires_at: expiresAt
         })
         .eq('username', username);
 
     if (updateError) return { success: false };
 
-    return { success: true, phone: admin.phone, code };
+    return {
+        success: true,
+        phone: admin.phone,
+        email: admin.email,
+        screenPart,
+        whatsappPartEncoded
+    };
 };
 
 export const verifyAndResetAdminPassword = async (username: string, code: string, newPassword: string): Promise<boolean> => {
@@ -260,7 +275,6 @@ export const verifyAndResetAdminPassword = async (username: string, code: string
 
     if (fetchError || !admin) return false;
 
-    // Verificar expiração
     if (new Date(admin.reset_code_expires_at) < new Date()) return false;
 
     const { error: updateError } = await supabase
@@ -293,13 +307,11 @@ export const getMerchantSession = async (): Promise<string | null> => {
 };
 
 export const createMerchantSession = async (businessId: string): Promise<boolean> => {
-    // Clear existing sessions
     await supabase
         .from('merchant_sessions')
         .delete()
-        .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all
+        .neq('id', '00000000-0000-0000-0000-000000000000');
 
-    // Create new session
     const { error } = await supabase
         .from('merchant_sessions')
         .insert([{ business_id: businessId }]);
@@ -316,7 +328,7 @@ export const clearMerchantSession = async (): Promise<boolean> => {
     const { error } = await supabase
         .from('merchant_sessions')
         .delete()
-        .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all
+        .neq('id', '00000000-0000-0000-0000-000000000000');
 
     if (error) {
         console.error('Error clearing merchant session:', error);
