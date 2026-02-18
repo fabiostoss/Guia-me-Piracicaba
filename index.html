@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,9 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap"
+    rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
@@ -53,58 +55,126 @@
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background-color: #f1f5f9; /* Slate-100 */
-      color: #0f172a; /* Slate-900 */
+      background-color: #f1f5f9;
+      /* Slate-100 */
+      color: #0f172a;
+      /* Slate-900 */
       overflow-x: hidden;
     }
-    h1, h2, h3, h4, .font-heading {
+
+    h1,
+    h2,
+    h3,
+    h4,
+    .font-heading {
       font-family: 'Poppins', sans-serif;
     }
+
     .no-scrollbar::-webkit-scrollbar {
       display: none;
     }
+
     .no-scrollbar {
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+
     .glass-effect {
       background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
     }
+
     .guide-shadow {
       box-shadow: 0 10px 30px -5px rgba(0, 173, 181, 0.05);
     }
+
     .card-hover:hover {
       transform: translateY(-8px);
       box-shadow: 0 25px 50px -12px rgba(0, 173, 181, 0.2);
     }
-    
+
     /* Reveal Animation Utility */
     .reveal {
       opacity: 0;
       transform: translateY(30px);
       transition: all 0.8s ease-out;
     }
+
     .reveal.active {
       opacity: 1;
       transform: translateY(0);
     }
-    
-    .stagger-1 { transition-delay: 0.1s; }
-    .stagger-2 { transition-delay: 0.2s; }
-    .stagger-3 { transition-delay: 0.3s; }
-    .stagger-4 { transition-delay: 0.4s; }
+
+    .stagger-1 {
+      transition-delay: 0.1s;
+    }
+
+    .stagger-2 {
+      transition-delay: 0.2s;
+    }
+
+    .stagger-3 {
+      transition-delay: 0.3s;
+    }
+
+    .stagger-4 {
+      transition-delay: 0.4s;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 0.4s ease-out forwards;
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateY(-50%) translateX(0);
+      }
+
+      25% {
+        transform: translateY(-50%) translateX(-4px);
+      }
+
+      75% {
+        transform: translateY(-50%) translateX(4px);
+      }
+    }
+
+    .animate-shake {
+      animation: shake 0.3s ease-in-out infinite;
+    }
 
     @keyframes bounceHorizontal {
-      0%, 100% { transform: translateX(0); }
-      50% { transform: translateX(5px); }
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      50% {
+        transform: translateX(5px);
+      }
     }
+
     .animate-bounce-horizontal {
       animation: bounceHorizontal 1.5s infinite;
     }
   </style>
-<script type="importmap">
+  <script type="importmap">
 {
   "imports": {
     "lucide-react": "https://esm.sh/lucide-react@^0.564.0",
@@ -116,10 +186,12 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
+  <link rel="stylesheet" href="/index.css">
 </head>
+
 <body>
   <div id="root"></div>
-<script type="module" src="/index.tsx"></script>
+  <script type="module" src="/index.tsx"></script>
 </body>
+
 </html>

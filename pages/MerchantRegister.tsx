@@ -32,6 +32,7 @@ const MerchantRegister: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSponsorModal, setShowSponsorModal] = useState(false);
   const [addressFound, setAddressFound] = useState(false);
+  const [addressError, setAddressError] = useState<string | null>(null);
 
   useEffect(() => {
     observerRef.current = new IntersectionObserver((entries) => {
@@ -50,6 +51,7 @@ const MerchantRegister: React.FC = () => {
   }, []);
 
   const handleCepChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAddressError(null);
     let val = e.target.value.replace(/\D/g, '');
     if (val.length <= 8) {
       if (val.length > 5) {
@@ -60,6 +62,9 @@ const MerchantRegister: React.FC = () => {
       // Quando o CEP estiver completo, buscar endereço automaticamente
       if (val.replace('-', '').length === 8) {
         setIsGeocoding(true);
+        setAddressError(null);
+        setAddressFound(false);
+
         try {
           // 1. Buscar endereço via ViaCEP
           const cepClean = val.replace('-', '');
@@ -67,7 +72,7 @@ const MerchantRegister: React.FC = () => {
           const viaCepData = await viaCepResponse.json();
 
           if (viaCepData.erro) {
-            alert('CEP não encontrado. Verifique o número digitado.');
+            setAddressError('CEP não encontrado');
             setIsGeocoding(false);
             return;
           }
@@ -80,54 +85,38 @@ const MerchantRegister: React.FC = () => {
             cep: val
           }));
 
-          // 2. Buscar coordenadas GPS usando o endereço completo
-          const fullAddress = `${viaCepData.logradouro}, ${viaCepData.bairro}, Piracicaba, SP, Brasil`;
-          const geoQuery = encodeURIComponent(fullAddress);
-          const geoResponse = await fetch(
-            `https://nominatim.openstreetmap.org/search?format=json&q=${geoQuery}&limit=1`,
-            { headers: { 'User-Agent': 'Guia-me-Piracicaba/1.0' } }
-          );
-          const geoData = await geoResponse.json();
-
-          if (geoData && geoData.length > 0) {
-            setFormData(prev => ({
-              ...prev,
-              latitude: parseFloat(geoData[0].lat),
-              longitude: parseFloat(geoData[0].lon)
-            }));
-          } else {
-            // Fallback: tentar apenas com Piracicaba + bairro
-            const fallbackQuery = encodeURIComponent(`${viaCepData.bairro}, Piracicaba, SP, Brasil`);
-            const fallbackResponse = await fetch(
-              `https://nominatim.openstreetmap.org/search?format=json&q=${fallbackQuery}&limit=1`,
+          // 2. Buscar coordenadas GPS (opcional, em bloco separado para não travar o CEP)
+          try {
+            const fullAddress = `${viaCepData.logradouro}, ${viaCepData.bairro}, Piracicaba, SP, Brasil`;
+            const geoQuery = encodeURIComponent(fullAddress);
+            const geoResponse = await fetch(
+              `https://nominatim.openstreetmap.org/search?format=json&q=${geoQuery}&limit=1`,
               { headers: { 'User-Agent': 'Guia-me-Piracicaba/1.0' } }
             );
-            const fallbackData = await fallbackResponse.json();
+            const geoData = await geoResponse.json();
 
-            if (fallbackData && fallbackData.length > 0) {
+            if (geoData && geoData.length > 0) {
               setFormData(prev => ({
                 ...prev,
-                latitude: parseFloat(fallbackData[0].lat),
-                longitude: parseFloat(fallbackData[0].lon)
+                latitude: parseFloat(geoData[0].lat),
+                longitude: parseFloat(geoData[0].lon)
               }));
             }
+          } catch (geoErr) {
+            console.warn('Busca de coordenadas GPS falhou (não crítico):', geoErr);
           }
 
-
-          // Verificar se as coordenadas foram salvas e marcar como encontrado
-          const hasCoords = viaCepData.logradouro && viaCepData.bairro;
-          if (hasCoords) {
+          // Marcar como encontrado se tiver o básico
+          if (viaCepData.logradouro && viaCepData.bairro) {
             setAddressFound(true);
-            // Opcional: focar no campo de número após 1s
             setTimeout(() => {
-              const numInput = document.getElementById('address-number');
-              numInput?.focus();
-            }, 1000);
+              document.getElementById('address-number')?.focus();
+            }, 600);
           }
 
         } catch (error) {
           console.error('Erro ao buscar CEP:', error);
-          alert('Não foi possível buscar o endereço. Verifique sua conexão e tente novamente.');
+          setAddressError('Erro na conexão ao buscar endereço');
         } finally {
           setIsGeocoding(false);
         }
@@ -335,6 +324,12 @@ _Solicitação enviada via formulário de adesão_`;
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 bg-emerald-50 text-emerald-600 px-3 py-1.5 rounded-xl border border-emerald-100 animate-fade-in">
                       <ICONS.CheckCircle size={14} />
                       <span className="text-[10px] font-black uppercase">Localizado!</span>
+                    </div>
+                  )}
+                  {addressError && !isGeocoding && (
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 bg-rose-50 text-rose-500 px-3 py-1.5 rounded-xl border border-rose-100 animate-shake">
+                      <ICONS.Info size={14} />
+                      <span className="text-[10px] font-black uppercase">{addressError}</span>
                     </div>
                   )}
                 </div>
