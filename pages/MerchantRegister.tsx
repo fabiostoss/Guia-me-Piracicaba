@@ -31,6 +31,7 @@ const MerchantRegister: React.FC = () => {
   const [isGeocoding, setIsGeocoding] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSponsorModal, setShowSponsorModal] = useState(false);
+  const [addressFound, setAddressFound] = useState(false);
 
   useEffect(() => {
     observerRef.current = new IntersectionObserver((entries) => {
@@ -113,18 +114,16 @@ const MerchantRegister: React.FC = () => {
           }
 
 
-          // Verificar se as coordenadas foram salvas
-          setTimeout(() => {
-            setFormData(prev => {
-              const hasCoords = prev.latitude !== 0 && prev.longitude !== 0;
-              if (hasCoords) {
-                alert(`✅ Endereço e coordenadas GPS encontrados!\n\nRua: ${prev.street}\nBairro: ${prev.neighborhood}\nCoordenadas: ${prev.latitude.toFixed(6)}, ${prev.longitude.toFixed(6)}\n\nAgora preencha o número do imóvel.`);
-              } else {
-                alert('✅ Endereço encontrado! Coordenadas GPS não localizadas, mas você pode continuar.');
-              }
-              return prev;
-            });
-          }, 500);
+          // Verificar se as coordenadas foram salvas e marcar como encontrado
+          const hasCoords = viaCepData.logradouro && viaCepData.bairro;
+          if (hasCoords) {
+            setAddressFound(true);
+            // Opcional: focar no campo de número após 1s
+            setTimeout(() => {
+              const numInput = document.getElementById('address-number');
+              numInput?.focus();
+            }, 1000);
+          }
 
         } catch (error) {
           console.error('Erro ao buscar CEP:', error);
@@ -332,6 +331,12 @@ _Solicitação enviada via formulário de adesão_`;
                       <div className="w-5 h-5 border-2 border-brand-teal/30 border-t-brand-teal rounded-full animate-spin"></div>
                     </div>
                   )}
+                  {addressFound && !isGeocoding && (
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 bg-emerald-50 text-emerald-600 px-3 py-1.5 rounded-xl border border-emerald-100 animate-fade-in">
+                      <ICONS.CheckCircle size={14} />
+                      <span className="text-[10px] font-black uppercase">Localizado!</span>
+                    </div>
+                  )}
                 </div>
                 <p className="text-[9px] text-slate-400 font-medium ml-1">O endereço será preenchido automaticamente após digitar o CEP completo</p>
               </div>
@@ -364,6 +369,7 @@ _Solicitação enviada via formulário de adesão_`;
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Número do Imóvel</label>
                 <input
+                  id="address-number"
                   required
                   className="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 font-bold outline-none focus:border-brand-teal focus:bg-white transition-all shadow-inner"
                   value={formData.number}
