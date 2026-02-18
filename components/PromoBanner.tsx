@@ -62,7 +62,7 @@ const PromoBanner: React.FC = () => {
                         <div className="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
 
                         <div className={`relative z-10 w-10 h-10 rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center shadow-2xl transition-all duration-1000 ${isAnimating ? 'rotate-[360deg] scale-0' : 'rotate-0 scale-100'}`}>
-                            {React.cloneElement(currentBanner.icon as React.ReactElement, { className: "text-white" })}
+                            {React.cloneElement(currentBanner.icon as React.ReactElement<any>, { className: "text-white" })}
                         </div>
 
                         <div className="absolute top-3 left-3 px-2 py-0.5 bg-black/20 backdrop-blur-md rounded-full border border-white/10">
