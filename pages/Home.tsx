@@ -500,8 +500,8 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
 
         <div className="max-w-7xl mx-auto px-4">
           <div className="mb-6">
-            <h2 className="text-xl md:text-2xl font-black text-brand-teal-deep tracking-tight">Comércios Próximos</h2>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Ordenados por distância</p>
+            <h2 className="text-xl md:text-2xl font-black text-brand-teal-deep tracking-tight">Resultado da Busca</h2>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Melhores opções para você</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 pb-6 reveal">
