@@ -603,7 +603,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
           </div>
 
           <div ref={tourismRef} className="flex gap-3 md:gap-4 overflow-x-auto pb-6 snap-x no-scrollbar px-2 md:px-0 scroll-smooth">
-            {featuredSpots.slice(0, 4).map((spot) => (
+            {featuredSpots.slice(0, 6).map((spot) => (
               <div key={spot.id} className="w-[210px] md:w-[320px] shrink-0 snap-start bg-slate-50 rounded-2xl md:rounded-3xl p-3 md:p-4 border border-slate-100 group hover:bg-white hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center">
                 <div className="bg-brand-teal/10 w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-teal mb-3 md:mb-4 group-hover:bg-brand-teal group-hover:text-white group-hover:scale-110 transition-all duration-500">
                   {getTouristIcon(spot.category, 18)}
