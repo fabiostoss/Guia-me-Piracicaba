@@ -321,7 +321,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
             </div>
 
             <div
-              className="relative overflow-hidden -mx-4 px-4 pb-8 group/carousel"
+              className="relative overflow-hidden -mx-4 px-4 pt-4 pb-8 group/carousel"
               onMouseEnter={() => setIsPaused(true)}
               onMouseLeave={() => setIsPaused(false)}
             >
@@ -456,7 +456,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
               )}
 
               {/* Indicadores de página */}
-              {sponsorBusinesses.length > 3 && (
+              {sponsorBusinesses.length > visibleSponsors && (
                 <div className="flex justify-center gap-2 mt-6">
                   {sponsorBusinesses.map((_, idx) => (
                     <button
