@@ -25,11 +25,12 @@ const MerchantRegister: React.FC = () => {
     is24h: false,
     latitude: 0,
     longitude: 0,
-    isSponsor: false
+    isSponsor: null as boolean | null
   });
 
   const [isGeocoding, setIsGeocoding] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSponsorModal, setShowSponsorModal] = useState(false);
 
   useEffect(() => {
     observerRef.current = new IntersectionObserver((entries) => {
@@ -146,9 +147,27 @@ const MerchantRegister: React.FC = () => {
     setFormData({ ...formData, whatsapp: val });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (formData.isSponsor === null) {
+      alert('Por favor, responda se deseja ser um Patrocinador para continuar.');
+      const element = document.getElementById('sponsor-section');
+      element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    if (formData.isSponsor === false) {
+      setShowSponsorModal(true);
+      return;
+    }
+
+    handleFinalSubmit(true);
+  };
+
+  const handleFinalSubmit = async (confirmedSponsor: boolean) => {
     setIsSubmitting(true);
+    setShowSponsorModal(false);
 
     try {
       const schedule = getDefaultSchedule();
@@ -178,17 +197,19 @@ const MerchantRegister: React.FC = () => {
         latitude: formData.latitude,
         longitude: formData.longitude,
         createdAt: Date.now(),
-        views: 0
+        views: 0,
+        isSponsor: confirmedSponsor
       };
 
       await createBusiness(newBusiness);
 
-      if (formData.isSponsor) {
-        const message = `*SOLICITAÇÃO DE PATROCÍNIO - GUIA-ME PIRACICABA*
+      if (confirmedSponsor) {
+        const message = `*NOVO CADASTRO DE PATROCINADOR - GUIA-ME PIRACICABA*
 ---------------------------------------
 Quero ser um patrocinador!
 *Loja:* ${formData.name}
 *WhatsApp:* ${formData.whatsapp}
+*Bairro:* ${formData.neighborhood}
 *Categoria:* ${formData.category}
 ---------------------------------------
 _Solicitação enviada via formulário de adesão_`;
@@ -378,24 +399,52 @@ _Solicitação enviada via formulário de adesão_`;
             </div>
 
             {/* Patrocinador */}
-            <div className="p-8 bg-brand-orange/5 rounded-[2.5rem] border border-brand-orange/10 relative overflow-hidden group">
+            <div id="sponsor-section" className="p-8 bg-brand-orange/5 rounded-[2.5rem] border border-brand-orange/10 relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-brand-orange/5 -rotate-45 translate-x-10 -translate-y-10"></div>
-              <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
-                <div className="flex-grow">
-                  <div className="flex items-center gap-3 mb-2">
-                    <ICONS.Star className="text-brand-orange animate-pulse" size={20} />
-                    <h4 className="text-xl font-black text-brand-teal-deep">Quer Destaque Absoluto?</h4>
+              <div className="flex flex-col items-center text-center space-y-8 relative z-10">
+                <div className="max-w-2xl">
+                  <div className="flex items-center justify-center gap-3 mb-2">
+                    <ICONS.Star className="text-brand-orange animate-pulse" size={24} />
+                    <h4 className="text-2xl font-black text-brand-teal-deep uppercase tracking-tight">Deseja ser um Patrocinador e ter Destaque Absoluto?</h4>
                   </div>
-                  <p className="text-sm text-slate-500 font-medium">Marcas patrocinadas aparecem no topo das buscas e têm selo de verificado exclusivo.</p>
+                  <p className="text-slate-500 font-bold leading-relaxed px-4">
+                    Marcas patrocinadas aparecem no <span className="text-brand-orange font-black text-base">topo de todas as buscas</span> e têm selo exclusivo de verificado. Escolha uma das opções abaixo:
+                  </p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setFormData({ ...formData, isSponsor: !formData.isSponsor })}
-                  className={`flex items-center gap-3 px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${formData.isSponsor ? 'bg-brand-orange text-white shadow-lg' : 'bg-white text-brand-orange border border-brand-orange/20 hover:bg-brand-orange/5'}`}
-                >
-                  {formData.isSponsor ? <ICONS.Check size={16} /> : <ICONS.Zap size={16} />}
-                  {formData.isSponsor ? 'Quero ser Patrocinador!' : 'Ser Patrocinador'}
-                </button>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-xl">
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, isSponsor: true })}
+                    className={`group relative flex flex-col items-center gap-3 p-8 rounded-3xl border-2 transition-all duration-300 ${formData.isSponsor === true ? 'bg-brand-orange border-brand-orange text-white shadow-2xl scale-[1.05]' : 'bg-white border-slate-100 text-slate-400 hover:border-brand-orange/30 hover:bg-brand-orange/5'}`}
+                  >
+                    {formData.isSponsor === true && <div className="absolute -top-3 -right-3 bg-white text-brand-orange p-1 rounded-full shadow-lg border border-brand-orange"><ICONS.Check size={20} /></div>}
+                    <ICONS.Zap size={32} className={formData.isSponsor === true ? 'text-white' : 'text-brand-orange'} />
+                    <div className="flex flex-col">
+                      <span className="text-sm font-black uppercase tracking-widest">Sim, quero destaque!</span>
+                      <span className={`text-[9px] font-bold ${formData.isSponsor === true ? 'text-white/80' : 'text-slate-400'}`}>Aparecer no topo do Guia</span>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, isSponsor: false })}
+                    className={`group relative flex flex-col items-center gap-3 p-8 rounded-3xl border-2 transition-all duration-300 ${formData.isSponsor === false ? 'bg-slate-700 border-slate-700 text-white shadow-2xl scale-[1.05]' : 'bg-white border-slate-100 text-slate-400 hover:border-slate-500/30'}`}
+                  >
+                    {formData.isSponsor === false && <div className="absolute -top-3 -right-3 bg-white text-slate-700 p-1 rounded-full shadow-lg border border-slate-700"><ICONS.Check size={20} /></div>}
+                    <ICONS.X size={32} className={formData.isSponsor === false ? 'text-white' : 'text-slate-300'} />
+                    <div className="flex flex-col">
+                      <span className="text-sm font-black uppercase tracking-widest">Não quero agora</span>
+                      <span className={`text-[9px] font-bold ${formData.isSponsor === false ? 'text-white/80' : 'text-slate-400'}`}>Apenas cadastro simples</span>
+                    </div>
+                  </button>
+                </div>
+
+                {formData.isSponsor === null && (
+                  <p className="text-[10px] text-brand-orange font-black uppercase animate-bounce">
+                    Seleção obrigatória para continuar
+                  </p>
+                )}
               </div>
             </div>
 
@@ -418,6 +467,70 @@ _Solicitação enviada via formulário de adesão_`;
           </form>
         </div>
       </section >
+
+      {/* Modal de Vantagens Patrocinador */}
+      {showSponsorModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-brand-teal-deep/90 backdrop-blur-md">
+          <div className="bg-white rounded-[3.5rem] max-w-2xl w-full p-10 md:p-14 shadow-2xl animate-scale-in border border-white/20 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-brand-orange/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+
+            <div className="text-center space-y-8 relative z-10">
+              <div className="inline-flex items-center justify-center w-24 h-24 bg-brand-orange/10 rounded-full text-brand-orange mb-4 shadow-inner">
+                <ICONS.Zap size={48} className="animate-pulse" />
+              </div>
+
+              <div className="space-y-4">
+                <h2 className="text-3xl md:text-5xl font-black text-brand-teal-deep tracking-tighter leading-none">
+                  Você está deixando passar uma <span className="text-brand-orange">grande oportunidade!</span>
+                </h2>
+                <p className="text-slate-500 font-bold text-lg leading-relaxed max-w-md mx-auto">
+                  Como <span className="text-brand-orange font-black">PATROCINADOR</span>, você terá resultados imediatos:
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 text-left py-6">
+                {[
+                  { icon: <ICONS.TrendingUp size={24} />, text: "Destaque absoluto no topo das buscas" },
+                  { icon: <ICONS.Star size={24} />, text: "Selo de Verificado Exclusivo no card" },
+                  { icon: <ICONS.Eye size={24} />, text: "3x mais visualizações que o comum" },
+                  { icon: <ICONS.MessageCircle size={24} />, text: "Acesso privilegiado a novos recursos" }
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-5 p-5 bg-slate-50 rounded-3xl border border-slate-100 hover:border-brand-orange/20 transition-all group">
+                    <div className="bg-brand-orange text-white p-3 rounded-2xl group-hover:scale-110 transition-transform shadow-lg shadow-brand-orange/20">
+                      {item.icon}
+                    </div>
+                    <span className="text-[11px] font-black text-slate-700 uppercase tracking-widest">{item.text}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="pt-4">
+                <p className="text-lg font-black text-brand-teal-deep mb-8">
+                  Tem certeza que deseja continuar sem o destaque?
+                </p>
+
+                <div className="flex flex-col gap-4">
+                  <button
+                    onClick={() => handleFinalSubmit(true)}
+                    className="w-full bg-brand-orange text-white py-8 rounded-[2rem] font-black text-lg uppercase tracking-[0.2em] shadow-xl shadow-brand-orange/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-4"
+                  >
+                    <ICONS.Zap size={24} />
+                    SIM, QUERO SER PATROCINADOR!
+                  </button>
+
+                  <button
+                    onClick={() => navigate('/')}
+                    className="w-full bg-slate-100 text-slate-400 py-5 rounded-[2rem] font-black text-xs uppercase tracking-widest hover:bg-slate-200 transition-all flex items-center justify-center gap-2"
+                  >
+                    <ICONS.X size={16} />
+                    Não, quero ir para o início
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div >
   );
 };
