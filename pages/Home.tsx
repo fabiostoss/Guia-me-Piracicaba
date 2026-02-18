@@ -344,18 +344,18 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
                   return (
                     <div
                       key={`${biz.id}-${idx}`}
-                      className="min-w-full md:min-w-[calc(50%-12px)] lg:min-w-[calc(33.333%-16px)] group relative shrink-0"
+                      className="min-w-full md:min-w-[calc(50%-12px)] lg:min-w-[calc(25%-18px)] group relative shrink-0"
                     >
                       {/* Badge Patrocinador */}
-                      <div className="absolute -top-3 -left-3 z-20 bg-brand-orange text-white px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg shadow-brand-orange/30 flex items-center gap-1.5 animate-bounce-subtle">
-                        <ICONS.Star size={12} className="animate-pulse" />
+                      <div className="absolute -top-2 -left-2 z-20 bg-brand-orange text-white px-3 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest shadow-lg shadow-brand-orange/30 flex items-center gap-1.5 animate-bounce-subtle">
+                        <ICONS.Star size={10} className="animate-pulse" />
                         Patrocinador
                       </div>
 
-                      {/* Card */}
-                      <div className="bg-white rounded-[2rem] overflow-hidden border-2 border-brand-orange/20 shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 hover:border-brand-orange/40 flex flex-col h-full">
-                        {/* Image */}
-                        <div className="relative h-48 overflow-hidden bg-gradient-to-br from-brand-teal/10 to-brand-orange/10">
+                      {/* Card Compacto */}
+                      <div className="bg-white rounded-[1.5rem] overflow-hidden border-2 border-brand-orange/10 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 hover:border-brand-orange/30 flex flex-col h-full">
+                        {/* Image Compacta */}
+                        <div className="relative h-32 overflow-hidden bg-gradient-to-br from-brand-teal/10 to-brand-orange/10">
                           <img
                             src={biz.imageUrl}
                             alt={biz.name}
@@ -363,94 +363,70 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
 
-                          {/* Logo overlay */}
-                          <div className="absolute bottom-4 left-4 w-16 h-16 rounded-xl overflow-hidden border-4 border-white shadow-lg z-10">
+                          {/* Logo overlay menor */}
+                          <div className="absolute bottom-3 left-3 w-12 h-12 rounded-xl overflow-hidden border-2 border-white shadow-lg z-10">
                             <img src={biz.logoUrl} alt={biz.name} className="w-full h-full object-cover" />
                           </div>
 
-                          {/* Distance Badge */}
+                          {/* Distance Badge menor */}
                           {distance !== undefined && (
-                            <div className="absolute top-3 right-3 z-10">
-                              <span className="text-white text-[9px] font-black uppercase tracking-widest bg-black/40 backdrop-blur-md px-2 py-1 rounded-lg border border-white/10 flex items-center gap-1.5">
-                                <ICONS.MapPin size={10} className="text-brand-orange" />
+                            <div className="absolute top-2 right-2 z-10">
+                              <span className="text-white text-[8px] font-black uppercase tracking-widest bg-black/40 backdrop-blur-md px-2 py-1 rounded-lg border border-white/10 flex items-center gap-1.5">
+                                <ICONS.MapPin size={8} className="text-brand-orange" />
                                 {formatDistance(distance)}
                               </span>
                             </div>
                           )}
 
-                          {/* Open Status Badge */}
-                          <div className="absolute bottom-4 right-4 z-10">
+                          {/* Open Status Badge menor */}
+                          <div className="absolute bottom-3 right-3 z-10">
                             {isOpen ? (
-                              <span className="bg-emerald-500 text-white text-[9px] font-black px-2 py-1 rounded-lg uppercase tracking-widest flex items-center gap-1.5 shadow-lg">
-                                <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                              <span className="bg-emerald-500 text-white text-[8px] font-black px-2 py-1 rounded-lg uppercase tracking-widest flex items-center gap-1 shadow-lg">
+                                <span className="w-1 h-1 rounded-full bg-white animate-pulse"></span>
                                 Aberto
                               </span>
                             ) : (
-                              <span className="bg-brand-orange text-white text-[9px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-lg">
+                              <span className="bg-brand-orange text-white text-[8px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-lg">
                                 Fechado
                               </span>
                             )}
                           </div>
                         </div>
 
-                        {/* Content */}
-                        <div className="p-6 flex-grow flex flex-col">
-                          <div className="flex items-start justify-between mb-2">
-                            <div className="flex-grow">
-                              <Link to={`/business/${biz.id}`} className="block">
-                                <h3 className="text-xl font-black text-brand-teal-deep mb-1 group-hover:text-brand-orange transition-colors flex items-center gap-2">
-                                  <ICONS.Crown size={20} className="text-brand-orange animate-pulse" />
-                                  {biz.name}
-                                </h3>
-                              </Link>
+                        {/* Content Compacto */}
+                        <div className="p-4 flex-grow flex flex-col">
+                          <Link to={`/business/${biz.id}`} className="block mb-1">
+                            <h3 className="text-sm font-black text-brand-teal-deep group-hover:text-brand-orange transition-colors flex items-center gap-1.5 line-clamp-1">
+                              <ICONS.Crown size={14} className="text-brand-orange shrink-0" />
+                              {biz.name}
+                            </h3>
+                          </Link>
 
-                              <div className="flex flex-col gap-1">
-                                <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                                  <ICONS.Tag size={12} className="text-brand-teal" />
-                                  {biz.category}
-                                </div>
-                                {biz.rating && (
-                                  <div className="flex items-center gap-1 text-amber-500">
-                                    <ICONS.Star size={10} fill="currentColor" />
-                                    <span className="text-slate-700 font-black text-[10px]">{biz.rating}</span>
-                                    <span className="text-slate-400 text-[9px]">({biz.reviewsCount})</span>
-                                  </div>
-                                )}
+                          <div className="flex items-center gap-2 mb-3">
+                            <div className="flex items-center gap-1 text-[8px] font-bold text-slate-400 uppercase tracking-widest">
+                              <ICONS.Tag size={10} className="text-brand-teal" />
+                              {biz.category}
+                            </div>
+                            {biz.rating && (
+                              <div className="flex items-center gap-0.5 text-amber-500">
+                                <ICONS.Star size={8} fill="currentColor" />
+                                <span className="text-slate-700 font-black text-[9px]">{biz.rating}</span>
                               </div>
-                            </div>
+                            )}
                           </div>
 
-                          <p className="text-sm text-slate-600 font-medium mb-4 line-clamp-2">
-                            {biz.description}
-                          </p>
-
-                          {/* Address */}
-                          <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">
-                            <ICONS.MapPin size={12} className="text-brand-orange min-w-[12px]" />
-                            <span className="truncate">{biz.street}, {biz.number} - {biz.neighborhood}</span>
+                          {/* Address mais discreto */}
+                          <div className="flex items-start gap-1.5 text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-4">
+                            <ICONS.MapPin size={10} className="text-brand-orange shrink-0" />
+                            <span className="line-clamp-1">{biz.neighborhood}</span>
                           </div>
 
-                          <div className="mt-auto space-y-3">
-                            {/* Badges Delivery/Pickup */}
-                            <div className="flex gap-2">
-                              {biz.offersDelivery && (
-                                <span className="px-2 py-1 bg-emerald-50 text-emerald-600 text-[8px] font-black uppercase tracking-widest rounded-md border border-emerald-100 flex items-center gap-1">
-                                  <ICONS.Truck size={10} /> Delivery
-                                </span>
-                              )}
-                              {biz.offersPickup && (
-                                <span className="px-2 py-1 bg-brand-teal/5 text-brand-teal text-[8px] font-black uppercase tracking-widest rounded-md border border-brand-teal/10 flex items-center gap-1">
-                                  <ICONS.Package size={10} /> Retirada
-                                </span>
-                              )}
-                            </div>
-
-                            {/* CTA Button */}
+                          <div className="mt-auto space-y-2">
+                            {/* CTA Button mais compacto */}
                             <Link
                               to={`/business/${biz.id}`}
-                              className="w-full bg-gradient-to-r from-brand-teal to-brand-teal-dark text-white py-3 rounded-xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-2 hover:shadow-lg hover:scale-105 transition-all group/btn"
+                              className="w-full bg-gradient-to-r from-brand-teal to-brand-teal-dark text-white py-2 rounded-lg font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-2 hover:shadow-lg transition-all"
                             >
-                              <ICONS.MessageCircle size={16} className="group-hover/btn:animate-bounce" />
                               Ver Detalhes
                             </Link>
                           </div>
