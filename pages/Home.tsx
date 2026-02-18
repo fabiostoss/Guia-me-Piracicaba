@@ -193,8 +193,8 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       name: "Rota Gastronômica",
       description: "Sabores da Rua do Porto e culinária típica caipira.",
       icon: <ICONS.Coffee size={24} />,
-      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Rua_do_Porto_Piracicaba.jpg/800px-Rua_do_Porto_Piracicaba.jpg",
       color: "bg-orange-50 text-orange-500",
+      bgGradient: "from-orange-400 via-orange-500 to-orange-600",
       query: "Gastronomia"
     },
     {
@@ -202,8 +202,8 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       name: "Roteiro Histórico",
       description: "Engenho Central, Museus e a arquitetura do século XIX.",
       icon: <ICONS.Landmark size={24} />,
-      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Engenho_Central_de_Piracicaba.jpg/800px-Engenho_Central_de_Piracicaba.jpg",
       color: "bg-amber-50 text-amber-600",
+      bgGradient: "from-amber-500 via-amber-600 to-amber-700",
       query: "História"
     },
     {
@@ -211,8 +211,8 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       name: "Natureza & Lazer",
       description: "Tanquã, Horto Florestal e parques com paisagens incríveis.",
       icon: <ICONS.Mountain size={24} />,
-      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Rio_Piracicaba_e_Engenho_Central.jpg/1200px-Rio_Piracicaba_e_Engenho_Central.jpg",
       color: "bg-emerald-50 text-emerald-600",
+      bgGradient: "from-emerald-400 via-emerald-500 to-teal-600",
       query: "Lazer"
     },
     {
@@ -220,8 +220,8 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       name: "Rota Cervejeira",
       description: "Deguste as melhores cervejas artesanais produzidas em Pira.",
       icon: <ICONS.Beer size={24} />,
-      image: "https://images.unsplash.com/photo-1571506538622-d3cf4eec01ae?q=80&w=1000&auto=format&fit=crop",
       color: "bg-yellow-50 text-yellow-600",
+      bgGradient: "from-yellow-500 via-amber-500 to-orange-500",
       query: "Gastronomia"
     }
   ];
@@ -632,34 +632,29 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
               <Link
                 to={`/guia-turistico?categoria=${route.query}`}
                 key={route.id}
-                className="group relative h-64 md:h-80 rounded-[2rem] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 block isolate"
+                className="group relative h-64 md:h-80 rounded-[2rem] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 block"
               >
-                {/* Background Image with Zoom Effect */}
-                <div className="absolute inset-0">
-                  <img
-                    src={route.image}
-                    alt={route.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
-                </div>
+                {/* Background Gradient */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${route.bgGradient} group-hover:scale-105 transition-transform duration-500`} />
 
                 {/* Content */}
-                <div className="relative h-full flex flex-col justify-end p-6 z-10">
-                  <div className={`w-10 h-10 md:w-12 md:h-12 rounded-2xl ${route.color} backdrop-blur-md flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                <div className="relative h-full flex flex-col justify-between p-6 z-10">
+                  <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl ${route.color} flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300`}>
                     {route.icon}
                   </div>
 
-                  <h3 className="text-white text-lg md:text-2xl font-black leading-tight mb-2 group-hover:text-brand-orange transition-colors">
-                    {route.name}
-                  </h3>
+                  <div>
+                    <h3 className="text-white text-lg md:text-2xl font-black leading-tight mb-2 group-hover:text-white/90 transition-colors">
+                      {route.name}
+                    </h3>
 
-                  <p className="text-white/70 text-xs md:text-sm font-medium line-clamp-2 md:line-clamp-3 mb-4 group-hover:text-white/90 transition-colors">
-                    {route.description}
-                  </p>
+                    <p className="text-white/80 text-xs md:text-sm font-medium line-clamp-2 md:line-clamp-3 mb-4 group-hover:text-white transition-colors">
+                      {route.description}
+                    </p>
 
-                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-brand-teal group-hover:text-white transition-colors mt-auto">
-                    Explorar Rota <ICONS.ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/90 group-hover:text-white transition-colors">
+                      Explorar Rota <ICONS.ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                    </div>
                   </div>
                 </div>
               </Link>
