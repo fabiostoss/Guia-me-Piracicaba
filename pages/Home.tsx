@@ -239,6 +239,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       icon: <ICONS.Coffee size={24} />,
       color: "bg-orange-50 text-orange-500",
       bgGradient: "from-orange-400 via-orange-500 to-orange-600",
+      imageUrl: "https://piracicaba.sp.gov.br/wp-content/uploads/2025/11/Festa-do-Frango-de-Piracicaba-chega-a-sua-9a-edicao-neste-fim-de-semana-1024x683.jpg",
       query: "Gastronomia"
     },
     {
@@ -248,6 +249,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       icon: <ICONS.Landmark size={24} />,
       color: "bg-amber-50 text-amber-600",
       bgGradient: "from-amber-500 via-amber-600 to-amber-700",
+      imageUrl: "https://www.miranteppp.com.br/wp-content/uploads/2022/05/A-Mirante-sempre-buscou-minimizar-os-impactos-ambientais-decorrentes-das-obras-realizadas-no-processo-de-universalizacao-como-no-Engenho-Central.jpg",
       query: "História"
     },
     {
@@ -257,6 +259,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       icon: <ICONS.Mountain size={24} />,
       color: "bg-emerald-50 text-emerald-600",
       bgGradient: "from-emerald-400 via-emerald-500 to-teal-600",
+      imageUrl: "https://s2-g1.glbimg.com/zrj8YJd77J4OJAIVtYyG5OepAwc=/0x0:4864x3222/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2019/O/z/jhzyAMRAy4ktVi9n7GLw/3-parque-de-lazer-da-rua-do-porto-de-piracicaba-foto-de-helder-prado.jpg",
       query: "Lazer"
     },
     {
@@ -266,6 +269,7 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
       icon: <ICONS.Beer size={24} />,
       color: "bg-yellow-50 text-yellow-600",
       bgGradient: "from-yellow-500 via-amber-500 to-orange-500",
+      imageUrl: "https://cdn.comerciariossp.com.br/upload/img1-Cervejas-artesanais-brasileiras-obtem-re-16268.jpg",
       query: "Gastronomia"
     }
   ];
@@ -704,17 +708,25 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
                 key={route.id}
                 className="group relative h-64 md:h-80 rounded-[2rem] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 block"
               >
-                {/* Background Gradient */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${route.bgGradient} group-hover:scale-105 transition-transform duration-500`} />
+                {/* Background Image with Zoom */}
+                <div className="absolute inset-0 z-0">
+                  <img
+                    src={route.imageUrl}
+                    alt={route.name}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  {/* Glassmorphism Overlay */}
+                  <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20 group-hover:via-black/50 transition-colors duration-500`} />
+                </div>
 
                 {/* Content */}
                 <div className="relative h-full flex flex-col justify-between p-6 z-10">
-                  <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl ${route.color} flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300`}>
+                  <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300`}>
                     {route.icon}
                   </div>
 
                   <div>
-                    <h3 className="text-white text-lg md:text-2xl font-black leading-tight mb-2 group-hover:text-white/90 transition-colors">
+                    <h3 className="text-white text-lg md:text-2xl font-black leading-tight mb-2 group-hover:text-brand-orange transition-colors">
                       {route.name}
                     </h3>
 
@@ -722,8 +734,8 @@ const Home: React.FC<HomeProps> = ({ businesses, checkAuth }) => {
                       {route.description}
                     </p>
 
-                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/90 group-hover:text-white transition-colors">
-                      Explorar Rota <ICONS.ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-brand-orange group-hover:translate-x-2 transition-transform">
+                      Explorar Rota <ICONS.ArrowRight size={14} />
                     </div>
                   </div>
                 </div>

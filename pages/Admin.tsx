@@ -20,11 +20,14 @@ interface AdminProps {
   onAdd: (biz: Business) => void;
   onUpdate: (biz: Business) => void;
   onDelete: (id: string) => void;
+  onBulkUpdate: (ids: string[], changes: Partial<Business>) => void;
+  onBulkDelete: (ids: string[]) => void;
+  onMassExtraction: (category: CategoryType, updateProgress: (msg: string) => void) => Promise<void>;
 }
 
 const DAYS_NAME = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
-const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, onDelete }) => {
+const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, onDelete, onBulkUpdate, onBulkDelete, onMassExtraction }) => {
   const navigate = useNavigate();
   const { showNotification, showConfirm } = useUI();
   const [adminView, setAdminView] = useState<'dashboard' | 'management' | 'customers' | 'approvals'>('dashboard');
@@ -35,6 +38,9 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
   const [draftChanges, setDraftChanges] = useState<Record<string, Partial<Business>>>({});
   const [isSaving, setIsSaving] = useState(false);
   const [isGeocoding, setIsGeocoding] = useState(false);
+  const [isExtracting, setIsExtracting] = useState(false);
+  const [extractionMsg, setExtractionMsg] = useState('');
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const logoInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
@@ -590,37 +596,156 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
         {adminView === 'management' && (
           <div className="space-y-6 animate-in fade-in duration-500">
             <div className="flex flex-col md:flex-row gap-4 mb-8">
-              <input
-                placeholder="Pesquisar loja..."
-                className="flex-grow px-6 py-4 rounded-2xl border border-slate-200 focus:border-brand-teal outline-none font-bold"
-                value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
-              />
-              <div className="flex bg-slate-100 p-1.5 rounded-2xl">
-                <button onClick={() => setActiveTab('all')} className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest ${activeTab === 'all' ? 'bg-white text-brand-teal shadow-sm' : 'text-slate-400'}`}>Todos</button>
-                <button onClick={() => setActiveTab('active')} className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest ${activeTab === 'active' ? 'bg-white text-brand-teal shadow-sm' : 'text-slate-400'}`}>No Ar</button>
-                <button onClick={() => setActiveTab('inactive')} className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest ${activeTab === 'inactive' ? 'bg-white text-brand-teal shadow-sm' : 'text-slate-400'}`}>Pausados</button>
+              <div className="flex-grow flex items-center relative">
+                <ICONS.Search className="absolute left-6 text-slate-400" size={18} />
+                <input
+                  placeholder="Pesquisar loja..."
+                  className="w-full pl-14 pr-6 py-4 rounded-2xl border border-slate-200 focus:border-brand-teal outline-none font-bold"
+                  value={searchTerm}
+                  onChange={e => setSearchTerm(e.target.value)}
+                />
               </div>
-              {Object.keys(draftChanges).length > 0 && (
-                <button
-                  onClick={saveAllChanges}
-                  disabled={isSaving}
-                  className="flex-grow md:flex-initial bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-emerald-500/20 transition-all flex items-center justify-center gap-3 animate-bounce-subtle"
+
+              <div className="flex gap-2">
+                <select
+                  className="px-6 py-4 rounded-2xl border border-slate-200 bg-white font-bold text-slate-700 outline-none focus:border-brand-teal cursor-pointer"
+                  onChange={async (e) => {
+                    const cat = e.target.value as CategoryType;
+                    if (!cat) return;
+
+                    setIsExtracting(true);
+                    setExtractionMsg('Iniciando extração mágica...');
+                    await onMassExtraction(cat, setExtractionMsg);
+                    setTimeout(() => {
+                      setIsExtracting(false);
+                      setExtractionMsg('');
+                    }, 5000);
+                  }}
+                  disabled={isExtracting}
                 >
-                  {isSaving ? (
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  ) : (
-                    <ICONS.Check size={16} />
-                  )}
-                  Salvar Alterações ({Object.keys(draftChanges).length})
+                  <option value="">✨ IA: Extrair Leads...</option>
+                  {Object.values(CategoryType).map(cat => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+
+                <button
+                  onClick={() => {
+                    setEditingBiz(null);
+                    setIsModalOpen(true);
+                  }}
+                  className="bg-brand-teal text-white px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest shadow-lg shadow-brand-teal/20 hover:scale-[1.02] transition-transform active:scale-[0.98] flex items-center gap-2 whitespace-nowrap"
+                >
+                  <ICONS.Plus size={18} /> Nova Loja
                 </button>
-              )}
+              </div>
             </div>
+
+            {isExtracting && (
+              <div className="bg-brand-teal-deep text-white p-6 rounded-3xl shadow-xl animate-pulse flex items-center gap-4 mb-8">
+                <div className="w-12 h-12 rounded-full border-4 border-white/20 border-t-white animate-spin"></div>
+                <div>
+                  <h5 className="font-black uppercase tracking-widest text-[10px] opacity-70">Agente de IA em Ação</h5>
+                  <p className="text-sm font-bold">{extractionMsg}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Bulk Actions Bar */}
+            {selectedIds.length > 0 && (
+              <div className="bg-brand-teal-deep text-white p-4 md:p-6 rounded-[2rem] shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4 animate-in slide-in-from-top-4 duration-300 mb-6 sticky top-4 z-40 border border-white/10 backdrop-blur-md bg-brand-teal-deep/90">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20">
+                    <span className="text-xl font-black">{selectedIds.length}</span>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-black uppercase tracking-widest">Itens Selecionados</h4>
+                    <p className="text-[9px] font-bold text-white/50 uppercase tracking-widest">Aplique ações em massa para os itens marcados</p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap items-center justify-center gap-2">
+                  <button
+                    onClick={() => {
+                      onBulkUpdate(selectedIds, { isSponsor: true });
+                      setSelectedIds([]);
+                    }}
+                    className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-brand-orange text-white border border-white/10 transition-all text-[9px] font-black uppercase tracking-widest flex items-center gap-2"
+                  >
+                    <ICONS.Star size={14} /> Patrocinador
+                  </button>
+                  <button
+                    onClick={() => {
+                      onBulkUpdate(selectedIds, { isSponsor: false });
+                      setSelectedIds([]);
+                    }}
+                    className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-slate-700 text-white border border-white/10 transition-all text-[9px] font-black uppercase tracking-widest flex items-center gap-2"
+                  >
+                    <ICONS.X size={14} /> Remover Patrocínio
+                  </button>
+                  <div className="w-px h-8 bg-white/10 mx-1 hidden md:block"></div>
+                  <button
+                    onClick={() => {
+                      onBulkUpdate(selectedIds, { isActive: true });
+                      setSelectedIds([]);
+                    }}
+                    className="px-4 py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500 text-white border border-emerald-500/30 transition-all text-[9px] font-black uppercase tracking-widest flex items-center gap-2"
+                  >
+                    <ICONS.CheckCircle size={14} /> Colocar No Ar
+                  </button>
+                  <button
+                    onClick={() => {
+                      onBulkUpdate(selectedIds, { isActive: false });
+                      setSelectedIds([]);
+                    }}
+                    className="px-4 py-2.5 rounded-xl bg-brand-orange/20 hover:bg-brand-orange text-white border border-brand-orange/30 transition-all text-[9px] font-black uppercase tracking-widest flex items-center gap-2"
+                  >
+                    <ICONS.Clock size={14} /> Pausar
+                  </button>
+                  <button
+                    onClick={() => {
+                      showConfirm({
+                        title: 'Excluir em Massa',
+                        message: `Tem certeza que deseja excluir ${selectedIds.length} comércios selecionados? Esta ação é irreversível.`,
+                        type: 'danger',
+                        confirmLabel: 'Excluir Selecionados',
+                        onConfirm: () => {
+                          onBulkDelete(selectedIds);
+                          setSelectedIds([]);
+                        }
+                      });
+                    }}
+                    className="px-4 py-2.5 rounded-xl bg-red-500/20 hover:bg-red-500 text-white border border-red-500/30 transition-all text-[9px] font-black uppercase tracking-widest flex items-center gap-2"
+                  >
+                    <ICONS.Trash2 size={14} /> Excluir
+                  </button>
+                  <button
+                    onClick={() => setSelectedIds([])}
+                    className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-all text-[9px] font-black uppercase tracking-widest"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            )}
 
             <div className="bg-white rounded-[2.5rem] border border-slate-200 shadow-xl shadow-slate-200/50 overflow-hidden overflow-x-auto">
               <table className="w-full text-left">
                 <thead className="bg-slate-50 border-b border-slate-100">
                   <tr>
+                    <th className="px-6 py-6 text-center">
+                      <input
+                        type="checkbox"
+                        className="w-4 h-4 rounded border-slate-300 text-brand-teal focus:ring-brand-teal"
+                        checked={selectedIds.length === filteredBusinesses.length && filteredBusinesses.length > 0}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedIds(filteredBusinesses.map(b => String(b.id)));
+                          } else {
+                            setSelectedIds([]);
+                          }
+                        }}
+                      />
+                    </th>
                     <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Identificação da Loja</th>
                     <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Categoria / Bairro</th>
 
@@ -643,7 +768,21 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                     const currentIsSponsor = draft.isSponsor !== undefined ? draft.isSponsor : biz.isSponsor;
 
                     return (
-                      <tr key={biz.id} className="hover:bg-slate-50/50 transition-colors group">
+                      <tr key={biz.id} className={`hover:bg-slate-50/50 transition-colors group ${selectedIds.includes(String(biz.id)) ? 'bg-brand-teal/5' : ''}`}>
+                        <td className="px-6 py-6 text-center">
+                          <input
+                            type="checkbox"
+                            className="w-4 h-4 rounded border-slate-300 text-brand-teal focus:ring-brand-teal"
+                            checked={selectedIds.includes(String(biz.id))}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedIds(prev => [...prev, String(biz.id)]);
+                              } else {
+                                setSelectedIds(prev => prev.filter(id => id !== String(biz.id)));
+                              }
+                            }}
+                          />
+                        </td>
                         <td className="px-8 py-6">
                           <div className="flex items-center gap-4">
                             <img src={biz.logoUrl} className="w-10 h-10 rounded-xl object-cover shadow-sm shrink-0" />

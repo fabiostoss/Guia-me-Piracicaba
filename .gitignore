@@ -25,3 +25,7 @@ dist-ssr
 
 .vercel
 .env*.local
+*.txt
+*.signal
+import_progress.json
+public_import/

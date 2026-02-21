@@ -5,17 +5,33 @@ import { Business, Customer } from '../types';
 // ==================== BUSINESSES ====================
 
 export const getAllBusinesses = async (): Promise<Business[]> => {
-    const { data, error } = await supabase
-        .from('businesses')
-        .select('*')
-        .order('created_at', { ascending: false });
+    let allData: any[] = [];
+    let from = 0;
+    const step = 1000;
+    let hasMore = true;
 
-    if (error) {
-        console.error('Error fetching businesses:', error);
-        return [];
+    while (hasMore) {
+        const { data, error } = await supabase
+            .from('businesses')
+            .select('*')
+            .range(from, from + step - 1)
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('Error fetching businesses:', error);
+            hasMore = false;
+        } else if (data && data.length > 0) {
+            allData = [...allData, ...data];
+            from += step;
+            if (data.length < step) {
+                hasMore = false;
+            }
+        } else {
+            hasMore = false;
+        }
     }
 
-    return data.map(transformBusinessFromDB);
+    return allData.map(transformBusinessFromDB);
 };
 
 export const getBusinessById = async (id: string): Promise<Business | null> => {
@@ -84,6 +100,44 @@ export const deleteBusiness = async (id: string): Promise<boolean> => {
     return true;
 };
 
+export const bulkDeleteBusinesses = async (ids: string[]): Promise<boolean> => {
+    const { error } = await supabase
+        .from('businesses')
+        .delete()
+        .in('id', ids);
+
+    if (error) {
+        console.error('Error bulk deleting businesses:', error);
+        return false;
+    }
+
+    return true;
+};
+
+export const bulkUpdateBusinesses = async (ids: string[], changes: Partial<Business>): Promise<boolean> => {
+    // Note: We use a simplified mapping since transformBusinessToDB requires a full Business object
+    const updateData: any = {};
+    if (changes.name !== undefined) updateData.name = changes.name;
+    if (changes.category !== undefined) updateData.category = changes.category;
+    if (changes.views !== undefined) updateData.views = changes.views;
+    if (changes.isSponsor !== undefined) updateData.is_sponsor = changes.isSponsor;
+    if (changes.isActive !== undefined) updateData.is_active = changes.isActive;
+    if (changes.isOfficial !== undefined) updateData.is_official = changes.isOfficial;
+    if (changes.neighborhood !== undefined) updateData.neighborhood = changes.neighborhood;
+
+    const { error } = await supabase
+        .from('businesses')
+        .update(updateData)
+        .in('id', ids);
+
+    if (error) {
+        console.error('Error bulk updating businesses:', error);
+        return false;
+    }
+
+    return true;
+};
+
 export const incrementBusinessViews = async (id: string): Promise<void> => {
     const { error } = await supabase.rpc('increment_views', { business_id: id });
 
@@ -106,17 +160,33 @@ export const incrementBusinessViews = async (id: string): Promise<void> => {
 // ==================== CUSTOMERS ====================
 
 export const getAllCustomers = async (): Promise<Customer[]> => {
-    const { data, error } = await supabase
-        .from('customers')
-        .select('*')
-        .order('created_at', { ascending: false });
+    let allData: any[] = [];
+    let from = 0;
+    const step = 1000;
+    let hasMore = true;
 
-    if (error) {
-        console.error('Error fetching customers:', error);
-        return [];
+    while (hasMore) {
+        const { data, error } = await supabase
+            .from('customers')
+            .select('*')
+            .range(from, from + step - 1)
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('Error fetching customers:', error);
+            hasMore = false;
+        } else if (data && data.length > 0) {
+            allData = [...allData, ...data];
+            from += step;
+            if (data.length < step) {
+                hasMore = false;
+            }
+        } else {
+            hasMore = false;
+        }
     }
 
-    return data.map(transformCustomerFromDB);
+    return allData.map(transformCustomerFromDB);
 };
 
 export const createCustomer = async (customer: Customer): Promise<Customer | null> => {

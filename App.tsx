@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { HashRouter as Router, Routes, Route, Link, useNavigate, useLocation, Navigate } from 'react-router-dom';
-import { Business, CategoryType, Customer } from './types';
+import { Business, CategoryType, Customer, DaySchedule, WeekSchedule } from './types';
 import { INITIAL_BUSINESSES } from './data/mockData';
 import { ICONS, CATEGORY_ICONS, WHATSAPP_ADMIN, PIRACICABA_NEIGHBORHOODS, INSTAGRAM_URL, APP_VERSION } from './constants';
 import NeighborhoodSelector from './components/NeighborhoodSelector';
@@ -20,8 +20,9 @@ import News from './pages/News';
 import SeedOfficial from './pages/SeedOfficial';
 import { Calendar, Clock as ClockIcon } from 'lucide-react';
 import * as db from './services/databaseService';
+import { geminiService } from './services/geminiService';
 import { UIProvider, useUI } from './components/CustomUI';
-import PromoBanner from './components/PromoBanner';
+
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -106,7 +107,7 @@ const CustomerRegistrationModal: React.FC<{
     if (!neighborhood) return showNotification('Por favor, selecione seu bairro.', 'warning');
 
     const newCustomer: Customer = {
-      id: crypto.randomUUID(),
+      id: Date.now().toString(36) + Math.random().toString(36).substring(2),
       name,
       phone,
       neighborhood,
@@ -290,6 +291,25 @@ const App: React.FC = () => {
     }
   };
 
+  const bulkUpdateBusinesses = useCallback(async (ids: string[], changes: Partial<Business>) => {
+    // Optimistic update
+    setBusinesses(prev => prev.map(b => ids.includes(String(b.id)) ? { ...b, ...changes } : b));
+
+    const success = await db.bulkUpdateBusinesses(ids, changes);
+    if (!success) {
+      // Revert or log error (simplified here: just reload data)
+      const data = await db.getAllBusinesses();
+      setBusinesses(data);
+    }
+  }, []);
+
+  const bulkDeleteBusinesses = useCallback(async (ids: string[]) => {
+    const success = await db.bulkDeleteBusinesses(ids);
+    if (success) {
+      setBusinesses(prev => prev.filter(b => !ids.includes(String(b.id))));
+    }
+  }, []);
+
   const handleRegisterCustomer = (customer: Customer) => {
     setCustomers(prev => [...prev, customer]);
     setCurrentCustomer(customer);
@@ -299,6 +319,81 @@ const App: React.FC = () => {
       setPendingAction(null);
     }
   };
+
+  const getDefaultSchedule = (): WeekSchedule => {
+    const schedule: WeekSchedule = {};
+    for (let i = 0; i < 7; i++) {
+      schedule[i] = { enabled: true, open: '08:00', close: '18:00' };
+    }
+    return schedule;
+  };
+
+  const handleMassExtraction = useCallback(async (category: CategoryType, updateProgress: (msg: string) => void) => {
+    const neighborhoods = [...PIRACICABA_NEIGHBORHOODS].slice(0, 10);
+    let totalAdded = 0;
+
+    for (const neighborhood of neighborhoods) {
+      updateProgress(`🔍 Buscando ${category} em ${neighborhood}...`);
+      try {
+        const leads = await geminiService.extractLeads(category, neighborhood);
+
+        if (leads && leads.length > 0) {
+          updateProgress(`✨ Encontrados ${leads.length} itens. Salvando...`);
+
+          for (const lead of leads) {
+            const exists = businesses.some(b => b.name.toLowerCase() === lead.name.toLowerCase());
+            if (exists) continue;
+
+            let domain = 'google.com';
+            try {
+              if (lead.website && lead.website.startsWith('http')) {
+                domain = new URL(lead.website).hostname;
+              }
+            } catch (e) {
+              console.warn('Invalid website URL:', lead.website);
+            }
+            const newBiz: Business = {
+              id: Date.now().toString(36) + Math.random().toString(36).substring(2),
+              code: lead.name.toLowerCase().replace(/\s+/g, '-').substring(0, 15),
+              name: lead.name,
+              username: lead.name.toLowerCase().replace(/\s+/g, ''),
+              description: `Auto-extraído via Gemini Grounding (${category})`,
+              category: category,
+              address: lead.address,
+              street: lead.address.split(',')[0] || lead.address,
+              number: '',
+              neighborhood: lead.neighborhood || neighborhood,
+              cep: '',
+              phone: lead.phone || 'Não informado',
+              imageUrl: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=800',
+              logoUrl: `https://www.google.com/s2/favicons?sz=128&domain=${domain}`,
+              isActive: true,
+              isOfficial: false,
+              isSponsor: false,
+              schedule: getDefaultSchedule(),
+              businessHours: 'Não informado',
+              offersDelivery: true,
+              offersPickup: true,
+              createdAt: Date.now(),
+              views: 0
+            };
+
+            const success = await db.createBusiness(newBiz);
+            if (success) {
+              setBusinesses(prev => [newBiz, ...prev]);
+              totalAdded++;
+            }
+          }
+        }
+      } catch (err) {
+        console.error(`Erro extraindo em ${neighborhood}:`, err);
+      }
+    }
+
+    updateProgress(`✅ Finalizado! ${totalAdded} novas lojas adicionadas ao Guia-me.`);
+  }, [businesses]);
+
+
 
   const checkCustomerAuth = (onAuth: () => void) => {
     if (currentCustomer) {
@@ -414,7 +509,6 @@ const App: React.FC = () => {
             </div>
           </nav>
 
-          <PromoBanner />
 
           <main className="flex-grow">
             <Routes>
@@ -440,6 +534,9 @@ const App: React.FC = () => {
                       onAdd={addBusiness}
                       onUpdate={updateBusiness}
                       onDelete={deleteBusiness}
+                      onBulkUpdate={bulkUpdateBusinesses}
+                      onBulkDelete={bulkDeleteBusinesses}
+                      onMassExtraction={handleMassExtraction}
                     />
                   </ProtectedAdminRoute>
                 }

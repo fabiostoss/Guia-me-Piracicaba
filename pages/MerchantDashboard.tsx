@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Business, CategoryType, WeekSchedule } from '../types';
 import { ICONS, PIRACICABA_NEIGHBORHOODS, BUSINESS_SPECIALTIES } from '../constants';
 import NeighborhoodSelector from '../components/NeighborhoodSelector';
-import PromoBanner from '../components/PromoBanner';
+
 import { getDefaultSchedule, formatScheduleSummary } from '../utils/businessUtils';
 import * as db from '../services/databaseService';
 import { useUI } from '../components/CustomUI';
@@ -548,7 +548,7 @@ const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ businesses, onUpd
           <h4 className="text-[10px] font-black text-brand-teal uppercase tracking-[0.3em]">Potencialize seu Comércio</h4>
           <p className="text-slate-400 text-[11px] font-bold mt-2">Veja as oportunidades exclusivas do Guia-me</p>
         </div>
-        <PromoBanner />
+
       </div>
     </div>
   );
