@@ -29,3 +29,6 @@ dist-ssr
 *.signal
 import_progress.json
 public_import/
+
+.vercel
+.env*.local

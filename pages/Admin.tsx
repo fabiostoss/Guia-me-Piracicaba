@@ -41,6 +41,8 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
   const [isExtracting, setIsExtracting] = useState(false);
   const [extractionMsg, setExtractionMsg] = useState('');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
 
   const logoInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
@@ -388,6 +390,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
   };
 
   const filteredBusinesses = useMemo(() => {
+    setCurrentPage(1); // Reset page on filter change
     return businesses.filter(b => {
       const matchesSearch = b.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (b.code && b.code.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -398,6 +401,13 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
       return matchesSearch && matchesTab;
     });
   }, [businesses, searchTerm, activeTab]);
+
+  const paginatedBusinesses = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredBusinesses.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredBusinesses, currentPage]);
+
+  const totalPages = Math.ceil(filteredBusinesses.length / itemsPerPage);
 
   return (
     <div className="min-h-screen bg-slate-100/80 -mt-20 pt-20">
@@ -756,7 +766,7 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-50">
-                  {filteredBusinesses.map(biz => {
+                  {paginatedBusinesses.map(biz => {
                     const draft = draftChanges[biz.id] || {};
                     const isCurrentActive = draft.isActive !== undefined ? draft.isActive : biz.isActive;
                     const currentViews = draft.views !== undefined ? draft.views : (biz.views || 0);
@@ -890,6 +900,69 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                 </tbody>
               </table>
             </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex flex-col md:flex-row items-center justify-between gap-6 mt-8 px-6">
+                <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                  Mostrando <span className="text-brand-teal">{paginatedBusinesses.length}</span> de <span className="text-brand-teal-deep">{filteredBusinesses.length}</span> Lojistas
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                    className={`flex items-center gap-2 px-5 py-3 rounded-xl border transition-all ${currentPage === 1
+                        ? 'bg-slate-50 border-slate-100 text-slate-300 cursor-not-allowed'
+                        : 'bg-white border-slate-200 text-slate-600 hover:border-brand-teal hover:text-brand-teal shadow-sm'
+                      }`}
+                  >
+                    <ICONS.ChevronLeft size={14} />
+                    <span className="text-[10px] font-black uppercase tracking-widest">Anterior</span>
+                  </button>
+
+                  <div className="flex items-center gap-2">
+                    {[...Array(Math.min(5, totalPages))].map((_, i) => {
+                      let pageNum;
+                      if (totalPages <= 5) {
+                        pageNum = i + 1;
+                      } else if (currentPage <= 3) {
+                        pageNum = i + 1;
+                      } else if (currentPage >= totalPages - 2) {
+                        pageNum = totalPages - 4 + i;
+                      } else {
+                        pageNum = currentPage - 2 + i;
+                      }
+
+                      return (
+                        <button
+                          key={pageNum}
+                          onClick={() => setCurrentPage(pageNum)}
+                          className={`w-10 h-10 rounded-xl text-[10px] font-black transition-all ${currentPage === pageNum
+                              ? 'bg-brand-teal text-white shadow-lg shadow-brand-teal/20'
+                              : 'bg-white border border-slate-100 text-slate-400 hover:border-brand-teal/30'
+                            }`}
+                        >
+                          {pageNum}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                    className={`flex items-center gap-2 px-5 py-3 rounded-xl border transition-all ${currentPage === totalPages
+                        ? 'bg-slate-50 border-slate-100 text-slate-300 cursor-not-allowed'
+                        : 'bg-white border-slate-200 text-slate-600 hover:border-brand-teal hover:text-brand-teal shadow-sm'
+                      }`}
+                  >
+                    <span className="text-[10px] font-black uppercase tracking-widest">Próxima</span>
+                    <ICONS.ChevronRight size={14} />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
