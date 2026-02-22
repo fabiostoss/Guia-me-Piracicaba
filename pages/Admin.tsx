@@ -44,6 +44,12 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
 
+  // Novos estados para filtros de coluna
+  const [filterCategory, setFilterCategory] = useState<string>('all');
+  const [filterNeighborhood, setFilterNeighborhood] = useState<string>('all');
+  const [filterSponsor, setFilterSponsor] = useState<string>('all');
+  const [sortViews, setSortViews] = useState<'desc' | 'asc' | 'none'>('none');
+
   const logoInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
 
@@ -391,16 +397,33 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
 
   const filteredBusinesses = useMemo(() => {
     setCurrentPage(1); // Reset page on filter change
-    return businesses.filter(b => {
+    let result = businesses.filter(b => {
       const matchesSearch = b.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (b.code && b.code.toLowerCase().includes(searchTerm.toLowerCase()));
+
       const matchesTab =
         activeTab === 'all' ? true :
           activeTab === 'active' ? b.isActive === true :
             b.isActive === false;
-      return matchesSearch && matchesTab;
+
+      const matchesCategory = filterCategory === 'all' ? true : b.category === filterCategory;
+      const matchesNeighborhood = filterNeighborhood === 'all' ? true : b.neighborhood === filterNeighborhood;
+      const matchesSponsor = filterSponsor === 'all' ? true :
+        (filterSponsor === 'sponsor' ? b.isSponsor === true : b.isSponsor === false);
+
+      return matchesSearch && matchesTab && matchesCategory && matchesNeighborhood && matchesSponsor;
     });
-  }, [businesses, searchTerm, activeTab]);
+
+    if (sortViews !== 'none') {
+      result = [...result].sort((a, b) => {
+        const vA = a.views || 0;
+        const vB = b.views || 0;
+        return sortViews === 'desc' ? vB - vA : vA - vB;
+      });
+    }
+
+    return result;
+  }, [businesses, searchTerm, activeTab, filterCategory, filterNeighborhood, filterSponsor, sortViews]);
 
   const paginatedBusinesses = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -757,10 +780,59 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                       />
                     </th>
                     <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Identificação da Loja</th>
-                    <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Categoria / Bairro</th>
+                    <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                      <div className="flex flex-col gap-2">
+                        <span>Categoria / Bairro</span>
+                        <div className="flex gap-2">
+                          <select
+                            className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-[8px] font-black text-brand-teal lowercase outline-none focus:border-brand-teal transition-all max-w-[100px]"
+                            value={filterCategory}
+                            onChange={(e) => setFilterCategory(e.target.value)}
+                          >
+                            <option value="all">Ver Todas Categorias</option>
+                            {Object.values(CategoryType).sort().map(cat => (
+                              <option key={cat} value={cat}>{cat}</option>
+                            ))}
+                          </select>
+                          <select
+                            className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-[8px] font-black text-brand-orange lowercase outline-none focus:border-brand-orange transition-all max-w-[100px]"
+                            value={filterNeighborhood}
+                            onChange={(e) => setFilterNeighborhood(e.target.value)}
+                          >
+                            <option value="all">Ver Todos Bairros</option>
+                            {PIRACICABA_NEIGHBORHOODS.sort().map(neigh => (
+                              <option key={neigh} value={neigh}>{neigh}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                    </th>
 
-                    <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Acessos</th>
-                    <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Destaque</th>
+                    <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">
+                      <div className="flex flex-col items-center gap-2">
+                        <span>Acessos</span>
+                        <button
+                          onClick={() => setSortViews(prev => prev === 'desc' ? 'asc' : prev === 'asc' ? 'none' : 'desc')}
+                          className={`p-1 rounded bg-slate-100 hover:bg-slate-200 transition-all ${sortViews !== 'none' ? 'text-brand-teal' : 'text-slate-400'}`}
+                        >
+                          {sortViews === 'desc' ? <ICONS.ArrowDown size={12} /> : sortViews === 'asc' ? <ICONS.ArrowUp size={12} /> : <ICONS.Filter size={12} />}
+                        </button>
+                      </div>
+                    </th>
+                    <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">
+                      <div className="flex flex-col items-center gap-2">
+                        <span>Destaque</span>
+                        <select
+                          className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-[8px] font-black text-brand-orange lowercase outline-none focus:border-brand-orange transition-all"
+                          value={filterSponsor}
+                          onChange={(e) => setFilterSponsor(e.target.value)}
+                        >
+                          <option value="all">Todos</option>
+                          <option value="sponsor">Sim</option>
+                          <option value="no-sponsor">Não</option>
+                        </select>
+                      </div>
+                    </th>
                     <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
                     <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Ação</th>
                   </tr>
@@ -913,8 +985,8 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}
                     className={`flex items-center gap-2 px-5 py-3 rounded-xl border transition-all ${currentPage === 1
-                        ? 'bg-slate-50 border-slate-100 text-slate-300 cursor-not-allowed'
-                        : 'bg-white border-slate-200 text-slate-600 hover:border-brand-teal hover:text-brand-teal shadow-sm'
+                      ? 'bg-slate-50 border-slate-100 text-slate-300 cursor-not-allowed'
+                      : 'bg-white border-slate-200 text-slate-600 hover:border-brand-teal hover:text-brand-teal shadow-sm'
                       }`}
                   >
                     <ICONS.ChevronLeft size={14} />
@@ -939,8 +1011,8 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                           key={pageNum}
                           onClick={() => setCurrentPage(pageNum)}
                           className={`w-10 h-10 rounded-xl text-[10px] font-black transition-all ${currentPage === pageNum
-                              ? 'bg-brand-teal text-white shadow-lg shadow-brand-teal/20'
-                              : 'bg-white border border-slate-100 text-slate-400 hover:border-brand-teal/30'
+                            ? 'bg-brand-teal text-white shadow-lg shadow-brand-teal/20'
+                            : 'bg-white border border-slate-100 text-slate-400 hover:border-brand-teal/30'
                             }`}
                         >
                           {pageNum}
@@ -953,8 +1025,8 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                     onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                     disabled={currentPage === totalPages}
                     className={`flex items-center gap-2 px-5 py-3 rounded-xl border transition-all ${currentPage === totalPages
-                        ? 'bg-slate-50 border-slate-100 text-slate-300 cursor-not-allowed'
-                        : 'bg-white border-slate-200 text-slate-600 hover:border-brand-teal hover:text-brand-teal shadow-sm'
+                      ? 'bg-slate-50 border-slate-100 text-slate-300 cursor-not-allowed'
+                      : 'bg-white border-slate-200 text-slate-600 hover:border-brand-teal hover:text-brand-teal shadow-sm'
                       }`}
                   >
                     <span className="text-[10px] font-black uppercase tracking-widest">Próxima</span>
