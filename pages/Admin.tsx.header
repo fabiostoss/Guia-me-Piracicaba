@@ -1,0 +1,29 @@
+
+import React, { useState, useRef, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Business, CategoryType, Customer } from '../types';
+import { ICONS, PIRACICABA_NEIGHBORHOODS, BUSINESS_SPECIALTIES } from '../constants';
+import NeighborhoodSelector from '../components/NeighborhoodSelector';
+import { isBusinessOpen, getDefaultSchedule, formatScheduleSummary } from '../utils/businessUtils';
+import * as db from '../services/databaseService';
+import { useUI } from '../components/CustomUI';
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  Cell, PieChart, Pie, Legend, LineChart, Line
+} from 'recharts';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
+interface AdminProps {
+  businesses: Business[];
+  customers: Customer[];
+  onAdd: (biz: Business) => void;
+  onUpdate: (biz: Business) => void;
+  onDelete: (id: string) => void;
+  onBulkUpdate: (ids: string[], changes: Partial<Business>) => void;
+  onBulkDelete: (ids: string[]) => void;
+}
+
+const DAYS_NAME = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+
+const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, onDelete, onBulkUpdate, onBulkDelete }) => {

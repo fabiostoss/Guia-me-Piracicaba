@@ -20,7 +20,6 @@ import News from './pages/News';
 import SeedOfficial from './pages/SeedOfficial';
 import { Calendar, Clock as ClockIcon } from 'lucide-react';
 import * as db from './services/databaseService';
-import { geminiService } from './services/geminiService';
 import { UIProvider, useUI } from './components/CustomUI';
 
 
@@ -328,70 +327,6 @@ const App: React.FC = () => {
     return schedule;
   };
 
-  const handleMassExtraction = useCallback(async (category: CategoryType, updateProgress: (msg: string) => void) => {
-    const neighborhoods = [...PIRACICABA_NEIGHBORHOODS].slice(0, 10);
-    let totalAdded = 0;
-
-    for (const neighborhood of neighborhoods) {
-      updateProgress(`🔍 Buscando ${category} em ${neighborhood}...`);
-      try {
-        const leads = await geminiService.extractLeads(category, neighborhood);
-
-        if (leads && leads.length > 0) {
-          updateProgress(`✨ Encontrados ${leads.length} itens. Salvando...`);
-
-          for (const lead of leads) {
-            const exists = businesses.some(b => b.name.toLowerCase() === lead.name.toLowerCase());
-            if (exists) continue;
-
-            let domain = 'google.com';
-            try {
-              if (lead.website && lead.website.startsWith('http')) {
-                domain = new URL(lead.website).hostname;
-              }
-            } catch (e) {
-              console.warn('Invalid website URL:', lead.website);
-            }
-            const newBiz: Business = {
-              id: Date.now().toString(36) + Math.random().toString(36).substring(2),
-              code: lead.name.toLowerCase().replace(/\s+/g, '-').substring(0, 15),
-              name: lead.name,
-              username: lead.name.toLowerCase().replace(/\s+/g, ''),
-              description: `Auto-extraído via Gemini Grounding (${category})`,
-              category: category,
-              address: lead.address,
-              street: lead.address.split(',')[0] || lead.address,
-              number: '',
-              neighborhood: lead.neighborhood || neighborhood,
-              cep: '',
-              phone: lead.phone || 'Não informado',
-              imageUrl: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=800',
-              logoUrl: `https://www.google.com/s2/favicons?sz=128&domain=${domain}`,
-              isActive: true,
-              isOfficial: false,
-              isSponsor: false,
-              schedule: getDefaultSchedule(),
-              businessHours: 'Não informado',
-              offersDelivery: true,
-              offersPickup: true,
-              createdAt: Date.now(),
-              views: 0
-            };
-
-            const success = await db.createBusiness(newBiz);
-            if (success) {
-              setBusinesses(prev => [newBiz, ...prev]);
-              totalAdded++;
-            }
-          }
-        }
-      } catch (err) {
-        console.error(`Erro extraindo em ${neighborhood}:`, err);
-      }
-    }
-
-    updateProgress(`✅ Finalizado! ${totalAdded} novas lojas adicionadas ao Guia-me.`);
-  }, [businesses]);
 
 
 
@@ -536,7 +471,6 @@ const App: React.FC = () => {
                       onDelete={deleteBusiness}
                       onBulkUpdate={bulkUpdateBusinesses}
                       onBulkDelete={bulkDeleteBusinesses}
-                      onMassExtraction={handleMassExtraction}
                     />
                   </ProtectedAdminRoute>
                 }

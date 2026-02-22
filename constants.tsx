@@ -66,7 +66,9 @@ import {
   Beer,
   Landmark,
   Mountain,
-  Mail
+  Mail,
+  ArrowUp,
+  ArrowDown
 } from 'lucide-react';
 import { CategoryType } from './types';
 
@@ -131,7 +133,9 @@ export const ICONS = {
   Coffee,
   Beer,
   Landmark,
-  Mountain
+  Mountain,
+  ArrowUp,
+  ArrowDown
 };
 
 export const CATEGORY_ICONS: Record<CategoryType, React.ReactNode> = {

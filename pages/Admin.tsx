@@ -22,12 +22,11 @@ interface AdminProps {
   onDelete: (id: string) => void;
   onBulkUpdate: (ids: string[], changes: Partial<Business>) => void;
   onBulkDelete: (ids: string[]) => void;
-  onMassExtraction: (category: CategoryType, updateProgress: (msg: string) => void) => Promise<void>;
 }
 
 const DAYS_NAME = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
-const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, onDelete, onBulkUpdate, onBulkDelete, onMassExtraction }) => {
+const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, onDelete, onBulkUpdate, onBulkDelete }) => {
   const navigate = useNavigate();
   const { showNotification, showConfirm } = useUI();
   const [adminView, setAdminView] = useState<'dashboard' | 'management' | 'customers' | 'approvals'>('dashboard');
@@ -35,12 +34,8 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
   const [editingBiz, setEditingBiz] = useState<Business | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState<'all' | 'active' | 'inactive'>('all');
-  const [draftChanges, setDraftChanges] = useState<Record<string, Partial<Business>>>({});
-  const [isSaving, setIsSaving] = useState(false);
-  const [isGeocoding, setIsGeocoding] = useState(false);
-  const [isExtracting, setIsExtracting] = useState(false);
-  const [extractionMsg, setExtractionMsg] = useState('');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isGeocoding, setIsGeocoding] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
 
@@ -360,31 +355,6 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
     await onUpdate(updatedBiz);
   };
 
-  const saveAllChanges = async () => {
-    setIsSaving(true);
-    try {
-      const entries = Object.entries(draftChanges);
-      console.log(`Iniciando sincronização de ${entries.length} alterações...`);
-
-      // Executa as atualizações em sequência para garantir a integridade
-      for (const [id, changes] of entries) {
-        const original = businesses.find(b => String(b.id) === String(id));
-        if (original) {
-          // Garante que estamos enviando o objeto completo para o onUpdate
-          const updatedBusiness = { ...original, ...changes } as Business;
-          await onUpdate(updatedBusiness);
-        }
-      }
-
-      setDraftChanges({});
-      showNotification('Sincronização concluída! Todas as alterações estão salvas no servidor.', 'success');
-    } catch (error) {
-      console.error('Erro crítico na sincronização:', error);
-      showNotification('Erro ao sincronizar. Algumas alterações podem não ter sido salvas.', 'error');
-    } finally {
-      setIsSaving(false);
-    }
-  };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, field: 'imageUrl' | 'logoUrl') => {
     const file = e.target.files?.[0];
@@ -640,28 +610,6 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
               </div>
 
               <div className="flex gap-2">
-                <select
-                  className="px-6 py-4 rounded-2xl border border-slate-200 bg-white font-bold text-slate-700 outline-none focus:border-brand-teal cursor-pointer"
-                  onChange={async (e) => {
-                    const cat = e.target.value as CategoryType;
-                    if (!cat) return;
-
-                    setIsExtracting(true);
-                    setExtractionMsg('Iniciando extração mágica...');
-                    await onMassExtraction(cat, setExtractionMsg);
-                    setTimeout(() => {
-                      setIsExtracting(false);
-                      setExtractionMsg('');
-                    }, 5000);
-                  }}
-                  disabled={isExtracting}
-                >
-                  <option value="">✨ IA: Extrair Leads...</option>
-                  {Object.values(CategoryType).map(cat => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
-                </select>
-
                 <button
                   onClick={() => {
                     setEditingBiz(null);
@@ -673,16 +621,6 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                 </button>
               </div>
             </div>
-
-            {isExtracting && (
-              <div className="bg-brand-teal-deep text-white p-6 rounded-3xl shadow-xl animate-pulse flex items-center gap-4 mb-8">
-                <div className="w-12 h-12 rounded-full border-4 border-white/20 border-t-white animate-spin"></div>
-                <div>
-                  <h5 className="font-black uppercase tracking-widest text-[10px] opacity-70">Agente de IA em Ação</h5>
-                  <p className="text-sm font-bold">{extractionMsg}</p>
-                </div>
-              </div>
-            )}
 
             {/* Bulk Actions Bar */}
             {selectedIds.length > 0 && (
@@ -839,16 +777,6 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                 </thead>
                 <tbody className="divide-y divide-slate-50">
                   {paginatedBusinesses.map(biz => {
-                    const draft = draftChanges[biz.id] || {};
-                    const isCurrentActive = draft.isActive !== undefined ? draft.isActive : biz.isActive;
-                    const currentViews = draft.views !== undefined ? draft.views : (biz.views || 0);
-                    const currentName = draft.name !== undefined ? draft.name : biz.name;
-                    const currentCategory = (draft.category !== undefined ? draft.category : biz.category) as CategoryType;
-                    const currentNeighborhood = draft.neighborhood !== undefined ? draft.neighborhood : biz.neighborhood;
-                    const currentPhone = draft.phone !== undefined ? draft.phone : biz.phone;
-                    const currentIsOfficial = draft.isOfficial !== undefined ? draft.isOfficial : biz.isOfficial;
-                    const currentIsSponsor = draft.isSponsor !== undefined ? draft.isSponsor : biz.isSponsor;
-
                     return (
                       <tr key={biz.id} className={`hover:bg-slate-50/50 transition-colors group ${selectedIds.includes(String(biz.id)) ? 'bg-brand-teal/5' : ''}`}>
                         <td className="px-6 py-6 text-center">
@@ -871,16 +799,20 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                             <div className="flex flex-col gap-1 min-w-0 flex-grow group/field">
                               <div className="flex items-center gap-2">
                                 <input
-                                  className={`font-black text-sm outline-none bg-transparent border-b border-transparent focus:border-brand-teal transition-all flex-grow ${draft.name !== undefined ? 'text-brand-teal' : 'text-brand-teal-deep'}`}
-                                  value={currentName}
-                                  onChange={e => setDraftChanges(prev => ({ ...prev, [biz.id]: { ...prev[biz.id], name: e.target.value } }))}
+                                  className="font-black text-sm outline-none bg-transparent border-b border-transparent focus:border-brand-teal transition-all flex-grow text-brand-teal-deep"
+                                  defaultValue={biz.name}
+                                  onBlur={e => {
+                                    if (e.target.value !== biz.name) {
+                                      onUpdate({ ...biz, name: e.target.value });
+                                    }
+                                  }}
                                 />
                                 <ICONS.Edit size={10} className="text-slate-200 opacity-0 group-hover/field:opacity-100 transition-opacity" />
                               </div>
                               <div className="flex items-center gap-2">
                                 <span className="text-[8px] font-bold text-slate-300 uppercase tracking-widest">{biz.code}</span>
-                                {currentIsOfficial && <span className="bg-brand-teal/10 text-brand-teal px-1.5 py-0.5 rounded text-[7px] font-bold border border-brand-teal/20">OFICIAL</span>}
-                                {currentIsSponsor && <span className="bg-brand-orange/10 text-brand-orange px-1.5 py-0.5 rounded text-[7px] font-bold border border-brand-orange/20">PATROCINADOR</span>}
+                                {biz.isOfficial && <span className="bg-brand-teal/10 text-brand-teal px-1.5 py-0.5 rounded text-[7px] font-bold border border-brand-teal/20">OFICIAL</span>}
+                                {biz.isSponsor && <span className="bg-brand-orange/10 text-brand-orange px-1.5 py-0.5 rounded text-[7px] font-bold border border-brand-orange/20">PATROCINADOR</span>}
                               </div>
                             </div>
                           </div>
@@ -889,9 +821,9 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                           <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2 group/cat">
                               <select
-                                className={`text-[10px] font-bold uppercase tracking-widest outline-none bg-transparent border-b border-transparent focus:border-brand-teal cursor-pointer flex-grow ${draft.category !== undefined ? 'text-brand-teal' : 'text-slate-500'}`}
-                                value={currentCategory}
-                                onChange={e => setDraftChanges(prev => ({ ...prev, [biz.id]: { ...prev[biz.id], category: e.target.value as CategoryType } }))}
+                                className="text-[10px] font-bold uppercase tracking-widest outline-none bg-transparent border-b border-transparent focus:border-brand-teal cursor-pointer flex-grow text-slate-500"
+                                value={biz.category}
+                                onChange={e => onUpdate({ ...biz, category: e.target.value as CategoryType })}
                               >
                                 {Object.values(CategoryType).map(cat => (
                                   <option key={cat} value={cat}>{cat}</option>
@@ -902,10 +834,10 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                             <div className="flex items-center gap-2 group/neigh">
                               <NeighborhoodSelector
                                 className="flex-grow min-w-[120px]"
-                                triggerClassName={`text-[9px] font-black uppercase tracking-widest outline-none bg-transparent border-b border-transparent focus:border-brand-teal cursor-pointer ${draft.neighborhood !== undefined ? 'text-brand-teal' : 'text-slate-400'}`}
+                                triggerClassName="text-[9px] font-black uppercase tracking-widest outline-none bg-transparent border-b border-transparent focus:border-brand-teal cursor-pointer text-slate-400"
                                 dropdownClassName="min-w-[200px]"
-                                value={currentNeighborhood || ''}
-                                onChange={val => setDraftChanges(prev => ({ ...prev, [biz.id]: { ...prev[biz.id], neighborhood: val } }))}
+                                value={biz.neighborhood || ''}
+                                onChange={val => onUpdate({ ...biz, neighborhood: val })}
                                 placeholder="Sem Bairro"
                               />
                               <ICONS.Edit size={8} className="text-slate-200 opacity-0 group-hover/neigh:opacity-100 transition-opacity" />
@@ -918,11 +850,13 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                             <div className="flex items-center gap-2">
                               <input
                                 type="number"
-                                className={`w-20 font-black outline-none bg-transparent border-b border-transparent focus:border-brand-teal text-sm text-center ${draft.views !== undefined ? 'text-brand-teal' : 'text-brand-teal-deep'}`}
-                                value={currentViews}
-                                onChange={(e) => {
+                                className="w-20 font-black outline-none bg-transparent border-b border-transparent focus:border-brand-teal text-sm text-center text-brand-teal-deep"
+                                defaultValue={biz.views || 0}
+                                onBlur={e => {
                                   const val = parseInt(e.target.value) || 0;
-                                  setDraftChanges(prev => ({ ...prev, [biz.id]: { ...prev[biz.id], views: val } }));
+                                  if (val !== (biz.views || 0)) {
+                                    onUpdate({ ...biz, views: val });
+                                  }
                                 }}
                               />
                               <ICONS.Edit size={10} className="text-slate-200 opacity-0 group-hover/views:opacity-100 transition-opacity" />
@@ -932,25 +866,22 @@ const Admin: React.FC<AdminProps> = ({ businesses, customers, onAdd, onUpdate, o
                         </td>
                         <td className="px-8 py-6 text-center">
                           <button
-                            onClick={() => setDraftChanges(prev => ({
-                              ...prev,
-                              [biz.id]: { ...prev[biz.id], isSponsor: !currentIsSponsor }
-                            }))}
-                            className={`p-3 rounded-xl transition-all ${currentIsSponsor ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/20 scale-110' : 'bg-slate-50 text-slate-300 hover:bg-slate-100 hover:text-slate-400 border border-slate-100'}`}
-                            title={currentIsSponsor ? "Remover Patrocínio" : "Tornar Patrocinador"}
+                            onClick={() => onUpdate({ ...biz, isSponsor: !biz.isSponsor })}
+                            className={`p-3 rounded-xl transition-all ${biz.isSponsor ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/20 scale-110' : 'bg-slate-50 text-slate-300 hover:bg-slate-100 hover:text-slate-400 border border-slate-100'}`}
+                            title={biz.isSponsor ? "Remover Patrocínio" : "Tornar Patrocinador"}
                           >
-                            <ICONS.Crown size={18} className={currentIsSponsor ? "animate-pulse" : ""} />
+                            <ICONS.Crown size={18} className={biz.isSponsor ? "animate-pulse" : ""} />
                           </button>
                         </td>
                         <td className="px-8 py-6">
                           <button
                             onClick={() => handleToggleStatus(biz)}
-                            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all ${isCurrentActive ? 'bg-emerald-50 border-emerald-100 text-emerald-600' : 'bg-slate-50 border-slate-200 text-slate-400'}`}
+                            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all ${biz.isActive ? 'bg-emerald-50 border-emerald-100 text-emerald-600' : 'bg-slate-50 border-slate-200 text-slate-400'}`}
                           >
-                            <div className={`w-6 h-3 rounded-full relative transition-colors ${isCurrentActive ? 'bg-emerald-500' : 'bg-slate-300'}`}>
-                              <div className={`absolute top-0.5 w-2 h-2 bg-white rounded-full transition-transform ${isCurrentActive ? 'translate-x-3' : 'translate-x-0.5'}`}></div>
+                            <div className={`w-6 h-3 rounded-full relative transition-colors ${biz.isActive ? 'bg-emerald-500' : 'bg-slate-300'}`}>
+                              <div className={`absolute top-0.5 w-2 h-2 bg-white rounded-full transition-transform ${biz.isActive ? 'translate-x-3' : 'translate-x-0.5'}`}></div>
                             </div>
-                            <span className="text-[9px] font-black uppercase tracking-widest">{isCurrentActive ? 'No Ar' : 'Pausa'}</span>
+                            <span className="text-[9px] font-black uppercase tracking-widest">{biz.isActive ? 'No Ar' : 'Pausa'}</span>
                           </button>
                         </td>
                         <td className="px-8 py-6 text-right">
